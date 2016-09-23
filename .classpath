@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/home/matt/Downloads/Slick2d/lib/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/matt/Downloads/Slick2d"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/matt/Downloads/Slick2d/lib/jogg-0.0.7.jar"/>
+	<classpathentry kind="lib" path="/home/matt/Downloads/Slick2d/lib/jorbis-0.0.15.jar"/>
+	<classpathentry kind="lib" path="/home/matt/Downloads/Slick2d/lib/slick.jar"/>
+	<classpathentry kind="lib" path="/home/matt/Downloads/json-simple-1.1.1/json-simple-1.1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
