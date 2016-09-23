@@ -14,11 +14,11 @@ public class Hero extends Entity{
 
 	@Override
 	public void init() {
-		x = 1550;
-		y = 932;
-		width = 23*Tile.SCALE;
-		height = 22*Tile.SCALE;
-		image = Resources.getImage("soldier");
+		x = 2500;
+		y = 1900;
+		width = 21*Tile.SCALE/1.5f;
+		height = 47*Tile.SCALE/1.5f;
+		image = Resources.getImage("player1");
 		System.out.println("setting image");
 	}
 	
@@ -29,7 +29,7 @@ public class Hero extends Entity{
 		
 		Input input = gc.getInput();
 		if (input.isKeyDown(Input.KEY_UP)&&isOnSolid()){
-			vPY -= 1.4f;
+			vPY -= 1.7f;
 		}else if (input.isKeyDown(Input.KEY_DOWN)){
 			//y+= speed*delta;
 		}

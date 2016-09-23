@@ -23,6 +23,7 @@ public class Resources {
 		
 		try {
 			images.put("soldier", loadImage("res/placeHolder.png") );
+			images.put("player1", loadImage("res/NewPlayer.png") );
 			sprites.put("tiles", loadSprite("res/tiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		} catch (SlickException e) {
 			e.printStackTrace();

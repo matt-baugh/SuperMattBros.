@@ -19,8 +19,8 @@ import SMB.world.World;
 public class GameState extends BasicGameState {
 	
 	private ArrayList<Entity> entities;
-	private int xRender = 1500;
-	private int yRender = 900;
+	private int xRender = 2400;
+	private int yRender = 1900;
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {

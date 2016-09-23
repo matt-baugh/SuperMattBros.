@@ -15,6 +15,7 @@ import SMB.main.Window;
 public class World {
 	
 	public static Image[][] solids;
+	public static Image[][] background;
 	public static int WIDTH;
 	public static int HEIGHT;
 	
@@ -30,6 +31,8 @@ public class World {
 			for (int y=yStart;y<yEnd;y++){
 				if(solids[x][y]!=null){
 					solids[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
+				}else{
+					background[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
 				}
 			}
 		}
@@ -46,13 +49,14 @@ public class World {
 			JSONObject layer = (JSONObject) layers.get(i);
 			String type = (String) layer.get("name");
 			System.out.println(type);
+			WIDTH = ((Long) layer.get("width")).intValue();
+			HEIGHT = ((Long) layer.get("height")).intValue();
 			if(type.equals("solids")){
-				WIDTH = ((Long) layer.get("width")).intValue();
-				HEIGHT = ((Long) layer.get("height")).intValue();
+				
 				solids =  parse((JSONArray)layer.get("data"));
 				System.out.println("fuck sam");
-			}else if(type.equals("spawns")){
-				//spawn code
+			}else if(type.equals("background")){
+				background = parse((JSONArray)layer.get("data"));
 			}
 		}
 	}
