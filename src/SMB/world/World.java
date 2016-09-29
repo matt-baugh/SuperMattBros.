@@ -15,6 +15,7 @@ import SMB.main.Window;
 public class World {
 	
 	public static Image[][] solids;
+	public static Image[][] partialSolids;
 	public static Image[][] background;
 	public static int WIDTH;
 	public static int HEIGHT;
@@ -33,6 +34,9 @@ public class World {
 					solids[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
 				}else{
 					background[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
+				}
+				if(partialSolids[x][y]!=null){
+					partialSolids[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
 				}
 			}
 		}
@@ -57,6 +61,8 @@ public class World {
 				System.out.println("fuck sam");
 			}else if(type.equals("background")){
 				background = parse((JSONArray)layer.get("data"));
+			}else if(type.equals("patialSolids")){
+				partialSolids  = parse((JSONArray)layer.get("data"));
 			}
 		}
 	}
@@ -106,11 +112,19 @@ public class World {
 			return (solids[xTile][yTile].getColor(xPoint, yPoint).a > 0);
 		}
 		return false;
-		
-		
-		
-		
 	}
+	public static boolean hitTestPSolid(float x, float y){
+		int xPoint = (int) (x / Tile.SCALE) % Tile.SMALL_SIZE;
+		int yPoint = (int) (y / Tile.SCALE) % Tile.SMALL_SIZE;
+		int xTile = (int) (x / Tile.SIZE);
+		int yTile = (int) (y / Tile.SIZE);
+		
+		if(solidTile(xTile, yTile)){
+			return (partialSolids[xTile][yTile].getColor(xPoint, yPoint).a > 0);
+		}
+		return false;
+	}
+	
 	
 
 }

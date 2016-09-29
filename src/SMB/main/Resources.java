@@ -22,8 +22,21 @@ public class Resources {
 		sounds = new HashMap<String, Sound>();
 		
 		try {
-			images.put("soldier", loadImage("res/placeHolder.png") );
-			images.put("player1", loadImage("res/NewPlayer.png") );
+			images.put("p1Idle", loadImage("res/playerImages/NewPlayerIdle.png") );
+			images.put("p1HeavyGroundDown1", loadImage("res/playerImages/NewPlayerHAGD1.png") );
+			images.put("p1HeavyGroundDown2", loadImage("res/playerImages/NewPlayerHAGD2.png") );
+			images.put("p1HeavyGroundRight1", loadImage("res/playerImages/NewPlayerHAGLR1.png") );
+			images.put("p1HeavyGroundRight2", loadImage("res/playerImages/NewPlayerHAGLR2.png") );
+			images.put("p1HeavyGroundNeutral1", loadImage("res/playerImages/NewPlayerHAGN1.png") );
+			images.put("p1HeavyGroundNeutral2", loadImage("res/playerImages/NewPlayerHAGN2.png") );
+			images.put("p1LightGroundDown", loadImage("res/playerImages/NewPlayerLAGD.png") );
+			images.put("p1LightGroundRight", loadImage("res/playerImages/NewPlayerLAGLR.png") );
+			images.put("p1LightGroundNeutral", loadImage("res/playerImages/NewPlayerLAGN.png") );
+			images.put("p1GrabGround", loadImage("res/playerImages/NewPlayerGrG.png") );
+			images.put("p1ThrowGroundDown", loadImage("res/playerImages/NewPlayerTGD.png") );
+			images.put("p1ThrowGroundRight", loadImage("res/playerImages/NewPlayerTGLR.png") );
+			images.put("p1ThrowGroundUp", loadImage("res/playerImages/NewPlayerTGU.png") );
+			
 			sprites.put("tiles", loadSprite("res/tiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		} catch (SlickException e) {
 			e.printStackTrace();

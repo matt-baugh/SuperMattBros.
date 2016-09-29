@@ -29,7 +29,7 @@ public class Hero extends Entity{
 		
 		Input input = gc.getInput();
 		if (input.isKeyDown(Input.KEY_UP)&&isOnSolid()){
-			vPY -= 1.7f;
+			vPY -= 2f;
 		}else if (input.isKeyDown(Input.KEY_DOWN)){
 			//y+= speed*delta;
 		}
