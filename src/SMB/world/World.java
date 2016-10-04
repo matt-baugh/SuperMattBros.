@@ -61,7 +61,7 @@ public class World {
 				System.out.println("fuck sam");
 			}else if(type.equals("background")){
 				background = parse((JSONArray)layer.get("data"));
-			}else if(type.equals("patialSolids")){
+			}else if(type.equals("partialSolids")){
 				partialSolids  = parse((JSONArray)layer.get("data"));
 			}
 		}
@@ -102,6 +102,9 @@ public class World {
 	public static boolean solidTile(int x, int y){
 		return (inBounds(x,y)&&solids[x][y]!=null);
 	}
+	public static boolean pSolidTile(int x, int y){
+		return (inBounds(x,y)&&partialSolids[x][y]!=null);
+	}
 	public static boolean hitTest(float x, float y){
 		int xPoint = (int) (x / Tile.SCALE) % Tile.SMALL_SIZE;
 		int yPoint = (int) (y / Tile.SCALE) % Tile.SMALL_SIZE;
@@ -119,7 +122,7 @@ public class World {
 		int xTile = (int) (x / Tile.SIZE);
 		int yTile = (int) (y / Tile.SIZE);
 		
-		if(solidTile(xTile, yTile)){
+		if(pSolidTile(xTile, yTile)){
 			return (partialSolids[xTile][yTile].getColor(xPoint, yPoint).a > 0);
 		}
 		return false;

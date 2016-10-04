@@ -11,14 +11,15 @@ import SMB.world.Tile;
 public class Hero extends Entity{
 	
 	private float speed = 0.3f;
+	private int jumpsRemaining = 1;
 
 	@Override
 	public void init() {
 		x = 2500;
-		y = 1900;
+		y = 2700;
 		width = 21*Tile.SCALE/1.5f;
 		height = 47*Tile.SCALE/1.5f;
-		image = Resources.getImage("player1");
+		image = Resources.getImage("p1Idle");
 		System.out.println("setting image");
 	}
 	
@@ -28,10 +29,14 @@ public class Hero extends Entity{
 		
 		
 		Input input = gc.getInput();
-		if (input.isKeyDown(Input.KEY_UP)&&isOnSolid()){
-			vPY -= 2f;
-		}else if (input.isKeyDown(Input.KEY_DOWN)){
-			//y+= speed*delta;
+		if (input.isKeyPressed(Input.KEY_UP)){
+			if(isOnSolid()||isOnPSolid()){
+					vPY = -2f;
+			}else if(jumpsRemaining==1){
+				vPY = -2f;
+				jumpsRemaining = 0;
+			}
+			System.out.println(jumpsRemaining);
 		}
 		
 		if (input.isKeyDown(Input.KEY_LEFT)){
@@ -42,9 +47,25 @@ public class Hero extends Entity{
 			vPX = 0;
 		}
 		
+		if(!input.isKeyDown(Input.KEY_DOWN)&&isOnPSolid()){
+			if(vPY>=0){
+			vPY = 0;
+			vTY = 0;
+			jumpsRemaining = 1;
+			}
+		}
+		if(isOnSolid()){
+			jumpsRemaining = 1;
+		}
+
+		
 		if(testLeft()) x += speed *delta;
 		if(testRight()) x -= speed *delta;
-		if(testUp()) y += speed *delta;
+		if(testUp()) {
+			y += Math.abs(vTY) *delta;
+			vTY = 0;
+			vPY = 0;
+		}
 		if(isWithin()) y -= (getEndY() % Tile.SIZE);
 	}
 }

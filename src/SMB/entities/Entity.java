@@ -50,8 +50,10 @@ public abstract class Entity extends Hitbox{
 		}
 		
 		if(isOnSolid()){
-			vPY = 0;
-			vTY = 0;
+			if(vTY>=0){
+				vPY = 0;
+				vTY = 0;
+			}
 		}else{
 			vPY += 0.13f;
 		}
@@ -75,10 +77,13 @@ public abstract class Entity extends Hitbox{
 		return (World.hitTest(getCenterX(), getEndY()));
 	}
 	public boolean isWithin(){
-		return (World.hitTest(x, getEndY())||World.hitTest(getEndX(), getEndY()))||World.hitTest(getCenterX(), getEndY());
+		return (World.hitTest(x,getEndY()) || World.hitTest(getEndX(),getEndY())) || World.hitTest(getCenterX(),getEndY()) ||World.hitTestPSolid(x, getEndY())||World.hitTestPSolid(getEndX(), getEndY())||World.hitTestPSolid(getCenterX(), getEndY());
 	}
 	public boolean isOnSolid(){
 		return (World.hitTest(x, getEndY()+1)||World.hitTest(getEndX(), getEndY()+1))||World.hitTest(getCenterX(), getEndY()+1);
+	}
+	public boolean isOnPSolid(){
+		return (World.hitTestPSolid(x, getEndY()+1)||World.hitTestPSolid(getEndX(), getEndY()+1))||World.hitTestPSolid(getCenterX(), getEndY()+1);
 	}
 	
 }

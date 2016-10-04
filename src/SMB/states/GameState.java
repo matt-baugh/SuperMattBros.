@@ -20,7 +20,7 @@ public class GameState extends BasicGameState {
 	
 	private ArrayList<Entity> entities;
 	private int xRender = 2400;
-	private int yRender = 1900;
+	private int yRender = 2600;
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
