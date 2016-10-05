@@ -10,9 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import SMB.entities.Entity;
-import SMB.entities.Hero;
-import SMB.main.Resources;
+import SMB.entities.*;
 import SMB.main.Window;
 import SMB.world.World;
 
@@ -27,6 +25,7 @@ public class GameState extends BasicGameState {
 		
 		entities = new ArrayList<Entity>();
 		entities.add(new Hero());
+		entities.add(new TrainingDummy());
 		 
 		
 	}

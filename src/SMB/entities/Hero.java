@@ -15,8 +15,8 @@ public class Hero extends Entity{
 
 	@Override
 	public void init() {
-		x = 2500;
-		y = 2700;
+		x = 4234;
+		y = 3138;
 		width = 21*Tile.SCALE/1.5f;
 		height = 47*Tile.SCALE/1.5f;
 		image = Resources.getImage("p1Idle");
@@ -57,10 +57,12 @@ public class Hero extends Entity{
 		if(isOnSolid()){
 			jumpsRemaining = 1;
 		}
-
+		if (input.isKeyPressed(Input.KEY_K)){
+			System.out.println("("+x+","+y+")");
+		}
 		
-		if(testLeft()) x += speed *delta;
-		if(testRight()) x -= speed *delta;
+		if(testLeft()) x -= vTX *delta;
+		if(testRight()) x -= vTX *delta;
 		if(testUp()) {
 			y += Math.abs(vTY) *delta;
 			vTY = 0;

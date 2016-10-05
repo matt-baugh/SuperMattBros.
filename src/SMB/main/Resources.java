@@ -36,6 +36,7 @@ public class Resources {
 			images.put("p1ThrowGroundDown", loadImage("res/playerImages/NewPlayerTGD.png") );
 			images.put("p1ThrowGroundRight", loadImage("res/playerImages/NewPlayerTGLR.png") );
 			images.put("p1ThrowGroundUp", loadImage("res/playerImages/NewPlayerTGU.png") );
+			images.put("trainingDummy", loadImage("res/training.png") );
 			
 			sprites.put("tiles", loadSprite("res/tiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		} catch (SlickException e) {
