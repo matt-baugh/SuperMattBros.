@@ -33,4 +33,11 @@ public class Hitbox {
 	public boolean hitTest(Hitbox b){
 		return(b.getEndX()>=x && b.getEndY()>=y && getEndX()>= b.x && getEndY() >= b.y);
 	}
+	public boolean intersects(Hitbox other){
+		if(this.x > other.x + other.width) return false;
+		if(this.x + this.width > other.x ) return false;
+		if(this.y > other.y + other.height) return false;
+		if(this.y + this.height > other.y ) return false;
+		return true;
+	}
 }

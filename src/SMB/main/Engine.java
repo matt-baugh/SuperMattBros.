@@ -4,9 +4,7 @@ import java.io.File;
 
 
 import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -17,7 +15,7 @@ import SMB.world.World;
 public class Engine extends StateBasedGame{
 
 	public Engine() {
-		super("Memes");
+		super("SuperMattBros");
 		// TODO Auto-generated constructor stub
 	}
 	

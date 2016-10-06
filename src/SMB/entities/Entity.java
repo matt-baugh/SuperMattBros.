@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 import SMB.tools.Hitbox;
+import SMB.world.Tile;
 import SMB.world.World;
 
 
@@ -15,6 +16,7 @@ public abstract class Entity extends Hitbox{
 	public Color color;
 	private final int TERMINAL_X = 5;
 	private final int TERMINAL_Y = 5;
+	public boolean facingRight = true;
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
 	public float vTY, vPY, vKY;
@@ -28,7 +30,7 @@ public abstract class Entity extends Hitbox{
 	
 	public void render(GameContainer gc, Graphics g){
 		if (image != null){
-			image.draw(x,y,width, height, color);
+			image.getFlippedCopy(!facingRight, false ).draw(x,y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
 		}
 	}
 	protected abstract void indivUpdate(GameContainer gc, int delta);
@@ -58,7 +60,11 @@ public abstract class Entity extends Hitbox{
 			vPY += 0.13f;
 		}
 		
+		if(-1<vKX&&vKX<1)vKX=0;
+		if(-1<vKY&&vKY<1)vKY=0;
 		
+		vKX *= 0.7;
+		vKY *= 0.7;
 		
 		
 		indivUpdate(gc, delta);
