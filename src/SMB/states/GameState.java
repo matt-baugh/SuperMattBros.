@@ -11,12 +11,13 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import SMB.entities.*;
+import SMB.main.Resources;
 import SMB.main.Window;
 import SMB.world.World;
 
 public class GameState extends BasicGameState {
 	
-	private ArrayList<Entity> entities;
+	public ArrayList<Entity> entities;
 	private int xRender = 2400;
 	private int yRender = 2600;
 
@@ -73,7 +74,26 @@ public class GameState extends BasicGameState {
 			}else if (input.isKeyDown(Input.KEY_D)){
 				xRender+= 0.3*delta;
 			}
+			
+			combat(entities.get(i));
+			
 		}
+		
+		
+	}
+	
+	public void combat(Entity player){
+			
+			for(Entity opponent : entities){
+				if(player==opponent) continue;
+				if(player.getLGNHitBox().intersects(opponent)) System.out.println("lol");
+				if(player.image == Resources.getImage("p1LightGroundNeutral")&&player.getLGNHitBox().intersects(opponent)){
+					opponent.getHit(10, 0, 10);
+					System.out.println("hit");
+				}
+				
+				
+			}
 		
 		
 	}

@@ -58,7 +58,7 @@ public class World {
 			if(type.equals("solids")){
 				
 				solids =  parse((JSONArray)layer.get("data"));
-				System.out.println("fuck sam");
+				
 			}else if(type.equals("background")){
 				background = parse((JSONArray)layer.get("data"));
 			}else if(type.equals("partialSolids")){

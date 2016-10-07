@@ -3,7 +3,6 @@ package SMB.entities;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
@@ -14,8 +13,10 @@ public class Hero extends Entity{
 	
 	private float speed = 0.3f;
 	private int jumpsRemaining = 1;
-	private int AmountDamaged = 0;
-	private Animation currentAnimation;
+	
+	private Animation currentAnimation, LGN, LGR, LGD;
+	private Input input;
+	
 
 	@Override
 	public void init() {
@@ -26,9 +27,9 @@ public class Hero extends Entity{
 		image = Resources.getImage("p1Idle");
 		System.out.println("setting image");
 		
-		Animation LGN = new Animation (new Image[]{Resources.getImage("p1LightGroundNeutral"), Resources.getImage("p1Idle")}, 100, false);
-		Animation LGR = new Animation (new Image[]{Resources.getImage("p1LightGroundRight"), Resources.getImage("p1Idle")}, 100, false);
-		Animation LGD = new Animation (new Image[]{Resources.getImage("p1LightGroundDown"), Resources.getImage("p1Idle")}, 100, false);
+		LGN = new Animation (new Image[]{Resources.getImage("p1LightGroundNeutral"), Resources.getImage("p1Idle")}, 100, false);
+		LGR = new Animation (new Image[]{Resources.getImage("p1LightGroundRight"), Resources.getImage("p1Idle")}, 100, false);
+		LGD = new Animation (new Image[]{Resources.getImage("p1LightGroundDown"), Resources.getImage("p1Idle")}, 100, false);
 	}
 	
 
@@ -37,9 +38,11 @@ public class Hero extends Entity{
 		
 		if(currentAnimation!=null){
 			image = currentAnimation.getCurrentFrame();
+			currentAnimation.update(delta);
+			
 		}
 		
-		Input input = gc.getInput();
+		input = gc.getInput();
 		if (input.isKeyPressed(Input.KEY_UP)){
 			if(isOnSolid()||isOnPSolid()){
 					vPY = -2f;
@@ -82,17 +85,27 @@ public class Hero extends Entity{
 			vPY = 0;
 		}
 		
-		
 		if (input.isKeyDown(Input.KEY_Z)&&(isOnSolid()||isOnPSolid())){
-			
+			if (input.isKeyDown(Input.KEY_RIGHT)||input.isKeyDown(Input.KEY_LEFT)){
+				currentAnimation = LGR;
+				currentAnimation.setLooping(false);
+				currentAnimation.restart();
+				if(facingRight) vKX = 0.2f;else vKX = -0.2f;
+			}else if (input.isKeyDown(Input.KEY_DOWN)){
+				currentAnimation = LGD;
+				currentAnimation.setLooping(false);
+				currentAnimation.restart();
+			}else{
+				currentAnimation = LGN;
+				currentAnimation.setLooping(false);
+				currentAnimation.restart();
+			}
 		}
-		
 		
 		if(isWithin()) y -= (getEndY() % Tile.SIZE);
 	}
-	public void getHit(int xF, int xY, int damage){
-		AmountDamaged += damage;
-		vKX+=xF*(AmountDamaged/50);
-		vKY+=xY*(AmountDamaged/50);
-	}
+
+		
+
+	
 }
