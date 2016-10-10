@@ -14,6 +14,7 @@ public class TrainingDummy extends Entity{
 		width = 21*Tile.SCALE/1.5f;
 		height = 47*Tile.SCALE/1.5f;
 		image = Resources.getImage("trainingDummy");
+		label = "Training";
 	}
 
 	@Override

@@ -52,6 +52,7 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) s.enterState(States.MENU);
 		int amount = entities.size();
 		for (int i = 0; i <amount;i++){
+			if(entities.get(i).label.equals("Training")) continue;
 			entities.get(i).update(gc, delta);
 			
 			if(entities.get(i).x<xRender + 80)xRender -= 0.3f*delta;
@@ -74,8 +75,9 @@ public class GameState extends BasicGameState {
 			}else if (input.isKeyDown(Input.KEY_D)){
 				xRender+= 0.3*delta;
 			}
-			
-			combat(entities.get(i));
+			if(entities.get(i).label.equals("Player1") ){
+				combat(entities.get(i));
+			}
 			
 		}
 		
@@ -86,9 +88,9 @@ public class GameState extends BasicGameState {
 			
 			for(Entity opponent : entities){
 				if(player==opponent) continue;
-				if(player.getLGNHitBox().intersects(opponent)) System.out.println("lol");
+				
 				if(player.image == Resources.getImage("p1LightGroundNeutral")&&player.getLGNHitBox().intersects(opponent)){
-					opponent.getHit(10, 0, 10);
+					opponent.getHit(1000000, 0, 10);
 					System.out.println("hit");
 				}
 				

@@ -20,6 +20,7 @@ public class Hero extends Entity{
 
 	@Override
 	public void init() {
+		label = "Player1";
 		x = 4234;
 		y = 3138;
 		width = 21*Tile.SCALE/1.5f;
@@ -85,12 +86,12 @@ public class Hero extends Entity{
 			vPY = 0;
 		}
 		
-		if (input.isKeyDown(Input.KEY_Z)&&(isOnSolid()||isOnPSolid())){
+		if (input.isKeyPressed(Input.KEY_Z)&&(isOnSolid()||isOnPSolid())){
 			if (input.isKeyDown(Input.KEY_RIGHT)||input.isKeyDown(Input.KEY_LEFT)){
 				currentAnimation = LGR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
-				if(facingRight) vKX = 0.2f;else vKX = -0.2f;
+				if(facingRight) vKX = 1.3f;else vKX = -1.3f;
 			}else if (input.isKeyDown(Input.KEY_DOWN)){
 				currentAnimation = LGD;
 				currentAnimation.setLooping(false);

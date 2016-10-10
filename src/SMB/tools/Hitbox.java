@@ -35,9 +35,9 @@ public class Hitbox {
 	}
 	public boolean intersects(Hitbox other){
 		if(this.x > other.x + other.width) return false;
-		if(this.x + this.width > other.x ) return false;
+		if(this.x + this.width < other.x ) return false;
 		if(this.y > other.y + other.height) return false;
-		if(this.y + this.height > other.y ) return false;
+		if(this.y + this.height < other.y ) return false;
 		return true;
 	}
 }

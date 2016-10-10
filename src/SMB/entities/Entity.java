@@ -18,12 +18,14 @@ public abstract class Entity extends Hitbox{
 	private final int TERMINAL_Y = 5;
 	private int AmountDamaged = 0;
 	public boolean facingRight = true;
+	public String label;
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
 	public float vTY, vPY, vKY;
 	
 	
 	public Entity(){
+		
 		init();
 	}
 	
@@ -96,9 +98,11 @@ public abstract class Entity extends Hitbox{
 		AmountDamaged += damage;
 		vKX+=xF*(AmountDamaged/50);
 		vKY+=xY*(AmountDamaged/50);
+		System.out.println("vKX: "+vKX);
+		System.out.println("vKY: "+vKY);
 	}
 	public Hitbox getLGNHitBox(){
-		if(facingRight) return new Hitbox(x+18, y+ 18, 6, 4);
+		if(facingRight) return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-3*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 	}
 	
