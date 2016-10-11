@@ -52,8 +52,9 @@ public class GameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) s.enterState(States.MENU);
 		int amount = entities.size();
 		for (int i = 0; i <amount;i++){
-			if(entities.get(i).label.equals("Training")) continue;
+		
 			entities.get(i).update(gc, delta);
+			if(entities.get(i).label.equals("Training")) continue;
 			
 			if(entities.get(i).x<xRender + 80)xRender -= 0.3f*delta;
 			if(entities.get(i).y<yRender  + 60)yRender -= 0.3f*delta;
@@ -90,9 +91,30 @@ public class GameState extends BasicGameState {
 				if(player==opponent) continue;
 				
 				if(player.image == Resources.getImage("p1LightGroundNeutral")&&player.getLGNHitBox().intersects(opponent)){
-					opponent.getHit(1000000, 0, 10);
-					System.out.println("hit");
+					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
 				}
+				if(player.image == Resources.getImage("p1LightGroundDown")&&player.getLGDHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
+				}
+				if(player.image == Resources.getImage("p1LightGroundRight")&&player.getLGRHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
+				}
+				
+				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&player.getHGNHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 10);
+				}
+				if(player.image == Resources.getImage("p1HeavyGroundDown2")&&player.getHGDHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+				}
+				if(player.image == Resources.getImage("p1HeavyGroundRight2")&&player.getHGRHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 3.5f : -3.5f, 0, 11);
+				}
+				
+				if(player.image == Resources.getImage("p1GrabGround")&&player.getGGHitBox().intersects(opponent)){
+					player.currentAnimation = GGSuccess;
+				}
+				
+				
 				
 				
 			}

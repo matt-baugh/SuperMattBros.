@@ -16,9 +16,10 @@ public abstract class Entity extends Hitbox{
 	public Color color;
 	private final int TERMINAL_X = 5;
 	private final int TERMINAL_Y = 5;
-	private int AmountDamaged = 0;
-	public boolean facingRight = true;
+	private float AmountDamaged = 0;
+	public boolean facingRight = true, grabbed = false;
 	public String label;
+	
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
 	public float vTY, vPY, vKY;
@@ -40,9 +41,13 @@ public abstract class Entity extends Hitbox{
 	
 	public void update(GameContainer gc, int delta){
 		
-		
-		vTX = vPX + vKX;
-		vTY = vPY + vKY;
+		if(!grabbed){
+			vTX = vPX + vKX;
+			vTY = vPY + vKY;
+		}else{
+			vTX = 0;
+			vTY = 0;
+		}
 		if(vTY<TERMINAL_Y){
 			y += vTY*delta;
 		}else{
@@ -94,16 +99,42 @@ public abstract class Entity extends Hitbox{
 	public boolean isOnPSolid(){
 		return (World.hitTestPSolid(x, getEndY()+1)||World.hitTestPSolid(getEndX(), getEndY()+1))||World.hitTestPSolid(getCenterX(), getEndY()+1);
 	}
-	public void getHit(int xF, int xY, int damage){
+	public void getHit(float xF, float xY, int damage){
 		AmountDamaged += damage;
-		vKX+=xF*(AmountDamaged/50);
-		vKY+=xY*(AmountDamaged/50);
+		vKX+=(xF*(AmountDamaged/50));
+		vKY+=(xY*(AmountDamaged/50));
 		System.out.println("vKX: "+vKX);
 		System.out.println("vKY: "+vKY);
+		System.out.println("Damaged: "+ AmountDamaged);
 	}
 	public Hitbox getLGNHitBox(){
 		if(facingRight) return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-3*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 	}
+	public Hitbox getLGDHitBox(){
+		if(facingRight) return new Hitbox(x+21*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 11*Tile.SCALE/1.5f, 11*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-11*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 11*Tile.SCALE/1.5f, 11*Tile.SCALE/1.5f);
+	}
+	public Hitbox getLGRHitBox(){
+		if(facingRight) return new Hitbox(x+22*Tile.SCALE/1.5f, y+ 17*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-7*Tile.SCALE/1.5f, y+ 17*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHGNHitBox(){
+		if(facingRight) return new Hitbox(x+17*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-1*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHGDHitBox(){
+		if(facingRight) return new Hitbox(x+23*Tile.SCALE/1.5f, y+ 41*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 41*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHGRHitBox(){
+		if(facingRight) return new Hitbox(x+24*Tile.SCALE/1.5f, y+ 31*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 31*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+	}
+	public Hitbox getGGHitBox(){
+		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+	}
+	
 	
 }
