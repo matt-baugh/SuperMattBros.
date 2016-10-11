@@ -13,6 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import SMB.entities.*;
 import SMB.main.Resources;
 import SMB.main.Window;
+import SMB.world.Tile;
 import SMB.world.World;
 
 public class GameState extends BasicGameState {
@@ -101,17 +102,42 @@ public class GameState extends BasicGameState {
 				}
 				
 				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&player.getHGNHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 10);
+					opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundDown2")&&player.getHGDHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundRight2")&&player.getHGRHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 3.5f : -3.5f, 0, 11);
+					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
 				}
 				
 				if(player.image == Resources.getImage("p1GrabGround")&&player.getGGHitBox().intersects(opponent)){
-					player.currentAnimation = GGSuccess;
+					player.grabbing = true;
+					opponent.grabbed = true;
+					if(player.facingRight){
+						opponent.x = player.x + 14* Tile.SCALE / 1.5f;
+					}else{
+						opponent.x = player.x - 14* Tile.SCALE / 1.5f;
+					}
+					opponent.y = player.y - 20* Tile.SCALE / 1.5f;
+				}
+				if(player.image == Resources.getImage("p1ThrowGroundUp")){
+					player.grabbing = false;
+					opponent.grabbed = false;
+					opponent.getHit((player.facingRight) ? 2f : -2f, -5f, 0);
+					player.image = Resources.getImage("p1Idle");
+				}
+				if(player.image == Resources.getImage("p1ThrowGroundRight")){
+					player.grabbing = false;
+					opponent.grabbed = false;
+					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 0);
+					player.image = Resources.getImage("p1Idle");
+				}
+				if(player.image == Resources.getImage("p1ThrowGroundDown")){
+					player.grabbing = false;
+					opponent.grabbed = false;
+					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 0);
+					player.image = Resources.getImage("p1Idle");
 				}
 				
 				

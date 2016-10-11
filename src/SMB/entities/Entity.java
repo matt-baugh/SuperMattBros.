@@ -17,7 +17,7 @@ public abstract class Entity extends Hitbox{
 	private final int TERMINAL_X = 5;
 	private final int TERMINAL_Y = 5;
 	private float AmountDamaged = 0;
-	public boolean facingRight = true, grabbed = false;
+	public boolean facingRight = true, grabbed = false, grabbing = false;
 	public String label;
 	
 	
@@ -68,8 +68,8 @@ public abstract class Entity extends Hitbox{
 			vPY += 0.13f;
 		}
 		
-		if(-1<vKX&&vKX<1)vKX=0;
-		if(-1<vKY&&vKY<1)vKY=0;
+		if(-0.5<vKX&&vKX<0.5)vKX=0;
+		if(-0.5<vKY&&vKY<0.5)vKY=0;
 		
 		vKX *= 0.7;
 		vKY *= 0.7;
@@ -101,8 +101,8 @@ public abstract class Entity extends Hitbox{
 	}
 	public void getHit(float xF, float xY, int damage){
 		AmountDamaged += damage;
-		vKX+=(xF*(AmountDamaged/50));
-		vKY+=(xY*(AmountDamaged/50));
+		vKX+=(xF*(AmountDamaged/200));
+		vKY+=(xY*(AmountDamaged/200));
 		System.out.println("vKX: "+vKX);
 		System.out.println("vKY: "+vKY);
 		System.out.println("Damaged: "+ AmountDamaged);
