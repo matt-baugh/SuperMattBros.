@@ -21,6 +21,9 @@ public abstract class Entity extends Hitbox{
 	public String label;
 	public boolean invulnerable;
 	public int invulnerableTimer;
+	public boolean busy;
+	public int busyTimer;
+	public boolean walkingB = false;
 	
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
@@ -42,6 +45,12 @@ public abstract class Entity extends Hitbox{
 	protected abstract void indivUpdate(GameContainer gc, int delta);
 	
 	public void update(GameContainer gc, int delta){
+		if(busyTimer>0){
+			busy = true;
+			busyTimer-=delta;
+		}else{
+			busy=false;
+		}
 		if(invulnerableTimer>0){
 			invulnerable = true;
 			invulnerableTimer-=delta;

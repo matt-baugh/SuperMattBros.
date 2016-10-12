@@ -10,11 +10,11 @@ import SMB.world.Tile;
 
 public class Hero extends Entity {
 
-	private float speed = 0.3f;
+	private float speed = 0.5f;
 	private int jumpsRemaining = 1;
 
 	private Animation currentAnimation, LGN, LGR, LGD, HGN, HGD, HGR,
-			GGAttempt, GGSuccess, TGR, TGU, TGD;
+			GGAttempt, GGSuccess, TGR, TGU, TGD, WalkingA;
 	private Input input;
 
 	@Override
@@ -26,6 +26,8 @@ public class Hero extends Entity {
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
 		System.out.println("setting image");
+		
+		WalkingA = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
 
 		LGN = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundNeutral"),
@@ -81,7 +83,31 @@ public class Hero extends Entity {
 			
 			
 		input = gc.getInput();
-		if (!grabbing) {
+		
+		if (!input.isKeyDown(Input.KEY_DOWN) && isOnPSolid()) {
+			if (vPY >= 0) {
+				vPY = 0;
+				vTY = 0;
+				jumpsRemaining = 1;
+			}
+		}
+		if (isOnSolid()) {
+			jumpsRemaining = 1;
+		}
+		if (input.isKeyPressed(Input.KEY_K)) {
+			System.out.println("(" + x + "," + y + ")");
+		}
+
+		if (testLeft())
+			x -= vTX * delta;
+		if (testRight())
+			x -= vTX * delta;
+		if (testUp()) {
+			y += Math.abs(vTY) * delta;
+			vTY = 0;
+			vPY = 0;
+		}
+		if (!grabbing&&!busy) {
 			if (input.isKeyPressed(Input.KEY_UP)) {
 				if (isOnSolid() || isOnPSolid()) {
 					vPY = -2f;
@@ -93,43 +119,31 @@ public class Hero extends Entity {
 			}
 
 			if (input.isKeyDown(Input.KEY_LEFT)) {
+				if ((isOnSolid() || isOnPSolid())) {
+					currentAnimation = WalkingA;
+					currentAnimation.setLooping(true);
+				}
 				vPX = -speed;
 				facingRight = false;
 			} else if (input.isKeyDown(Input.KEY_RIGHT)) {
+				if ((isOnSolid() || isOnPSolid())) {
+					currentAnimation = WalkingA;
+					currentAnimation.setLooping(true);
+				}
 				vPX = speed;
 				facingRight = true;
 			} else {
+				if ((isOnSolid() || isOnPSolid())) {
+					image = Resources.getImage("p1Idle"); 
+				}
 				vPX = 0;
 			}
 
-			if (!input.isKeyDown(Input.KEY_DOWN) && isOnPSolid()) {
-				if (vPY >= 0) {
-					vPY = 0;
-					vTY = 0;
-					jumpsRemaining = 1;
-				}
-			}
-			if (isOnSolid()) {
-				jumpsRemaining = 1;
-			}
-			if (input.isKeyPressed(Input.KEY_K)) {
-				System.out.println("(" + x + "," + y + ")");
-			}
+			
 
-			if (testLeft())
-				x -= vTX * delta;
-			if (testRight())
-				x -= vTX * delta;
-			if (testUp()) {
-				y += Math.abs(vTY) * delta;
-				vTY = 0;
-				vPY = 0;
-			}
-
-			if (input.isKeyPressed(Input.KEY_Z)
-					&& (isOnSolid() || isOnPSolid())) {
-				if (input.isKeyDown(Input.KEY_RIGHT)
-						|| input.isKeyDown(Input.KEY_LEFT)) {
+			if (input.isKeyPressed(Input.KEY_Z) && (isOnSolid() || isOnPSolid())) {
+				busyTimer = 50;
+				if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_LEFT)) {
 					currentAnimation = LGR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
@@ -147,6 +161,7 @@ public class Hero extends Entity {
 					currentAnimation.restart();
 				}
 			} else if (input.isKeyPressed(Input.KEY_X) && (isOnSolid() || isOnPSolid())) {
+				busyTimer = 400;
 				if (input.isKeyDown(Input.KEY_RIGHT)
 						|| input.isKeyDown(Input.KEY_LEFT)) {
 					currentAnimation = HGR;
@@ -171,26 +186,30 @@ public class Hero extends Entity {
 				currentAnimation.restart();
 
 			}
-		}else{
+		}else if (grabbing){
 			currentAnimation = GGSuccess;
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
 			if (input.isKeyDown(Input.KEY_RIGHT)) {
+				busyTimer = 250;
 				facingRight = true;
 				currentAnimation = TGR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(Input.KEY_LEFT)){
+				busyTimer = 250;
 				facingRight = false;
 				currentAnimation = TGR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(Input.KEY_UP)){	
+				busyTimer = 250;
 				currentAnimation = TGU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 				
 			} else if (input.isKeyDown(Input.KEY_DOWN)) {
+				busyTimer = 250;
 				currentAnimation = TGD;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
