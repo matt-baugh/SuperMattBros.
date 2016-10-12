@@ -119,17 +119,15 @@ public class Hero extends Entity {
 			}
 
 			if (input.isKeyDown(Input.KEY_LEFT)) {
-				if ((isOnSolid() || isOnPSolid())) {
-					currentAnimation = WalkingA;
-					currentAnimation.setLooping(true);
-				}
+				currentAnimation = WalkingA;
+				currentAnimation.setLooping(true);
 				vPX = -speed;
 				facingRight = false;
 			} else if (input.isKeyDown(Input.KEY_RIGHT)) {
-				if ((isOnSolid() || isOnPSolid())) {
-					currentAnimation = WalkingA;
-					currentAnimation.setLooping(true);
-				}
+				
+				currentAnimation = WalkingA;
+				currentAnimation.setLooping(true);
+				
 				vPX = speed;
 				facingRight = true;
 			} else {
@@ -137,6 +135,7 @@ public class Hero extends Entity {
 					image = Resources.getImage("p1Idle"); 
 				}
 				vPX = 0;
+				currentAnimation = null;
 			}
 
 			
