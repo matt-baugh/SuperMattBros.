@@ -175,7 +175,13 @@ public class Hero extends Entity {
 			currentAnimation = GGSuccess;
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
-			if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_LEFT)) {
+			if (input.isKeyDown(Input.KEY_RIGHT)) {
+				facingRight = true;
+				currentAnimation = TGR;
+				currentAnimation.setLooping(false);
+				currentAnimation.restart();
+			}else if(input.isKeyDown(Input.KEY_LEFT)){
+				facingRight = false;
 				currentAnimation = TGR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();

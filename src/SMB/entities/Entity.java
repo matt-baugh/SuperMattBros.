@@ -19,6 +19,8 @@ public abstract class Entity extends Hitbox{
 	private float AmountDamaged = 0;
 	public boolean facingRight = true, grabbed = false, grabbing = false;
 	public String label;
+	public boolean invulnerable;
+	public int invulnerableTimer;
 	
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
@@ -40,7 +42,12 @@ public abstract class Entity extends Hitbox{
 	protected abstract void indivUpdate(GameContainer gc, int delta);
 	
 	public void update(GameContainer gc, int delta){
-		
+		if(invulnerableTimer>0){
+			invulnerable = true;
+			invulnerableTimer-=delta;
+		}else{
+			invulnerable = false;
+		}
 		if(!grabbed){
 			vTX = vPX + vKX;
 			vTY = vPY + vKY;
@@ -62,7 +69,7 @@ public abstract class Entity extends Hitbox{
 		if(isOnSolid()){
 			if(vTY>=0){
 				vPY = 0;
-				vTY = 0;
+				vKY = -vKY;
 			}
 		}else{
 			vPY += 0.13f;
@@ -101,8 +108,8 @@ public abstract class Entity extends Hitbox{
 	}
 	public void getHit(float xF, float xY, int damage){
 		AmountDamaged += damage;
-		vKX+=(xF*(AmountDamaged/200));
-		vKY+=(xY*(AmountDamaged/200));
+		vKX+=(xF*(AmountDamaged/50));
+		vKY+=(xY*(AmountDamaged/50));
 		System.out.println("vKX: "+vKX);
 		System.out.println("vKY: "+vKY);
 		System.out.println("Damaged: "+ AmountDamaged);

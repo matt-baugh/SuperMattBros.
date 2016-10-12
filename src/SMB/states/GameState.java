@@ -19,7 +19,7 @@ import SMB.world.World;
 public class GameState extends BasicGameState {
 	
 	public ArrayList<Entity> entities;
-	private int xRender = 2400;
+	private int xRender = 4000;
 	private int yRender = 2600;
 
 	public void init(GameContainer gc, StateBasedGame s)
@@ -90,25 +90,32 @@ public class GameState extends BasicGameState {
 			
 			for(Entity opponent : entities){
 				if(player==opponent) continue;
+				if(opponent.invulnerable)continue;
 				
 				if(player.image == Resources.getImage("p1LightGroundNeutral")&&player.getLGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
+					opponent.invulnerableTimer = 60;
 				}
 				if(player.image == Resources.getImage("p1LightGroundDown")&&player.getLGDHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
+					opponent.invulnerableTimer = 60;
 				}
 				if(player.image == Resources.getImage("p1LightGroundRight")&&player.getLGRHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
+					opponent.invulnerableTimer = 60;
 				}
 				
 				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&player.getHGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
+					opponent.invulnerableTimer = 210;
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundDown2")&&player.getHGDHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+					opponent.invulnerableTimer = 210;
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundRight2")&&player.getHGRHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
+					opponent.invulnerableTimer = 210;
 				}
 				
 				if(player.image == Resources.getImage("p1GrabGround")&&player.getGGHitBox().intersects(opponent)){
@@ -124,20 +131,23 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1ThrowGroundUp")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 2f : -2f, -5f, 0);
+					opponent.getHit((player.facingRight) ? 2f : -2f, -5f, 1);
 					player.image = Resources.getImage("p1Idle");
+					opponent.invulnerableTimer = 260;
 				}
 				if(player.image == Resources.getImage("p1ThrowGroundRight")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 0);
+					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 1);
 					player.image = Resources.getImage("p1Idle");
+					opponent.invulnerableTimer = 260;
 				}
 				if(player.image == Resources.getImage("p1ThrowGroundDown")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 0);
+					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 1);
 					player.image = Resources.getImage("p1Idle");
+					opponent.invulnerableTimer = 260;
 				}
 				
 				
