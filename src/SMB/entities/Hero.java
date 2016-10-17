@@ -13,8 +13,8 @@ public class Hero extends Entity {
 	private float speed = 0.5f;
 	private int jumpsRemaining = 1;
 
-	private Animation currentAnimation, LGN, LGR, LGD, HGN, HGD, HGR,
-			GGAttempt, GGSuccess, TGR, TGU, TGD, WalkingA;
+	private Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
+			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, WalkingA;
 	private Input input;
 
 	@Override
@@ -38,6 +38,13 @@ public class Hero extends Entity {
 		LGD = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundDown"),
 				Resources.getImage("p1Idle") }, 50, false);
+		LAN = new Animation(new Image[] {
+				Resources.getImage("p1LightAirNeutral"),
+				Resources.getImage("p1IdleAir") }, 50, false);
+		LAR = new Animation(new Image[] {
+				Resources.getImage("p1LightAirRight"),
+				Resources.getImage("p1IdleAir") }, 50, false);
+		
 
 		HGN = new Animation(new Image[] {
 				Resources.getImage("p1HeavyGroundNeutral1"),
@@ -54,6 +61,20 @@ public class Hero extends Entity {
 				Resources.getImage("p1HeavyGroundRight2"),
 				Resources.getImage("p1Idle") }, new int[] { 200, 200, 100 },
 				false);
+		HAN = new Animation(new Image[] {
+				Resources.getImage("p1HeavyAirNeutral1"),
+				Resources.getImage("p1HeavyAirNeutral2"),
+				Resources.getImage("p1IdleAir") }, new int[] { 200, 200, 100 },
+				false);
+		HAD = new Animation(new Image[] {
+				Resources.getImage("p1HeavyAirDown")}, new int[] { 200 },
+				false);
+		HAU = new Animation(new Image[] {
+				Resources.getImage("p1HeavyAirUp1"),
+				Resources.getImage("p1HeavyAirUp2"),
+				Resources.getImage("p1IdleAir") }, new int[] { 200, 200, 100 },
+				false);
+		
 
 		TGR = new Animation(new Image[] {
 				Resources.getImage("p1ThrowGroundRight"),
@@ -64,11 +85,27 @@ public class Hero extends Entity {
 		TGD = new Animation(new Image[] {
 				Resources.getImage("p1ThrowGroundDown"),
 				Resources.getImage("p1Idle") }, 250, false);
+		TAR = new Animation(new Image[] {
+				Resources.getImage("p1ThrowAirRight"),
+				Resources.getImage("p1IdleAir") }, 250, false);
+		TAU = new Animation(new Image[] {
+				Resources.getImage("p1ThrowAirUp"),
+				Resources.getImage("p1IdleAir") }, 250, false);
+		TAD = new Animation(new Image[] {
+				Resources.getImage("p1ThrowAirDown"),
+				Resources.getImage("p1IdleAir") }, 250, false);
 		GGAttempt = new Animation(new Image[] {
 				Resources.getImage("p1GrabGround"),
-				Resources.getImage("p1Idle") }, 50, false);
+				Resources.getImage("p1Idle") }, 300, false);
 		GGSuccess = new Animation(
-				new Image[] { Resources.getImage("p1GrabGround") }, 50, false);
+				new Image[] { Resources.getImage("p1GrabGround") },
+				50, false);
+		GAAttempt = new Animation(new Image[] {
+				Resources.getImage("p1GrabAir"),
+				Resources.getImage("p1IdleAir") }, 300, false);
+		GASuccess = new Animation(
+				new Image[] { Resources.getImage("p1GrabAir") },
+				50, false);
 	}
 
 	@Override
@@ -78,6 +115,11 @@ public class Hero extends Entity {
 			image = currentAnimation.getCurrentFrame();
 			currentAnimation.update(delta);
 
+		}
+		if(image == Resources.getImage("p1HeavyAirNeutral2")){
+			xImageOffset = 13*Tile.SCALE/1.5f;
+		}else{
+			xImageOffset = 0;
 		}
 
 			
@@ -131,58 +173,112 @@ public class Hero extends Entity {
 				vPX = speed;
 				facingRight = true;
 			} else {
-				if ((isOnSolid() || isOnPSolid())) {
-					image = Resources.getImage("p1Idle"); 
-				}
+				
 				vPX = 0;
-				currentAnimation = null;
+				if(currentAnimation == WalkingA){
+					currentAnimation = null;
+					image = Resources.getImage("p1Idle");
+					
+				}
 			}
 
+			if(image == Resources.getImage("p1Idle")&&!(isOnSolid()||isOnPSolid())){
+				image = Resources.getImage("p1IdleAir");
+			}
+			if((image == Resources.getImage("p1IdleAir")||image == Resources.getImage("p1HeavyAirDown"))&&(isOnSolid()||isOnPSolid())){
+				image = Resources.getImage("p1Idle");
+				currentAnimation = null;
+			}
 			
 
-			if (input.isKeyPressed(Input.KEY_Z) && (isOnSolid() || isOnPSolid())) {
+			if (input.isKeyPressed(Input.KEY_Z) ) {
 				busyTimer = 50;
 				if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_LEFT)) {
-					currentAnimation = LGR;
-					currentAnimation.setLooping(false);
-					currentAnimation.restart();
-					if (facingRight)
-						vKX = 1.3f;
-					else
-						vKX = -1.3f;
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = LGR;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+						if (facingRight)
+							vKX = 1.3f;
+						else
+							vKX = -1.3f;
+					}else{
+						currentAnimation = LAR;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}
+					
 				} else if (input.isKeyDown(Input.KEY_DOWN)) {
-					currentAnimation = LGD;
-					currentAnimation.setLooping(false);
-					currentAnimation.restart();
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = LGD;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}else{
+						currentAnimation = LAR;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}
 				} else {
-					currentAnimation = LGN;
-					currentAnimation.setLooping(false);
-					currentAnimation.restart();
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = LGN;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}else{
+						currentAnimation = LAN;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}
 				}
-			} else if (input.isKeyPressed(Input.KEY_X) && (isOnSolid() || isOnPSolid())) {
+			} else if (input.isKeyPressed(Input.KEY_X)) {
 				busyTimer = 400;
 				if (input.isKeyDown(Input.KEY_RIGHT)
 						|| input.isKeyDown(Input.KEY_LEFT)) {
-					currentAnimation = HGR;
-					currentAnimation.setLooping(false);
-					currentAnimation.restart();
-					if (facingRight)
-						vKX = 2f;
-					else
-						vKX = -2f;
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = HGR;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+						if (facingRight)
+							vKX = 2f;
+						else
+							vKX = -2f;
+					}
 				} else if (input.isKeyDown(Input.KEY_DOWN)) {
-					currentAnimation = HGD;
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = HGD;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}else{
+						currentAnimation = HAD;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}
+				}else if (input.isKeyDown(Input.KEY_UP)&&!(isOnSolid() || isOnPSolid())) {
+					currentAnimation = HAU;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				} else {
-					currentAnimation = HGN;
+				}else {
+					if(isOnSolid() || isOnPSolid()){
+						currentAnimation = HGN;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}else{
+						currentAnimation = HAN;
+						currentAnimation.setLooping(false);
+						currentAnimation.restart();
+					}
+				}
+			} else if (input.isKeyPressed(Input.KEY_C) ) {
+				if(isOnSolid() || isOnPSolid()){
+					currentAnimation = GGAttempt;
+					currentAnimation.setLooping(false);
+					currentAnimation.restart();
+				}else{
+					currentAnimation = GAAttempt;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
-			} else if (input.isKeyPressed(Input.KEY_C) && (isOnSolid() || isOnPSolid())) {
-				currentAnimation = GGAttempt;
-				currentAnimation.setLooping(false);
-				currentAnimation.restart();
+				busyTimer = 300;
+				vPX = 0;
 
 			}
 		}else if (grabbing){

@@ -38,6 +38,20 @@ public class Resources {
 			images.put("p1ThrowGroundUp", loadImage("res/playerImages/NewPlayerTGU.png") );
 			images.put("p1Walking1", loadImage("res/playerImages/NewPlayerWalk1.png") );
 			images.put("p1Walking2", loadImage("res/playerImages/NewPlayerWalk2.png") );
+			
+			images.put("p1IdleAir", loadImage("res/playerImages/NewPlayerIdleAir.png") );
+			images.put("p1HeavyAirDown", loadImage("res/playerImages/NewPlayerHAAD.png") );
+			images.put("p1HeavyAirUp1", loadImage("res/playerImages/NewPlayerHAAU1.png") );
+			images.put("p1HeavyAirUp2", loadImage("res/playerImages/NewPlayerHAAU2.png") );
+			images.put("p1HeavyAirNeutral1", loadImage("res/playerImages/NewPlayerHAAN1.png") );
+			images.put("p1HeavyAirNeutral2", loadImage("res/playerImages/NewPlayerHAAN2.png") );
+			images.put("p1LightAirRight", loadImage("res/playerImages/NewPlayerLAALR.png") );
+			images.put("p1LightAirNeutral", loadImage("res/playerImages/NewPlayerLAAN.png") );
+			images.put("p1GrabAir", loadImage("res/playerImages/NewPlayerGrA.png") );
+			images.put("p1ThrowAirDown", loadImage("res/playerImages/NewPlayerTAD.png") );
+			images.put("p1ThrowAirRight", loadImage("res/playerImages/NewPlayerTALR.png") );
+			images.put("p1ThrowAirUp", loadImage("res/playerImages/NewPlayerTAU.png") );
+			
 			images.put("trainingDummy", loadImage("res/training.png") );
 			
 			sprites.put("tiles", loadSprite("res/tiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));

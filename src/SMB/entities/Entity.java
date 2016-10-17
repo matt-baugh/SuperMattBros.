@@ -24,6 +24,7 @@ public abstract class Entity extends Hitbox{
 	public boolean busy;
 	public int busyTimer;
 	public boolean walkingB = false;
+	public float xImageOffset = 0;
 	
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
@@ -39,12 +40,13 @@ public abstract class Entity extends Hitbox{
 	
 	public void render(GameContainer gc, Graphics g){
 		if (image != null){
-			image.getFlippedCopy(!facingRight, false ).draw((facingRight) ? x: x-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
+			image.getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
 		}
 	}
 	protected abstract void indivUpdate(GameContainer gc, int delta);
 	
 	public void update(GameContainer gc, int delta){
+		height = image.getHeight()*Tile.SCALE/1.5f;
 		if(busyTimer>0){
 			busy = true;
 			busyTimer-=delta;
