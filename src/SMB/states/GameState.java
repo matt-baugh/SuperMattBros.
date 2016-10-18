@@ -104,6 +104,15 @@ public class GameState extends BasicGameState {
 					opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
 					opponent.invulnerableTimer = 60;
 				}
+				if(player.image == Resources.getImage("p1LightAirNeutral")&&player.getLANHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 0.5f : -0.5f, -3, 5);
+					opponent.invulnerableTimer = 60;
+				}
+				if(player.image == Resources.getImage("p1LightAirRight")&&player.getLARHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 1.5f : -1.5f, 1.5f, 3);
+					opponent.invulnerableTimer = 60;
+				}
+				
 				
 				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&player.getHGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
@@ -117,6 +126,11 @@ public class GameState extends BasicGameState {
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
 					opponent.invulnerableTimer = 210;
 				}
+				if(player.image == Resources.getImage("p1HeavyAirDown")&&player.getHADHitBox().intersects(opponent)){
+					opponent.getHit(0, 3.5f, 8);
+					opponent.invulnerableTimer = 300;
+				}
+				
 				
 				if(player.image == Resources.getImage("p1GrabGround")&&player.getGGHitBox().intersects(opponent)){
 					player.grabbing = true;

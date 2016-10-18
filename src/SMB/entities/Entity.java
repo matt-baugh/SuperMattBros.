@@ -137,6 +137,15 @@ public abstract class Entity extends Hitbox{
 		if(facingRight) return new Hitbox(x+22*Tile.SCALE/1.5f, y+ 17*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-7*Tile.SCALE/1.5f, y+ 17*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);
 	}
+	public Hitbox getLANHitBox(){
+		if(facingRight) return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 4*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-3*Tile.SCALE/1.5f, y+ 4*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f);
+	}
+	public Hitbox getLARHitBox(){
+		if(facingRight) return new Hitbox(x+17*Tile.SCALE/1.5f, y+ 21*Tile.SCALE/1.5f, 10*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-6*Tile.SCALE/1.5f, y+ 21*Tile.SCALE/1.5f, 10*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f);
+	}
+	
 	public Hitbox getHGNHitBox(){
 		if(facingRight) return new Hitbox(x+17*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-1*Tile.SCALE/1.5f, y+ 30*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
@@ -149,7 +158,27 @@ public abstract class Entity extends Hitbox{
 		if(facingRight) return new Hitbox(x+24*Tile.SCALE/1.5f, y+ 31*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 31*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 	}
+	public Hitbox getHADHitBox(){
+		if(facingRight) return new Hitbox(x+2*Tile.SCALE/1.5f, y+ 29*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
+		else  return new Hitbox(x*Tile.SCALE/1.5f, y+ 29*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHAUHitBox(){
+		if(facingRight) return new Hitbox(x+17*Tile.SCALE/1.5f, y+ 1*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 17*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 1*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 17*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHAN1HitBox(){
+		return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 16*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHAN2HitBox(){
+		return new Hitbox(x-14*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 16*Tile.SCALE/1.5f);
+	}
+	
+	
 	public Hitbox getGGHitBox(){
+		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
+	}
+	public Hitbox getGAHitBox(){
 		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 	}
