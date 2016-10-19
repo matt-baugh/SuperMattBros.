@@ -28,6 +28,7 @@ public class Hero extends Entity {
 		width = 21 * Tile.SCALE / 1.5f;
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
+		color = Color.blue;
 		
 		
 		WalkingA = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
