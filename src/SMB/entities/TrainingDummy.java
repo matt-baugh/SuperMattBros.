@@ -1,5 +1,6 @@
 package SMB.entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 
 import SMB.main.Resources;
@@ -9,6 +10,7 @@ public class TrainingDummy extends Entity{
 
 	@Override
 	public void init() {
+		color = Color.white;
 		x = 4663;
 		y = 3138;
 		width = 21*Tile.SCALE/1.5f;
@@ -29,14 +31,7 @@ public class TrainingDummy extends Entity{
 			}
 		}
 		
-		if(testLeft()) x -= vTX *delta;
-		if(testRight()) x -= vTX *delta;
-		if(testUp()) {
-			y += Math.abs(vTY) *delta;
-			vTY = 0;
-			vPY = 0;
-		}
-		if(isWithin()) y -= (getEndY() % Tile.SIZE);
+		
 		
 	}
 

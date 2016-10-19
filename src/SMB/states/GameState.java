@@ -132,7 +132,7 @@ public class GameState extends BasicGameState {
 				}
 				
 				
-				if(player.image == Resources.getImage("p1GrabGround")&&player.getGGHitBox().intersects(opponent)){
+				if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&player.getGrabHitBox().intersects(opponent)){
 					player.grabbing = true;
 					opponent.grabbed = true;
 					if(player.facingRight){
@@ -142,25 +142,32 @@ public class GameState extends BasicGameState {
 					}
 					opponent.y = player.y - 20* Tile.SCALE / 1.5f;
 				}
-				if(player.image == Resources.getImage("p1ThrowGroundUp")){
+				
+				
+				if(player.image == Resources.getImage("p1ThrowGroundUp")||player.image == Resources.getImage("p1ThrowAirUp")){
 					player.grabbing = false;
 					opponent.grabbed = false;
 					opponent.getHit((player.facingRight) ? 2f : -2f, -5f, 1);
-					player.image = Resources.getImage("p1Idle");
+					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
+					else player.image = Resources.getImage("p1IdleAir");
+						
+				
 					opponent.invulnerableTimer = 260;
 				}
-				if(player.image == Resources.getImage("p1ThrowGroundRight")){
+				if(player.image == Resources.getImage("p1ThrowGroundRight")||player.image == Resources.getImage("p1ThrowAirRight")){
 					player.grabbing = false;
 					opponent.grabbed = false;
 					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 1);
-					player.image = Resources.getImage("p1Idle");
+					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
+					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = 260;
 				}
-				if(player.image == Resources.getImage("p1ThrowGroundDown")){
+				if(player.image == Resources.getImage("p1ThrowGroundDown")||player.image == Resources.getImage("p1ThrowAirDown")){
 					player.grabbing = false;
 					opponent.grabbed = false;
 					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 1);
-					player.image = Resources.getImage("p1Idle");
+					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
+					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = 260;
 				}
 				

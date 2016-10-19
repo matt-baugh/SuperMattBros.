@@ -1,6 +1,9 @@
 package SMB.entities;
 
+
+
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -25,7 +28,7 @@ public class Hero extends Entity {
 		width = 21 * Tile.SCALE / 1.5f;
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
-		System.out.println("setting image");
+		
 		
 		WalkingA = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
 
@@ -135,29 +138,24 @@ public class Hero extends Entity {
 		}
 		if (isOnSolid()) {
 			jumpsRemaining = 1;
+			canJump = true;
 		}
 		if (input.isKeyPressed(Input.KEY_K)) {
 			System.out.println("(" + x + "," + y + ")");
 		}
 
-		if (testLeft())
-			x -= vTX * delta;
-		if (testRight())
-			x -= vTX * delta;
-		if (testUp()) {
-			y += Math.abs(vTY) * delta;
-			vTY = 0;
-			vPY = 0;
-		}
 		if (!grabbing&&!busy) {
-			if (input.isKeyPressed(Input.KEY_UP)) {
-				if (isOnSolid() || isOnPSolid()) {
+			if (input.isKeyDown(Input.KEY_UP)) {
+				if ((isOnSolid() || isOnPSolid())&&canJump) {
 					vPY = -2f;
-				} else if (jumpsRemaining == 1) {
+				} else if (jumpsRemaining == 1&&canJump) {
 					vPY = -2f;
 					jumpsRemaining = 0;
 				}
+				canJump = false;
 				System.out.println(jumpsRemaining);
+			}else{
+				canJump = true;
 			}
 
 			if (input.isKeyDown(Input.KEY_LEFT)) {
@@ -288,31 +286,32 @@ public class Hero extends Entity {
 			if (input.isKeyDown(Input.KEY_RIGHT)) {
 				busyTimer = 250;
 				facingRight = true;
-				currentAnimation = TGR;
+				if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
+				else  currentAnimation = TAR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(Input.KEY_LEFT)){
 				busyTimer = 250;
 				facingRight = false;
-				currentAnimation = TGR;
+				if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
+				else  currentAnimation = TAR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(Input.KEY_UP)){	
 				busyTimer = 250;
-				currentAnimation = TGU;
+				if(isOnSolid()||isOnPSolid()) currentAnimation = TGU;
+				else  currentAnimation = TAU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 				
 			} else if (input.isKeyDown(Input.KEY_DOWN)) {
 				busyTimer = 250;
-				currentAnimation = TGD;
+				if(isOnSolid()||isOnPSolid()) currentAnimation = TGD;
+				else  currentAnimation = TAD;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}
 		}
-
-		if (isWithin())
-			y -= (getEndY() % Tile.SIZE);
 	}
 
 }

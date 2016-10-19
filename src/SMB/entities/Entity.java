@@ -17,7 +17,7 @@ public abstract class Entity extends Hitbox{
 	private final int TERMINAL_X = 5;
 	private final int TERMINAL_Y = 5;
 	private float AmountDamaged = 0;
-	public boolean facingRight = true, grabbed = false, grabbing = false;
+	public boolean facingRight = true, grabbed = false, grabbing = false, canJump = true;
 	public String label;
 	public boolean invulnerable;
 	public int invulnerableTimer;
@@ -92,7 +92,17 @@ public abstract class Entity extends Hitbox{
 		vKX *= 0.7;
 		vKY *= 0.7;
 		
-		
+
+		if (testLeft())
+			x -= (vTX - 0.01f) * delta;
+		if (testRight())
+			x -= (vTX + 0.01f) * delta;
+		if (testUp()) {
+			y += (Tile.SIZE - (y % Tile.SIZE));
+			vTY = 0;
+			vPY = 0;
+		}
+		if (isWithin()) y -= (getEndY() % Tile.SIZE);
 		indivUpdate(gc, delta);
 	}
 	
@@ -174,11 +184,7 @@ public abstract class Entity extends Hitbox{
 	}
 	
 	
-	public Hitbox getGGHitBox(){
-		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
-		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
-	}
-	public Hitbox getGAHitBox(){
+	public Hitbox getGrabHitBox(){
 		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 	}
