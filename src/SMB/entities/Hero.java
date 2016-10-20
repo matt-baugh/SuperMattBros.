@@ -20,6 +20,12 @@ public class Hero extends Entity {
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, WalkingA;
 	private Input input;
 
+	public Hero(int playerNumber) {
+		if(playerNumber == 1){
+			color = Color.blue;
+		}
+	}
+
 	@Override
 	public void init() {
 		label = "Player1";
@@ -28,7 +34,7 @@ public class Hero extends Entity {
 		width = 21 * Tile.SCALE / 1.5f;
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
-		color = Color.blue;
+		
 		
 		
 		WalkingA = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);

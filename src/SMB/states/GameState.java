@@ -26,7 +26,7 @@ public class GameState extends BasicGameState {
 			throws SlickException {
 		
 		entities = new ArrayList<Entity>();
-		entities.add(new Hero());
+		entities.add(new Hero(1));
 		entities.add(new TrainingDummy());
 		 
 		
@@ -129,6 +129,20 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1HeavyAirDown")&&player.getHADHitBox().intersects(opponent)){
 					opponent.getHit(0, 3.5f, 8);
 					opponent.invulnerableTimer = 300;
+					System.out.println("groundpound hit");
+				}
+				if(player.image == Resources.getImage("p1HeavyAirUp2")&&player.getHAUHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
+					opponent.invulnerableTimer = 210;
+				}
+				if(player.image == Resources.getImage("p1HeavyAirNeutral2")){
+					if(player.getHAN1HitBox().intersects(opponent)){
+						opponent.getHit( 2f, 0, 11);
+						opponent.invulnerableTimer = 210;
+					}else if(player.getHAN2HitBox().intersects(opponent)){
+						opponent.getHit( -2f, 0, 11);
+						opponent.invulnerableTimer = 210;
+					}
 				}
 				
 				
