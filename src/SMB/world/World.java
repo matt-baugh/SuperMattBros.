@@ -26,7 +26,7 @@ public class World {
 		int xStart = (int)(xRender/Tile.SIZE) - offset;
 		int yStart= (int)(yRender/Tile.SIZE) - offset;
 		int xEnd = Window.WIDTH/Tile.SIZE + xStart + (offset*2);
-		int yEnd = Window.WIDTH/Tile.SIZE + yStart + (offset*2);
+		int yEnd = Window.HEIGHT/Tile.SIZE + yStart + (offset*2);
 		
 		for (int x=xStart;x<xEnd;x++){
 			for (int y=yStart;y<yEnd;y++){

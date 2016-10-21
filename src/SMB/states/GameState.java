@@ -27,6 +27,7 @@ public class GameState extends BasicGameState {
 		
 		entities = new ArrayList<Entity>();
 		entities.add(new Hero(1));
+		entities.add(new Hero(2));
 		entities.add(new TrainingDummy());
 		 
 		
@@ -63,21 +64,7 @@ public class GameState extends BasicGameState {
 			if(entities.get(i).getEndX()>xRender + Window.WIDTH -80)xRender += 0.3f*delta;
 			if(entities.get(i).getEndY()>yRender + Window.HEIGHT- 60)yRender += 0.3f*delta;
 			
-			
-			
-			Input input = gc.getInput();
-			if (input.isKeyDown(Input.KEY_W)){
-				yRender-= 0.3*delta;
-			}else if (input.isKeyDown(Input.KEY_S)){
-				yRender+= 0.3*delta;
-			}
-			
-			if (input.isKeyDown(Input.KEY_A)){
-				xRender-= 0.3*delta;
-			}else if (input.isKeyDown(Input.KEY_D)){
-				xRender+= 0.3*delta;
-			}
-			if(entities.get(i).label.equals("Player1") ){
+			if(!entities.get(i).label.equals("Training") ){
 				combat(entities.get(i));
 			}
 			
@@ -131,6 +118,7 @@ public class GameState extends BasicGameState {
 					opponent.invulnerableTimer = 300;
 					System.out.println("groundpound hit");
 				}
+				
 				if(player.image == Resources.getImage("p1HeavyAirUp2")&&player.getHAUHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
 					opponent.invulnerableTimer = 210;

@@ -21,9 +21,7 @@ public class TrainingDummy extends Entity{
 
 	@Override
 	protected void indivUpdate(GameContainer gc, int delta) {
-		if(invulnerable){
-			System.out.println(invulnerableTimer);
-		}
+		
 		if(isOnPSolid()){
 			if(vPY>=0){
 			vPY = 0;

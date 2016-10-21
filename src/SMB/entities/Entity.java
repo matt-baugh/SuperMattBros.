@@ -14,8 +14,8 @@ public abstract class Entity extends Hitbox{
 	
 	public Image image;
 	public Color color;
-	private final int TERMINAL_X = 5;
-	private final int TERMINAL_Y = 5;
+
+	private final int TERMINAL_V = 3;
 	private float AmountDamaged = 0;
 	public boolean facingRight = true, grabbed = false, grabbing = false, canJump = true;
 	public String label;
@@ -46,6 +46,7 @@ public abstract class Entity extends Hitbox{
 	protected abstract void indivUpdate(GameContainer gc, int delta);
 	
 	public void update(GameContainer gc, int delta){
+		
 		height = image.getHeight()*Tile.SCALE/1.5f;
 		if(busyTimer>0){
 			busy = true;
@@ -66,15 +67,23 @@ public abstract class Entity extends Hitbox{
 			vTX = 0;
 			vTY = 0;
 		}
-		if(vTY<TERMINAL_Y){
-			y += vTY*delta;
+		
+		if(vTY*delta>TERMINAL_V*delta){
+			y+=TERMINAL_V*delta;
+		}else if(vTY*delta<-TERMINAL_V*delta){
+			y -=TERMINAL_V*delta;
 		}else{
-			y+=TERMINAL_Y*delta;
+			y+=vTY*delta;
 		}
-		if(vTX<TERMINAL_X){
-			x += vTX*delta;
+		
+		if(vTX*delta>TERMINAL_V*delta){	
+			System.out.println("+Terminal X reached");
+			x+=TERMINAL_V*delta;
+		}else if(vTX*delta<-TERMINAL_V*delta){
+			x -=TERMINAL_V*delta;
+			System.out.println("-Terminal X reached");
 		}else{
-			x+=TERMINAL_X*delta;
+			x+=vTX*delta;
 		}
 		
 		if(isOnSolid()){
@@ -113,7 +122,7 @@ public abstract class Entity extends Hitbox{
 		return (World.hitTest(getEndX(), getCenterY()));
 	}
 	public boolean testUp(){
-		return (World.hitTest(getCenterX(), y));
+		return (World.hitTest(getCenterX(), y)||World.hitTest(x, y)||World.hitTest(getEndX(), y));
 	}
 	public boolean testDown(){
 		return (World.hitTest(getCenterX(), getEndY()));
@@ -169,8 +178,8 @@ public abstract class Entity extends Hitbox{
 		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 31*Tile.SCALE/1.5f, 5*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f);
 	}
 	public Hitbox getHADHitBox(){
-		if(facingRight) return new Hitbox(x+2*Tile.SCALE/1.5f, y+ 29*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
-		else  return new Hitbox(x*Tile.SCALE/1.5f, y+ 29*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
+		if(facingRight) return new Hitbox(x+2*Tile.SCALE/1.5f, y+ 14*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 24*Tile.SCALE/1.5f);
+		else  return new Hitbox(x, y+ 14*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f, 24*Tile.SCALE/1.5f);
 	}
 	public Hitbox getHAUHitBox(){
 		if(facingRight) return new Hitbox(x+17*Tile.SCALE/1.5f, y+ 1*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 17*Tile.SCALE/1.5f);
