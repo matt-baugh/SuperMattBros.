@@ -145,7 +145,7 @@ public class GameState extends BasicGameState {
 					opponent.y = player.y - 20* Tile.SCALE / 1.5f;
 				}
 				
-				
+				if(opponent.grabbed){
 				if(player.image == Resources.getImage("p1ThrowGroundUp")||player.image == Resources.getImage("p1ThrowAirUp")){
 					player.grabbing = false;
 					opponent.grabbed = false;
@@ -172,7 +172,7 @@ public class GameState extends BasicGameState {
 					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = 260;
 				}
-				
+				}
 				
 				
 				

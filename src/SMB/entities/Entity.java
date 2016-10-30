@@ -136,10 +136,10 @@ public abstract class Entity extends Hitbox{
 	public boolean isOnPSolid(){
 		return (World.hitTestPSolid(x, getEndY()+1)||World.hitTestPSolid(getEndX(), getEndY()+1))||World.hitTestPSolid(getCenterX(), getEndY()+1);
 	}
-	public void getHit(float xF, float xY, int damage){
+	public void getHit(float xF, float yF, int damage){
 		AmountDamaged += damage;
-		vKX+=(xF*(AmountDamaged/50));
-		vKY+=(xY*(AmountDamaged/50));
+		vKX+=((xF/2)+(xF/2)*(AmountDamaged/50));
+		vKY+=((yF/2)+(yF/2)*(AmountDamaged/50));
 		System.out.println("vKX: "+vKX);
 		System.out.println("vKY: "+vKY);
 		System.out.println("Damaged: "+ AmountDamaged);
