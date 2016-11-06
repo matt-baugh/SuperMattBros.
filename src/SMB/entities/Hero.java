@@ -20,7 +20,8 @@ public class Hero extends Entity {
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, WalkingA;
 	private Input input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
-
+	public int LATime, HATime, GTime;
+	
 	public Hero(int playerNumber) {
 		if(playerNumber == 1){
 			color = Color.red;
@@ -57,84 +58,86 @@ public class Hero extends Entity {
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
 		
-		
+		LATime = 100;
+		HATime = 400;
+		GTime = 600;
 		
 		WalkingA = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
 
 		LGN = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundNeutral"),
-				Resources.getImage("p1Idle") }, 50, false);
+				Resources.getImage("p1Idle") }, LATime, false);
 		LGR = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundRight"),
-				Resources.getImage("p1Idle") }, 50, false);
+				Resources.getImage("p1Idle") }, LATime, false);
 		LGD = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundDown"),
-				Resources.getImage("p1Idle") }, 50, false);
+				Resources.getImage("p1Idle") }, LATime, false);
 		LAN = new Animation(new Image[] {
 				Resources.getImage("p1LightAirNeutral"),
-				Resources.getImage("p1IdleAir") }, 50, false);
+				Resources.getImage("p1IdleAir") }, LATime, false);
 		LAR = new Animation(new Image[] {
 				Resources.getImage("p1LightAirRight"),
-				Resources.getImage("p1IdleAir") }, 50, false);
+				Resources.getImage("p1IdleAir") }, LATime, false);
 		
 
 		HGN = new Animation(new Image[] {
 				Resources.getImage("p1HeavyGroundNeutral1"),
 				Resources.getImage("p1HeavyGroundNeutral2"),
-				Resources.getImage("p1Idle") }, new int[] { 200, 200, 100 },
+				Resources.getImage("p1Idle") }, new int[] { HATime, HATime, 100 },
 				false);
 		HGD = new Animation(new Image[] {
 				Resources.getImage("p1HeavyGroundDown1"),
 				Resources.getImage("p1HeavyGroundDown2"),
-				Resources.getImage("p1Idle") }, new int[] { 200, 200, 100 },
+				Resources.getImage("p1Idle") }, new int[] { HATime, HATime, 100 },
 				false);
 		HGR = new Animation(new Image[] {
 				Resources.getImage("p1HeavyGroundRight1"),
 				Resources.getImage("p1HeavyGroundRight2"),
-				Resources.getImage("p1Idle") }, new int[] { 200, 200, 100 },
+				Resources.getImage("p1Idle") }, new int[] { HATime, HATime, 100 },
 				false);
 		HAN = new Animation(new Image[] {
 				Resources.getImage("p1HeavyAirNeutral1"),
 				Resources.getImage("p1HeavyAirNeutral2"),
-				Resources.getImage("p1IdleAir") }, new int[] { 200, 200, 100 },
+				Resources.getImage("p1IdleAir") }, new int[] { HATime, HATime, 100 },
 				false);
 		HAD = new Animation(new Image[] {
-				Resources.getImage("p1HeavyAirDown")}, new int[] { 200 },
+				Resources.getImage("p1HeavyAirDown")}, new int[] { HATime },
 				false);
 		HAU = new Animation(new Image[] {
 				Resources.getImage("p1HeavyAirUp1"),
 				Resources.getImage("p1HeavyAirUp2"),
-				Resources.getImage("p1IdleAir") }, new int[] { 200, 200, 100 },
+				Resources.getImage("p1IdleAir") }, new int[] { HATime, HATime, 100 },
 				false);
 		
 
 		TGR = new Animation(new Image[] {
 				Resources.getImage("p1ThrowGroundRight"),
-				Resources.getImage("p1Idle") }, 250, false);
+				Resources.getImage("p1Idle") }, GTime, false);
 		TGU = new Animation(new Image[] {
 				Resources.getImage("p1ThrowGroundUp"),
-				Resources.getImage("p1Idle") }, 250, false);
+				Resources.getImage("p1Idle") }, GTime, false);
 		TGD = new Animation(new Image[] {
 				Resources.getImage("p1ThrowGroundDown"),
-				Resources.getImage("p1Idle") }, 250, false);
+				Resources.getImage("p1Idle") }, GTime, false);
 		TAR = new Animation(new Image[] {
 				Resources.getImage("p1ThrowAirRight"),
-				Resources.getImage("p1IdleAir") }, 250, false);
+				Resources.getImage("p1IdleAir") }, GTime, false);
 		TAU = new Animation(new Image[] {
 				Resources.getImage("p1ThrowAirUp"),
-				Resources.getImage("p1IdleAir") }, 250, false);
+				Resources.getImage("p1IdleAir") }, GTime, false);
 		TAD = new Animation(new Image[] {
 				Resources.getImage("p1ThrowAirDown"),
-				Resources.getImage("p1IdleAir") }, 250, false);
+				Resources.getImage("p1IdleAir") }, GTime, false);
 		GGAttempt = new Animation(new Image[] {
 				Resources.getImage("p1GrabGround"),
-				Resources.getImage("p1Idle") }, 300, false);
+				Resources.getImage("p1Idle") }, GTime, false);
 		GGSuccess = new Animation(
 				new Image[] { Resources.getImage("p1GrabGround") },
 				50, false);
 		GAAttempt = new Animation(new Image[] {
 				Resources.getImage("p1GrabAir"),
-				Resources.getImage("p1IdleAir") }, 300, false);
+				Resources.getImage("p1IdleAir") }, GTime, false);
 		GASuccess = new Animation(
 				new Image[] { Resources.getImage("p1GrabAir") },
 				50, false);
@@ -215,16 +218,16 @@ public class Hero extends Entity {
 			
 
 			if (input.isKeyPressed(LA_KEY) ) {
-				busyTimer = 50;
+				busyTimer = LATime;
 				if (input.isKeyDown(RIGHT_KEY) || input.isKeyDown(LEFT_KEY)) {
 					if(isOnSolid() || isOnPSolid()){
 						currentAnimation = LGR;
 						currentAnimation.setLooping(false);
 						currentAnimation.restart();
 						if (facingRight)
-							vKX = 1.3f;
+							vKX = 0.5f;
 						else
-							vKX = -1.3f;
+							vKX = -0.5f;
 					}else{
 						currentAnimation = LAR;
 						currentAnimation.setLooping(false);
@@ -253,7 +256,7 @@ public class Hero extends Entity {
 					}
 				}
 			} else if (input.isKeyPressed(HA_KEY)) {
-				busyTimer = 400;
+				busyTimer = HATime*2;
 				if (input.isKeyDown(RIGHT_KEY)
 						|| input.isKeyDown(LEFT_KEY)) {
 					if(isOnSolid() || isOnPSolid()){
@@ -303,7 +306,7 @@ public class Hero extends Entity {
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
-				busyTimer = 300;
+				busyTimer = GTime;
 				vPX = 0;
 
 			}
@@ -312,28 +315,28 @@ public class Hero extends Entity {
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
 			if (input.isKeyDown(RIGHT_KEY)) {
-				busyTimer = 250;
+				busyTimer = GTime;
 				facingRight = true;
 				if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
 				else  currentAnimation = TAR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(LEFT_KEY)){
-				busyTimer = 250;
+				busyTimer = GTime;
 				facingRight = false;
 				if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
 				else  currentAnimation = TAR;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else if(input.isKeyDown(UP_KEY)){	
-				busyTimer = 250;
+				busyTimer = GTime;
 				if(isOnSolid()||isOnPSolid()) currentAnimation = TGU;
 				else  currentAnimation = TAU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 				
 			} else if (input.isKeyDown(DOWN_KEY)) {
-				busyTimer = 250;
+				busyTimer = GTime;
 				if(isOnSolid()||isOnPSolid()) currentAnimation = TGD;
 				else  currentAnimation = TAD;
 				currentAnimation.setLooping(false);

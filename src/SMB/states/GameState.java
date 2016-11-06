@@ -81,55 +81,55 @@ public class GameState extends BasicGameState {
 				
 				if(player.image == Resources.getImage("p1LightGroundNeutral")&&player.getLGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
-					opponent.invulnerableTimer = 60;
+					opponent.invulnerableTimer = ((Hero) (player)).LATime;
 				}
 				if(player.image == Resources.getImage("p1LightGroundDown")&&player.getLGDHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
-					opponent.invulnerableTimer = 60;
+					opponent.invulnerableTimer = ((Hero) (player)).LATime;
 				}
 				if(player.image == Resources.getImage("p1LightGroundRight")&&player.getLGRHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
-					opponent.invulnerableTimer = 60;
+					opponent.invulnerableTimer = ((Hero) (player)).LATime;
 				}
 				if(player.image == Resources.getImage("p1LightAirNeutral")&&player.getLANHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 0.5f : -0.5f, -3, 5);
-					opponent.invulnerableTimer = 60;
+					opponent.invulnerableTimer = ((Hero) (player)).LATime;
 				}
 				if(player.image == Resources.getImage("p1LightAirRight")&&player.getLARHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.5f : -1.5f, 1.5f, 3);
-					opponent.invulnerableTimer = 60;
+					opponent.invulnerableTimer = ((Hero) (player)).LATime;
 				}
 				
 				
 				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&player.getHGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
-					opponent.invulnerableTimer = 210;
+					opponent.invulnerableTimer = ((Hero) (player)).HATime;
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundDown2")&&player.getHGDHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
-					opponent.invulnerableTimer = 210;
+					opponent.invulnerableTimer = ((Hero) (player)).HATime;
 				}
 				if(player.image == Resources.getImage("p1HeavyGroundRight2")&&player.getHGRHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
-					opponent.invulnerableTimer = 210;
+					opponent.invulnerableTimer = ((Hero) (player)).HATime;
 				}
 				if(player.image == Resources.getImage("p1HeavyAirDown")&&player.getHADHitBox().intersects(opponent)){
 					opponent.getHit(0, 3.5f, 8);
-					opponent.invulnerableTimer = 300;
+					opponent.invulnerableTimer = ((Hero) (player)).HATime + 100;
 					System.out.println("groundpound hit");
 				}
 				
 				if(player.image == Resources.getImage("p1HeavyAirUp2")&&player.getHAUHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
-					opponent.invulnerableTimer = 210;
+					opponent.invulnerableTimer = ((Hero) (player)).HATime;
 				}
 				if(player.image == Resources.getImage("p1HeavyAirNeutral2")){
 					if(player.getHAN1HitBox().intersects(opponent)){
 						opponent.getHit( 2f, 0, 11);
-						opponent.invulnerableTimer = 210;
+						opponent.invulnerableTimer = ((Hero) (player)).HATime;
 					}else if(player.getHAN2HitBox().intersects(opponent)){
 						opponent.getHit( -2f, 0, 11);
-						opponent.invulnerableTimer = 210;
+						opponent.invulnerableTimer = ((Hero) (player)).HATime;
 					}
 				}
 				
@@ -154,7 +154,7 @@ public class GameState extends BasicGameState {
 					else player.image = Resources.getImage("p1IdleAir");
 						
 				
-					opponent.invulnerableTimer = 260;
+					opponent.invulnerableTimer = ((Hero) (player)).GTime;
 				}
 				if(player.image == Resources.getImage("p1ThrowGroundRight")||player.image == Resources.getImage("p1ThrowAirRight")){
 					player.grabbing = false;
@@ -162,7 +162,7 @@ public class GameState extends BasicGameState {
 					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 1);
 					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
 					else player.image = player.image = Resources.getImage("p1IdleAir");
-					opponent.invulnerableTimer = 260;
+					opponent.invulnerableTimer = ((Hero) (player)).GTime;
 				}
 				if(player.image == Resources.getImage("p1ThrowGroundDown")||player.image == Resources.getImage("p1ThrowAirDown")){
 					player.grabbing = false;
@@ -170,7 +170,7 @@ public class GameState extends BasicGameState {
 					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 1);
 					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
 					else player.image = player.image = Resources.getImage("p1IdleAir");
-					opponent.invulnerableTimer = 260;
+					opponent.invulnerableTimer = ((Hero) (player)).GTime;
 				}
 				}
 				
