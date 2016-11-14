@@ -12,7 +12,7 @@ import SMB.main.Resources;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
-public class Hero extends Entity {
+public class Player extends Entity {
 
 	private float speed = 0.5f;
 	private int jumpsRemaining = 1;
@@ -23,7 +23,7 @@ public class Hero extends Entity {
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
 	
-	public Hero(int playerNumber) {
+	public Player(int playerNumber) {
 		if(playerNumber == 1){
 			color = Color.red;
 			UP_KEY = Input.KEY_UP;
