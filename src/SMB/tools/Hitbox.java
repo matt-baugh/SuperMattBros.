@@ -30,9 +30,7 @@ public class Hitbox {
 	public float getCenterY(){
 		return (y+getHalfHeight());
 	}
-	public boolean hitTest(Hitbox b){
-		return(b.getEndX()>=x && b.getEndY()>=y && getEndX()>= b.x && getEndY() >= b.y);
-	}
+	
 	public boolean intersects(Hitbox other){
 		if(this.x > other.x + other.width) return false;
 		if(this.x + this.width < other.x ) return false;
