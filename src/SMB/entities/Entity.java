@@ -26,7 +26,6 @@ public abstract class Entity extends Hitbox{
 	public int invulnerableTimer;
 	public boolean busy;
 	public int busyTimer;
-	public boolean walkingB = false;
 	public float xImageOffset = 0;
 	
 	
