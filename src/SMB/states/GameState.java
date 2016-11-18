@@ -29,6 +29,7 @@ public class GameState extends BasicGameState {
 		entities.add(new Player(1));
 		entities.add(new Player(2));
 		entities.add(new TrainingDummy());
+		entities.add(new Sword());
 		 
 		
 	}

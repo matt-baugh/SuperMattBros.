@@ -22,6 +22,8 @@ public class Player extends Entity {
 	private Input input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
+	public boolean hasSword = false;
+	public int swordTimer = 0;
 	
 	public Player(int playerNumber) {
 		if(playerNumber == 1){
@@ -46,7 +48,7 @@ public class Player extends Entity {
 			LA_KEY = Input.KEY_X;
 			HA_KEY = Input.KEY_C;
 			G_KEY = Input.KEY_V;
-			label = "Player1";
+			label = "Player2";
 			x = 4234;
 			y = 3138;
 			}
@@ -344,6 +346,11 @@ public class Player extends Entity {
 				currentAnimation.restart();
 			}
 		}
+	}
+	
+	public void pickUpSword(){
+		hasSword = true;
+		swordTimer = 3000;
 	}
 	
 	public Hitbox getLGNHitBox(){

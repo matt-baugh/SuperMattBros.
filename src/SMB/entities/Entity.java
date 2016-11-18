@@ -50,6 +50,7 @@ public abstract class Entity extends Hitbox{
 	public void update(GameContainer gc, int delta){
 		
 		height = image.getHeight()*Tile.SCALE/1.5f;
+		
 		if(busyTimer>0){
 			busy = true;
 			busyTimer-=delta;

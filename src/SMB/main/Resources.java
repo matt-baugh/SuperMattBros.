@@ -52,11 +52,11 @@ public class Resources {
 			images.put("p1ThrowAirRight", loadImage("res/playerImages/NewPlayerTALR.png") );
 			images.put("p1ThrowAirUp", loadImage("res/playerImages/NewPlayerTAU.png") );
 			
-			images.put("p1IdleSword", loadImage("res/NewPlayerIdleSword.png") );
-			images.put("p1IdleAirSword", loadImage("res/NewPlayerIdleSwordAir.png") );
-			images.put("p1LightGroundSword", loadImage("res/NewPlayerLAGSword.png") );
-			images.put("p1WalkingSword1", loadImage("res/NewPlayerWalk1Sword.png") );
-			images.put("p1WalkingSword2", loadImage("res/NewPlayerWalk2Sword.png") );
+			images.put("p1IdleSword", loadImage("res/playerImages/NewPlayerIdleSword.png") );
+			images.put("p1IdleAirSword", loadImage("res/playerImages/NewPlayerIdleAirSword.png") );
+			images.put("p1LightGroundSword", loadImage("res/playerImages/NewPlayerLAGSword.png") );
+			images.put("p1WalkingSword1", loadImage("res/playerImages/NewPlayerWalk1Sword.png") );
+			images.put("p1WalkingSword2", loadImage("res/playerImages/NewPlayerWalk2Sword.png") );
 			
 			
 			images.put("trainingDummy", loadImage("res/training.png") );
