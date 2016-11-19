@@ -109,14 +109,18 @@ public abstract class Entity extends Hitbox{
 			x -= (vTX - 0.01f) * delta;
 		if (testRight())
 			x -= (vTX + 0.01f) * delta;
-		if (testUp()) {
+		if (testUp()){
 			y += (Tile.SIZE - (y % Tile.SIZE));
 			vTY = 0;
 			vPY = 0;
 		}
-		if (isWithin()) y -= (getEndY() % Tile.SIZE);
+		while(isWithin()){ 
+			y --;
+		}
 		indivUpdate(gc, delta);
 	}
+	
+	
 	
 	public boolean testLeft(){
 		return (World.hitTest(x, getCenterY()));

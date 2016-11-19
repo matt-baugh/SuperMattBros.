@@ -38,7 +38,7 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_COMMA;
 			G_KEY = Input.KEY_PERIOD;
 			label = "Player1";
-			x = 4234;
+			x = 2745;
 			y = 3138;
 		}
 		if(playerNumber ==2){
@@ -52,7 +52,7 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_C;
 			G_KEY = Input.KEY_V;
 			label = "Player2";
-			x = 4234;
+			x = 3453;
 			y = 3138;
 			}
 	}
@@ -201,7 +201,13 @@ public class Player extends Entity {
 	}
 	
 	public void normalInput(){
-
+		
+		if(input.isKeyDown(input.KEY_K)&&label.equals("Player1")){
+			System.out.println("x: "+ x+"; y: "+y);
+			
+		}
+		
+		
 		if (input.isKeyDown(UP_KEY)&&!input.isKeyDown(HA_KEY)) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {
 				vPY = -2f;

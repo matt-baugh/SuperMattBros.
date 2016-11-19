@@ -46,7 +46,9 @@ public class Engine extends StateBasedGame{
 		new Resources();
 		
 		try {
-			World.load("res/maps/testMap2.json");
+			World.load("res/maps/RealMap.json");
+			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

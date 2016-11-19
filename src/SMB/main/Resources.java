@@ -63,7 +63,7 @@ public class Resources {
 			
 			images.put("sword", loadImage("res/Sword.png") );
 			
-			sprites.put("tiles", loadSprite("res/tiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
+			sprites.put("tiles", loadSprite("res/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

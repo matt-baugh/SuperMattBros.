@@ -19,7 +19,7 @@ import SMB.world.World;
 public class GameState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
-	private int xRender = 4000;
+	private int xRender = 2400;
 	private int yRender = 2600;
 
 	public void init(GameContainer gc, StateBasedGame s)

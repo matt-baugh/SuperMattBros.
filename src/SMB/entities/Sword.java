@@ -10,8 +10,8 @@ public class Sword extends Entity{
 	@Override
 	public void init() {
 		image = Resources.getImage("sword");
-		x = 4663;
-		y = 2838;
+		x = 3077;
+		y = 2882;
 		label = "Sword";
 		width = 9 * Tile.SCALE / 1.5f;
 		height = 24 * Tile.SCALE / 1.5f;

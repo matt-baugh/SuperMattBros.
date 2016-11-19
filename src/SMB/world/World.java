@@ -30,12 +30,12 @@ public class World {
 		
 		for (int x=xStart;x<xEnd;x++){
 			for (int y=yStart;y<yEnd;y++){
+				if(background[x][y]!=null){
+					background[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
+				}	
 				if(solids[x][y]!=null){
 					solids[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
-				}else{
-					background[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
-				}
-				if(partialSolids[x][y]!=null){
+				}else if(partialSolids[x][y]!=null){
 					partialSolids[x][y].draw(x*Tile.SIZE, y*Tile.SIZE, Tile.SIZE, Tile.SIZE);
 				}
 			}
@@ -55,15 +55,16 @@ public class World {
 			System.out.println(type);
 			WIDTH = ((Long) layer.get("width")).intValue();
 			HEIGHT = ((Long) layer.get("height")).intValue();
+			
 			if(type.equals("solids")){
 				
 				solids =  parse((JSONArray)layer.get("data"));
-				
 			}else if(type.equals("background")){
-				background = parse((JSONArray)layer.get("data"));
+				background = parse((JSONArray)layer.get("data"));	
 			}else if(type.equals("partialSolids")){
 				partialSolids  = parse((JSONArray)layer.get("data"));
 			}
+			
 		}
 	}
 	
@@ -86,11 +87,11 @@ public class World {
 		index -=1;
 		
 		SpriteSheet sheet = (SpriteSheet) Resources.getSprite("tiles");
-		int vertical = sheet.getVerticalCount();
 		int horizontal = sheet.getHorizontalCount();
 		
-		int y = (index/vertical);
+		int y = (index/horizontal);
 		int x = (index%horizontal);
+		
 		
 		return sheet.getSubImage(x,y);
 		
