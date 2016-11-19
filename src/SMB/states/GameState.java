@@ -18,7 +18,7 @@ import SMB.world.World;
 
 public class GameState extends BasicGameState {
 	
-	public ArrayList<Entity> entities;
+	public ArrayList<Entity> entities, toRemove;
 	private int xRender = 4000;
 	private int yRender = 2600;
 
@@ -30,6 +30,8 @@ public class GameState extends BasicGameState {
 		entities.add(new Player(2));
 		entities.add(new TrainingDummy());
 		entities.add(new Sword());
+		
+		toRemove = new ArrayList<Entity>();
 		 
 		
 	}
@@ -65,10 +67,15 @@ public class GameState extends BasicGameState {
 			if(entities.get(i).getEndX()>xRender + Window.WIDTH -80)xRender += 0.3f*delta;
 			if(entities.get(i).getEndY()>yRender + Window.HEIGHT- 60)yRender += 0.3f*delta;
 			
-			if(!entities.get(i).label.equals("Training") ){
+			if(!entities.get(i).label.equals("Training")&&!entities.get(i).label.equals("Sword")){
 				combat(entities.get(i));
 			}
 			
+			
+		}
+		if(toRemove.size()>0){
+			entities.removeAll(toRemove);
+			toRemove.clear();
 		}
 		
 		
@@ -79,6 +86,7 @@ public class GameState extends BasicGameState {
 			for(Entity opponent : entities){
 				if(player==opponent) continue;
 				if(opponent.invulnerable)continue;
+				
 				
 				if(player.image == Resources.getImage("p1LightGroundNeutral")&& ((Player) player).getLGNHitBox().intersects(opponent)){
 					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
@@ -136,6 +144,11 @@ public class GameState extends BasicGameState {
 				
 				
 				if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&((Player) player).getGrabHitBox().intersects(opponent)){
+					if(opponent.label.equals("Sword")){
+						((Player) player).pickUpSword();
+						toRemove.add(opponent);
+						continue;
+					}
 					player.grabbing = true;
 					opponent.grabbed = true;
 					if(player.facingRight){
