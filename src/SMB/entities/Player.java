@@ -18,7 +18,7 @@ public class Player extends Entity {
 	private int jumpsRemaining = 1;
 
 	private Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
-			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS;
+			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS, LAS, HAS, HASD;
 	private Input input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
@@ -89,6 +89,9 @@ public class Player extends Entity {
 		LAR = new Animation(new Image[] {
 				Resources.getImage("p1LightAirRight"),
 				Resources.getImage("p1IdleAir") }, LATime, false);
+		LAS = new Animation(new Image[] {
+				Resources.getImage("p1LightAirSword"),
+				Resources.getImage("p1IdleSword") }, LATime, false);
 		
 
 		HGN = new Animation(new Image[] {
@@ -106,6 +109,11 @@ public class Player extends Entity {
 				Resources.getImage("p1HeavyGroundRight2"),
 				Resources.getImage("p1Idle") }, new int[] { HATime, HATime, 100 },
 				false);
+		HGS = new Animation(new Image[] {
+				Resources.getImage("p1HeavyGroundSword1"),
+				Resources.getImage("p1HeavyGroundSword2"),
+				Resources.getImage("p1IdleSword") }, new int[] { HATime, HATime, 100 },
+				false);
 		HAN = new Animation(new Image[] {
 				Resources.getImage("p1HeavyAirNeutral1"),
 				Resources.getImage("p1HeavyAirNeutral2"),
@@ -119,6 +127,15 @@ public class Player extends Entity {
 				Resources.getImage("p1HeavyAirUp2"),
 				Resources.getImage("p1IdleAir") }, new int[] { HATime, HATime, 100 },
 				false);
+		HAS = new Animation(new Image[] {
+				Resources.getImage("p1HeavyAirSword1"),
+				Resources.getImage("p1HeavyAirSword2"),
+				Resources.getImage("p1IdleAirSword") }, new int[] { HATime, HATime, 100 },
+				false);
+		HASD = new Animation(new Image[] {
+				Resources.getImage("p1HeavyAirSwordDown")}, new int[] { HATime },
+				false);
+		
 		
 
 		TGR = new Animation(new Image[] {
@@ -182,13 +199,14 @@ public class Player extends Entity {
 			jumpsRemaining = 1;
 			canJump = true;
 		}
-		
-		if (!grabbing&&!busy&&!hasSword) {
-			normalInput();
-		}else if (grabbing){
-			grabbingInput();
-		}else if(hasSword){
-			swordInput();
+		if(!busy){
+			if (!grabbing&&!hasSword) {
+				normalInput();
+			}else if (grabbing){
+				grabbingInput();
+			}else if(hasSword){
+				swordInput();
+			}
 		}
 	}
 	
@@ -419,11 +437,22 @@ public class Player extends Entity {
 		}
 		if(image == Resources.getImage("p1IdleSword")&&!(isOnSolid()||isOnPSolid())){
 			image = Resources.getImage("p1IdleAirSword");
+			currentAnimation = null;
 		}
 		if((image == Resources.getImage("p1IdleAirSword")||image == Resources.getImage("p1HeavyAirDownSword"))&&(isOnSolid()||isOnPSolid())){
 			image = Resources.getImage("p1IdleSword");
 			currentAnimation = null;
 		}
+		if((image == Resources.getImage("p1HeavyAirSwordDown"))&&!input.isKeyDown(DOWN_KEY)){
+			if(isOnSolid()||isOnPSolid()){
+				image = Resources.getImage("p1IdleSword");
+				currentAnimation = null;
+			}else{
+				image = Resources.getImage("p1IdleAirSword");
+			}
+		}
+		
+		
 		if (input.isKeyPressed(LA_KEY) ) {
 			busyTimer = LATime;
 			
@@ -432,16 +461,32 @@ public class Player extends Entity {
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}else{
-					/*currentAnimation = LAS;
+					currentAnimation = LAS;
 					currentAnimation.setLooping(false);
-					currentAnimation.restart();*/
+					currentAnimation.restart();
 				}
 			
-		} 
-		
-		
-		
-		
+		} else if (input.isKeyPressed(HA_KEY)) {
+			busyTimer = HATime*2;
+			if(isOnSolid()||isOnPSolid()){
+				currentAnimation = HGS;
+				currentAnimation.setLooping(false);
+				currentAnimation.restart();
+			}else{
+				if(input.isKeyPressed(DOWN_KEY)){
+					currentAnimation = HASD;
+					currentAnimation.setLooping(false);
+					currentAnimation.restart();
+				}else{
+					currentAnimation = HAS;
+					currentAnimation.setLooping(false);
+					currentAnimation.restart();
+				}
+				
+			}
+			
+			
+		}
 		
 		swordTimer--;
 		if(swordTimer<=0){

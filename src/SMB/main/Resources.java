@@ -54,7 +54,13 @@ public class Resources {
 			
 			images.put("p1IdleSword", loadImage("res/playerImages/NewPlayerIdleSword.png") );
 			images.put("p1IdleAirSword", loadImage("res/playerImages/NewPlayerIdleAirSword.png") );
+			images.put("p1HeavyGroundSword1", loadImage("res/playerImages/NewPlayerHAG1Sword.png") );
+			images.put("p1HeavyGroundSword2", loadImage("res/playerImages/NewPlayerHAG2Sword.png") );
+			images.put("p1HeavyAirSword1", loadImage("res/playerImages/NewPlayerHAA1Sword.png") );
+			images.put("p1HeavyAirSword2", loadImage("res/playerImages/NewPlayerHAA2Sword.png") );
+			images.put("p1HeavyAirSwordDown", loadImage("res/playerImages/NewPlayerHAADSword.png") );
 			images.put("p1LightGroundSword", loadImage("res/playerImages/NewPlayerLAGSword.png") );
+			images.put("p1LightAirSword", loadImage("res/playerImages/NewPlayerLAASword.png") );
 			images.put("p1WalkingSword1", loadImage("res/playerImages/NewPlayerWalk1Sword.png") );
 			images.put("p1WalkingSword2", loadImage("res/playerImages/NewPlayerWalk2Sword.png") );
 			

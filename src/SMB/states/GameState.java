@@ -60,6 +60,8 @@ public class GameState extends BasicGameState {
 		
 			entities.get(i).update(gc, delta);
 			if(entities.get(i).label.equals("Training")) continue;
+			if(entities.get(i).label.equals("Sword")) continue;
+			
 			
 			if(entities.get(i).x<xRender + 80)xRender -= 0.3f*delta;
 			if(entities.get(i).y<yRender  + 60)yRender -= 0.3f*delta;
@@ -67,9 +69,8 @@ public class GameState extends BasicGameState {
 			if(entities.get(i).getEndX()>xRender + Window.WIDTH -80)xRender += 0.3f*delta;
 			if(entities.get(i).getEndY()>yRender + Window.HEIGHT- 60)yRender += 0.3f*delta;
 			
-			if(!entities.get(i).label.equals("Training")&&!entities.get(i).label.equals("Sword")){
-				combat(entities.get(i));
-			}
+			combat(entities.get(i));
+			
 			
 			
 		}
