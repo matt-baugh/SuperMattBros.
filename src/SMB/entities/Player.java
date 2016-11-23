@@ -544,11 +544,26 @@ public class Player extends Entity {
 	public Hitbox getHAN2HitBox(){
 		return new Hitbox(x-14*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f, 16*Tile.SCALE/1.5f);
 	}
-	
-	
 	public Hitbox getGrabHitBox(){
 		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-2*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 7*Tile.SCALE/1.5f, 12*Tile.SCALE/1.5f);
 	}
+	public Hitbox getLSwordHitBox(){
+		if(facingRight) return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 25*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-22*Tile.SCALE/1.5f, y+ 12*Tile.SCALE/1.5f, 25*Tile.SCALE/1.5f, 19*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHGSwordHitBox(){
+		if(facingRight) return new Hitbox(x+25*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 21*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-25*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 21*Tile.SCALE/1.5f, 9*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHASwordHitBox(){
+		if(facingRight) return new Hitbox(x+20*Tile.SCALE/1.5f, y, 17*Tile.SCALE/1.5f, 29*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-16*Tile.SCALE/1.5f, y, 17*Tile.SCALE/1.5f, 29*Tile.SCALE/1.5f);
+	}
+	public Hitbox getHADownSwordHitBox(){
+		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 24*Tile.SCALE/1.5f, 13*Tile.SCALE/1.5f, 23*Tile.SCALE/1.5f);
+		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 24*Tile.SCALE/1.5f, 13*Tile.SCALE/1.5f, 23*Tile.SCALE/1.5f);
+	}
+	
 
 }
