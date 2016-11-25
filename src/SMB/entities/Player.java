@@ -22,6 +22,7 @@ public class Player extends Entity {
 	private Input input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
+	public int startingX, startingY;
 	public boolean hasSword = false;
 	public int swordTimer = 0;
 	public Color playerColor;
@@ -38,8 +39,8 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_COMMA;
 			G_KEY = Input.KEY_PERIOD;
 			label = "Player1";
-			x = 2745;
-			y = 3138;
+			startingX = 2745;
+			startingY = 3138;
 		}
 		if(playerNumber ==2){
 			color = Color.blue;
@@ -52,8 +53,8 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_C;
 			G_KEY = Input.KEY_V;
 			label = "Player2";
-			x = 3453;
-			y = 3138;
+			startingX = 3453;
+			startingY = 3138;
 			}
 	}
 
@@ -66,7 +67,7 @@ public class Player extends Entity {
 		
 		LATime = 100;
 		HATime = 400;
-		GTime = 600;
+		GTime = 300;
 		
 		Walking = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
 		WalkingSword = new Animation(new Image[]{Resources.getImage("p1WalkingSword1"),Resources.getImage("p1WalkingSword2")}, 100, false);
@@ -443,8 +444,8 @@ public class Player extends Entity {
 			image = Resources.getImage("p1IdleSword");
 			currentAnimation = null;
 		}
-		if((image == Resources.getImage("p1HeavyAirSwordDown"))&&!input.isKeyDown(DOWN_KEY)){
-			if(isOnSolid()||isOnPSolid()){
+		if((image == Resources.getImage("p1HeavyAirSwordDown"))){
+			if(isOnSolid()||(isOnPSolid()&&!input.isKeyDown(DOWN_KEY))){
 				image = Resources.getImage("p1IdleSword");
 				currentAnimation = null;
 			}else{
@@ -473,7 +474,7 @@ public class Player extends Entity {
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else{
-				if(input.isKeyPressed(DOWN_KEY)){
+				if(input.isKeyDown (DOWN_KEY)){
 					currentAnimation = HASD;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();

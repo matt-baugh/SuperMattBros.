@@ -27,7 +27,7 @@ public class GameState extends BasicGameState {
 		
 		entities = new ArrayList<Entity>();
 		entities.add(new Player(1));
-		entities.add(new Player(2));
+		//entities.add(new Player(2));
 		entities.add(new TrainingDummy());
 		entities.add(new Sword());
 		
@@ -205,7 +205,21 @@ public class GameState extends BasicGameState {
 					opponent.invulnerableTimer = ((Player) (player)).LATime;
 					continue;
 				}
-				
+				if(player.image == Resources.getImage("p1HeavyGroundSword2")&& ((Player) player).getHGSwordHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 7f : -7f, 0, 20);
+					opponent.invulnerableTimer = ((Player) (player)).HATime;
+					continue;
+				}
+				if(player.image == Resources.getImage("p1HeavyAirSword2")&& ((Player) player).getHASwordHitBox().intersects(opponent)){
+					opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 20);
+					opponent.invulnerableTimer = ((Player) (player)).HATime;
+					continue;
+				}
+				if(player.image == Resources.getImage("p1HeavyAirSwordDown")&& ((Player) player).getHADownSwordHitBox().intersects(opponent)){
+					opponent.getHit(0, 8f, 20);
+					opponent.invulnerableTimer = ((Player) (player)).HATime;
+					continue;
+				}
 				
 			}
 		
