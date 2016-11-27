@@ -11,8 +11,8 @@ public class TrainingDummy extends Entity{
 	@Override
 	public void init() {
 		color = Color.white;
-		x = 3403;
-		y = 2881;
+		lives = 20;
+		spawn();
 		width = 21*Tile.SCALE/1.5f;
 		height = 47*Tile.SCALE/1.5f;
 		image = Resources.getImage("trainingDummy");
@@ -31,6 +31,12 @@ public class TrainingDummy extends Entity{
 		
 		
 		
+	}
+
+	@Override
+	void spawn() {
+		x = 2157;
+		y = 2065;
 	}
 
 }

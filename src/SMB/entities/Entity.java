@@ -15,13 +15,14 @@ public abstract class Entity extends Hitbox{
 	public Image image;
 	public Color color;
 
-	private final int TERMINAL_V = 3;
+	private final double TERMINAL_V = 2.25;
 	private float AmountDamaged = 0;
 	public boolean facingRight = true; 
 	public boolean grabbed = false; 
 	public boolean grabbing = false; 
 	public boolean canJump = true;
 	public String label;
+	public int lives;
 	public boolean invulnerable;
 	public int invulnerableTimer;
 	public boolean busy;
@@ -46,6 +47,8 @@ public abstract class Entity extends Hitbox{
 		}
 	}
 	protected abstract void indivUpdate(GameContainer gc, int delta);
+	
+	abstract void spawn();
 	
 	public void update(GameContainer gc, int delta){
 		
@@ -118,6 +121,13 @@ public abstract class Entity extends Hitbox{
 			y --;
 		}
 		indivUpdate(gc, delta);
+	}
+	
+	public void respawn(){
+		lives--;
+		if(lives>=0){
+			spawn();
+		}
 	}
 	
 	

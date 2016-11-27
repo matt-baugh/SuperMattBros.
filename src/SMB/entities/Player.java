@@ -25,9 +25,11 @@ public class Player extends Entity {
 	public int startingX, startingY;
 	public boolean hasSword = false;
 	public int swordTimer = 0;
+	public float jumpHeight = -1.75f;
 	public Color playerColor;
 	
 	public Player(int playerNumber) {
+		lives = 4;
 		if(playerNumber == 1){
 			color = Color.red;
 			playerColor = Color.red;
@@ -39,8 +41,8 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_COMMA;
 			G_KEY = Input.KEY_PERIOD;
 			label = "Player1";
-			startingX = 2745;
-			startingY = 3138;
+			startingX = 1985;
+			startingY = 2353;
 		}
 		if(playerNumber ==2){
 			color = Color.blue;
@@ -53,9 +55,10 @@ public class Player extends Entity {
 			HA_KEY = Input.KEY_C;
 			G_KEY = Input.KEY_V;
 			label = "Player2";
-			startingX = 3453;
-			startingY = 3138;
+			startingX = 2623;
+			startingY = 2353;
 			}
+		spawn();
 	}
 
 	@Override
@@ -211,6 +214,38 @@ public class Player extends Entity {
 		}
 	}
 	
+	@Override
+	void spawn() {
+		if(lives == 4){
+			x = startingX;
+			y = startingY;
+			lives--;
+		}else{
+			int i  = (int)(Math.random()*4);
+			System.out.println(i);
+			switch(i) {
+				case 0:
+					x = 1985;
+					y = 2353;
+				break;	
+				case 1:
+					x = 2623;
+					y = 2353;
+				break;	
+				case 2:
+					x = 2157;
+					y = 2065;
+				break;	
+				case 3:
+					x = 2476;
+					y = 2017;
+				break;	
+				
+			}
+		}
+		
+	}
+	
 	public void pickUpSword(){
 		hasSword = true;
 		swordTimer = 1000;
@@ -229,9 +264,9 @@ public class Player extends Entity {
 		
 		if (input.isKeyDown(UP_KEY)&&!input.isKeyDown(HA_KEY)) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {
-				vPY = -2f;
+				vPY = jumpHeight;
 			} else if (jumpsRemaining == 1&&canJump) {
-				vPY = -2f;
+				vPY = jumpHeight;
 				jumpsRemaining = 0;
 			}
 			canJump = false;
@@ -335,7 +370,7 @@ public class Player extends Entity {
 				currentAnimation = HAU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
-				vPY = -2f;
+				vPY = jumpHeight;
 				
 				
 			}else {
@@ -405,9 +440,9 @@ public class Player extends Entity {
 		
 		if (input.isKeyDown(UP_KEY)&&!input.isKeyDown(HA_KEY)) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {
-				vPY = -2f;
+				vPY = jumpHeight;
 			} else if (jumpsRemaining == 1&&canJump) {
-				vPY = -2f;
+				vPY = jumpHeight;
 				jumpsRemaining = 0;
 			}
 			canJump = false;
@@ -565,6 +600,8 @@ public class Player extends Entity {
 		if(facingRight) return new Hitbox(x+16*Tile.SCALE/1.5f, y+ 24*Tile.SCALE/1.5f, 13*Tile.SCALE/1.5f, 23*Tile.SCALE/1.5f);
 		else  return new Hitbox(x-8*Tile.SCALE/1.5f, y+ 24*Tile.SCALE/1.5f, 13*Tile.SCALE/1.5f, 23*Tile.SCALE/1.5f);
 	}
+
+	
 	
 
 }

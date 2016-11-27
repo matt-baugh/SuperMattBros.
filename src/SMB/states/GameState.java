@@ -19,8 +19,8 @@ import SMB.world.World;
 public class GameState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
-	private int xRender = 2400;
-	private int yRender = 2600;
+	private int xRender = 1366;
+	private int yRender = 1791;
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
@@ -56,18 +56,22 @@ public class GameState extends BasicGameState {
 		
 		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) s.enterState(States.MENU);
 		
+		if(gc.getInput().isKeyPressed(Input.KEY_G))System.out.println("xR:"+xRender+", yR: "+yRender);
+		
+		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
+		
 		for (int i = 0; i <entities.size();i++){
 		
 			entities.get(i).update(gc, delta);
 			if(entities.get(i).label.equals("Training")) continue;
 			if(entities.get(i).label.equals("Sword")) continue;
 			
-			
-			if(entities.get(i).x<xRender + 80)xRender -= 0.3f*delta;
-			if(entities.get(i).y<yRender  + 60)yRender -= 0.3f*delta;
-			
-			if(entities.get(i).getEndX()>xRender + Window.WIDTH -80)xRender += 0.3f*delta;
-			if(entities.get(i).getEndY()>yRender + Window.HEIGHT- 60)yRender += 0.3f*delta;
+			if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
+				entities.get(i).respawn();
+				if(entities.get(i).lives<0){
+					toRemove.add(entities.get(i));
+				}
+			}
 			
 			combat(entities.get(i));
 			

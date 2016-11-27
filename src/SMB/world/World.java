@@ -56,6 +56,7 @@ public class World {
 			WIDTH = ((Long) layer.get("width")).intValue();
 			HEIGHT = ((Long) layer.get("height")).intValue();
 			
+			
 			if(type.equals("solids")){
 				
 				solids =  parse((JSONArray)layer.get("data"));
