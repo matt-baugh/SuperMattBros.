@@ -64,6 +64,7 @@ public class Resources {
 			images.put("p1WalkingSword1", loadImage("res/playerImages/NewPlayerWalk1Sword.png") );
 			images.put("p1WalkingSword2", loadImage("res/playerImages/NewPlayerWalk2Sword.png") );
 			
+			images.put("p1Icon",loadImage("res/playerImages/NewPlayerIcon.png") );
 			
 			images.put("trainingDummy", loadImage("res/training.png") );
 			

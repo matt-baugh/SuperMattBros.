@@ -83,11 +83,9 @@ public abstract class Entity extends Hitbox{
 		}
 		
 		if(vTX*delta>TERMINAL_V*delta){	
-			System.out.println("+Terminal X reached");
 			x+=TERMINAL_V*delta;
 		}else if(vTX*delta<-TERMINAL_V*delta){
 			x -=TERMINAL_V*delta;
-			System.out.println("-Terminal X reached");
 		}else{
 			x+=vTX*delta;
 		}
@@ -126,7 +124,7 @@ public abstract class Entity extends Hitbox{
 	public void respawn(){
 		lives--;
 		if(lives>=0){
-			spawn();
+			spawn();F
 		}
 	}
 	

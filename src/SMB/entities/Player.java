@@ -14,7 +14,7 @@ import SMB.world.Tile;
 
 public class Player extends Entity {
 
-	private float speed = 0.5f;
+	private float speed = 0.35f;
 	private int jumpsRemaining = 1;
 
 	private Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
@@ -27,6 +27,7 @@ public class Player extends Entity {
 	public int swordTimer = 0;
 	public float jumpHeight = -1.75f;
 	public Color playerColor;
+	public Image playerIcon = Resources.getImage("p1Icon");  
 	
 	public Player(int playerNumber) {
 		lives = 4;
@@ -222,7 +223,6 @@ public class Player extends Entity {
 			lives--;
 		}else{
 			int i  = (int)(Math.random()*4);
-			System.out.println(i);
 			switch(i) {
 				case 0:
 					x = 1985;

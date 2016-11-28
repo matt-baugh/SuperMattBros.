@@ -27,9 +27,9 @@ public class GameState extends BasicGameState {
 		
 		entities = new ArrayList<Entity>();
 		entities.add(new Player(1));
-		//entities.add(new Player(2));
-		entities.add(new TrainingDummy());
-		entities.add(new Sword());
+		entities.add(new Player(2));
+		//entities.add(new TrainingDummy());
+		//entities.add(new Sword());
 		
 		toRemove = new ArrayList<Entity>();
 		 
