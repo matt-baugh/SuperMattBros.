@@ -16,7 +16,7 @@ public abstract class Entity extends Hitbox{
 	public Color color;
 
 	private final double TERMINAL_V = 2.25;
-	private float AmountDamaged = 0;
+	protected float AmountDamaged = 0;
 	public boolean facingRight = true; 
 	public boolean grabbed = false; 
 	public boolean grabbing = false; 
@@ -45,7 +45,11 @@ public abstract class Entity extends Hitbox{
 		if (image != null){
 			image.getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
 		}
+		indivRender(gc, g);
 	}
+	
+	protected abstract void indivRender(GameContainer gc, Graphics g);
+	
 	protected abstract void indivUpdate(GameContainer gc, int delta);
 	
 	abstract void spawn();
@@ -99,11 +103,11 @@ public abstract class Entity extends Hitbox{
 			vPY += 0.13f;
 		}
 		
-		if(-0.5<vKX&&vKX<0.5)vKX=0;
-		if(-0.5<vKY&&vKY<0.5)vKY=0;
+		if(-0.05<vKX&&vKX<0.05)vKX=0;
+		if(-0.05<vKY&&vKY<0.05)vKY=0;
 		
-		vKX *= 0.7;
-		vKY *= 0.7;
+		vKX *= 0.9;
+		vKY *= 0.9;
 		
 
 		if (testLeft())
@@ -124,7 +128,7 @@ public abstract class Entity extends Hitbox{
 	public void respawn(){
 		lives--;
 		if(lives>=0){
-			spawn();F
+			spawn();
 		}
 	}
 	

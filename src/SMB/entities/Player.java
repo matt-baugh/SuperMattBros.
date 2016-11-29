@@ -5,10 +5,12 @@ package SMB.entities;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
+import SMB.states.GameState;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
@@ -29,6 +31,7 @@ public class Player extends Entity {
 	public Color playerColor;
 	public Image playerIcon = Resources.getImage("p1Icon");  
 	
+	
 	public Player(int playerNumber) {
 		lives = 4;
 		if(playerNumber == 1){
@@ -44,6 +47,7 @@ public class Player extends Entity {
 			label = "Player1";
 			startingX = 1985;
 			startingY = 2353;
+			
 		}
 		if(playerNumber ==2){
 			color = Color.blue;
@@ -213,6 +217,7 @@ public class Player extends Entity {
 				swordInput();
 			}
 		}
+
 	}
 	
 	@Override
@@ -243,6 +248,7 @@ public class Player extends Entity {
 				
 			}
 		}
+		AmountDamaged = 0;
 		
 	}
 	
@@ -351,10 +357,13 @@ public class Player extends Entity {
 					currentAnimation = HGR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-					if (facingRight)
-						vKX = 2f;
-					else
-						vKX = -2f;
+					
+					if (facingRight){
+						vKX = 0.5f;
+						vPX = 0.1f;}
+					else{
+						vKX = -0.5f;
+						vPX = -0.1f;}
 				}
 			} else if (input.isKeyDown(DOWN_KEY)) {
 				if(isOnSolid() || isOnPSolid()){
@@ -530,6 +539,15 @@ public class Player extends Entity {
 			image = Resources.getImage("p1Idle");
 			color = playerColor;
 		}
+		
+	}
+	
+	public void indivRender(GameContainer gc, Graphics g){
+		
+		playerIcon.draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60),playerIcon.getWidth()*Tile.SCALE/1.5f ,playerIcon.getHeight()*Tile.SCALE/1.5f, playerColor );
+		GameState.font.drawString(2000f,1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
+
+	
 		
 	}
 	

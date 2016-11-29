@@ -1,18 +1,21 @@
 package SMB.states;
 
-import java.util.ArrayList;
 
+import java.awt.Font;
+import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import SMB.entities.*;
+import SMB.entities.Entity;
+import SMB.entities.Player;
+import SMB.entities.Sword;
 import SMB.main.Resources;
-import SMB.main.Window;
 import SMB.world.Tile;
 import SMB.world.World;
 
@@ -21,6 +24,7 @@ public class GameState extends BasicGameState {
 	public ArrayList<Entity> entities, toRemove;
 	private int xRender = 1366;
 	private int yRender = 1791;
+	public static TrueTypeFont font = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), false);
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
@@ -138,7 +142,6 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1HeavyAirDown")&&((Player) player).getHADHitBox().intersects(opponent)){
 					opponent.getHit(0, 3.5f, 8);
 					opponent.invulnerableTimer = ((Player) (player)).HATime + 100;
-					System.out.println("groundpound hit");
 					continue;
 				}
 				

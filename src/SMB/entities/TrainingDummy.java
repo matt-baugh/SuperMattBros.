@@ -2,6 +2,7 @@ package SMB.entities;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 
 import SMB.main.Resources;
 import SMB.world.Tile;
@@ -37,6 +38,12 @@ public class TrainingDummy extends Entity{
 	void spawn() {
 		x = 2157;
 		y = 2065;
+	}
+
+	@Override
+	protected void indivRender(GameContainer gc, Graphics g) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

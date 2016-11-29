@@ -1,6 +1,7 @@
 package SMB.entities;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 
 import SMB.main.Resources;
 import SMB.world.Tile;
@@ -52,6 +53,12 @@ public class Sword extends Entity{
 				y = 1969;
 			break;	
 		}
+		
+	}
+
+	@Override
+	protected void indivRender(GameContainer gc, Graphics g) {
+		// TODO Auto-generated method stub
 		
 	}
 
