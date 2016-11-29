@@ -4,6 +4,7 @@ package SMB.states;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -24,14 +25,17 @@ public class GameState extends BasicGameState {
 	public ArrayList<Entity> entities, toRemove;
 	private int xRender = 1366;
 	private int yRender = 1791;
-	public static TrueTypeFont font = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), false);
-
+	public static TrueTypeFont infoFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), false);
+	
+	
+	public String winner = null;
+	
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		
 		entities = new ArrayList<Entity>();
 		entities.add(new Player(1));
-		entities.add(new Player(2));
+		//entities.add(new Player(2));
 		//entities.add(new TrainingDummy());
 		//entities.add(new Sword());
 		
@@ -51,6 +55,10 @@ public class GameState extends BasicGameState {
 		
 		for (int i = 0; i <entities.size();i++){
 			entities.get(i).render(gc, g);
+		}
+		if(winner!=null){
+			infoFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 50), false);
+			infoFont.drawString(2000, 2000, winner+" is the winner", Color.black);
 		}
 		g.resetTransform();
 	}
@@ -86,7 +94,7 @@ public class GameState extends BasicGameState {
 			entities.removeAll(toRemove);
 			toRemove.clear();
 		}
-		
+		checkForWinner();
 		
 	}
 	
@@ -182,7 +190,7 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1ThrowGroundUp")||player.image == Resources.getImage("p1ThrowAirUp")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 2f : -2f, -5f, 1);
+					opponent.getHit((player.facingRight) ? 2f : -2f, -10f, 1);
 					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
 					else player.image = Resources.getImage("p1IdleAir");				
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
@@ -192,7 +200,7 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1ThrowGroundRight")||player.image == Resources.getImage("p1ThrowAirRight")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 3f : -3f, -0.1f, 1);
+					opponent.getHit((player.facingRight) ? 7f : -7f, -0.1f, 1);
 					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
 					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
@@ -201,7 +209,7 @@ public class GameState extends BasicGameState {
 				if(player.image == Resources.getImage("p1ThrowGroundDown")||player.image == Resources.getImage("p1ThrowAirDown")){
 					player.grabbing = false;
 					opponent.grabbed = false;
-					opponent.getHit((player.facingRight) ? 1f : -1f, 4f, 1);
+					opponent.getHit((player.facingRight) ? 1f : -1f, 6f, 1);
 					if(player.isOnSolid()||player.isOnPSolid()) player.image = Resources.getImage("p1Idle");
 					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
@@ -231,6 +239,23 @@ public class GameState extends BasicGameState {
 			}
 		
 		
+	}
+	public void checkForWinner(){
+		if(entities.size()==1){
+			winner = entities.get(0).label;
+		}else if(entities.size()==2){
+			int playersLeft = 0;
+			String temp = null;
+			for (int i = 0; i <entities.size();i++){
+				if(entities.get(i).label.contains("Player")){
+					playersLeft++;
+					temp = entities.get(i).label;
+				}	
+			}
+			if(playersLeft == 1){
+				winner = temp;
+			}
+		}
 	}
 
 	public int getID() {

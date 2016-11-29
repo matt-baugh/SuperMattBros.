@@ -249,6 +249,8 @@ public class Player extends Entity {
 			}
 		}
 		AmountDamaged = 0;
+		vPY=0;
+		vKY=0;
 		
 	}
 	
@@ -545,7 +547,8 @@ public class Player extends Entity {
 	public void indivRender(GameContainer gc, Graphics g){
 		
 		playerIcon.draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60),playerIcon.getWidth()*Tile.SCALE/1.5f ,playerIcon.getHeight()*Tile.SCALE/1.5f, playerColor );
-		GameState.font.drawString(2000f,1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
+		GameState.infoFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
+		GameState.infoFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
 
 	
 		

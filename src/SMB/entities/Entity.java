@@ -103,11 +103,11 @@ public abstract class Entity extends Hitbox{
 			vPY += 0.13f;
 		}
 		
-		if(-0.05<vKX&&vKX<0.05)vKX=0;
-		if(-0.05<vKY&&vKY<0.05)vKY=0;
+		if(-0.01<vKX&&vKX<0.01)vKX=0;
+		if(-0.01<vKY&&vKY<0.01)vKY=0;
 		
-		vKX *= 0.9;
-		vKY *= 0.9;
+		vKX *= 0.7;
+		vKY *= 0.7;
 		
 
 		if (testLeft())
