@@ -20,13 +20,13 @@ import SMB.main.Resources;
 import SMB.world.Tile;
 import SMB.world.World;
 
-public class GameState extends BasicGameState {
+public class LocalGameState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
 	private int xRender = 1366;
 	private int yRender = 1791;
-	public static TrueTypeFont infoFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 30), false);
 	
+	public boolean gameOver;
 	
 	public String winner = null;
 	
@@ -34,10 +34,7 @@ public class GameState extends BasicGameState {
 			throws SlickException {
 		
 		entities = new ArrayList<Entity>();
-		entities.add(new Player(1));
-		//entities.add(new Player(2));
-		//entities.add(new TrainingDummy());
-		//entities.add(new Sword());
+		startGame();
 		
 		toRemove = new ArrayList<Entity>();
 		 
@@ -57,8 +54,7 @@ public class GameState extends BasicGameState {
 			entities.get(i).render(gc, g);
 		}
 		if(winner!=null){
-			infoFont = new TrueTypeFont(new Font("Verdana", Font.BOLD, 50), false);
-			infoFont.drawString(2000, 2000, winner+" is the winner", Color.black);
+			Resources.bigFont.drawString(2000, 2000, winner+" is the winner", Color.black);
 		}
 		g.resetTransform();
 	}
@@ -66,36 +62,35 @@ public class GameState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
 		
-		if(gc.getInput().isKeyPressed(Input.KEY_ENTER)) s.enterState(States.MENU);
-		
-		if(gc.getInput().isKeyPressed(Input.KEY_G))System.out.println("xR:"+xRender+", yR: "+yRender);
+		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) s.enterState(States.MENU);
+
+		if(!gameOver){
 		
 		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
 		
-		for (int i = 0; i <entities.size();i++){
+			for (int i = 0; i <entities.size();i++){
 		
-			entities.get(i).update(gc, delta);
-			if(entities.get(i).label.equals("Training")) continue;
-			if(entities.get(i).label.equals("Sword")) continue;
+				entities.get(i).update(gc, delta);
+				if(entities.get(i).label.equals("Training")) continue;
+				if(entities.get(i).label.equals("Sword")) continue;
 			
-			if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
-				entities.get(i).respawn();
-				if(entities.get(i).lives<0){
-					toRemove.add(entities.get(i));
+				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
+					entities.get(i).respawn();
+					if(entities.get(i).lives<0){
+						toRemove.add(entities.get(i));
+					}
 				}
+
+				combat(entities.get(i));
 			}
-			
-			combat(entities.get(i));
-			
-			
-			
+			if(toRemove.size()>0){
+				entities.removeAll(toRemove);
+				toRemove.clear();
+			}
+			checkForWinner();
+		}else{
+			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
 		}
-		if(toRemove.size()>0){
-			entities.removeAll(toRemove);
-			toRemove.clear();
-		}
-		checkForWinner();
-		
 	}
 	
 	public void combat(Entity player){
@@ -243,6 +238,7 @@ public class GameState extends BasicGameState {
 	public void checkForWinner(){
 		if(entities.size()==1){
 			winner = entities.get(0).label;
+			gameOver = true;
 		}else if(entities.size()==2){
 			int playersLeft = 0;
 			String temp = null;
@@ -254,8 +250,19 @@ public class GameState extends BasicGameState {
 			}
 			if(playersLeft == 1){
 				winner = temp;
+				gameOver = true;
 			}
 		}
+	}
+	
+	public void startGame(){
+		entities.clear();
+		entities.add(new Player(1));
+		entities.add(new Player(2));
+		//entities.add(new TrainingDummy());
+		//entities.add(new Sword());
+		winner = null;
+		gameOver = false;
 	}
 
 	public int getID() {

@@ -7,6 +7,7 @@ import org.newdawn.slick.*;
 
 import SMB.world.Tile;
 
+import java.awt.Font;
 import java.util.*;
 
 
@@ -15,6 +16,8 @@ public class Resources {
 	public static Map<String, Image> images;
 	public static Map<String, SpriteSheet> sprites;
 	public static Map<String, Sound> sounds;
+	public static TrueTypeFont normalFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 30), false);
+	public static TrueTypeFont bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
 	
 	public Resources(){
 		images = new HashMap<String, Image>();
@@ -66,11 +69,15 @@ public class Resources {
 			
 			images.put("p1Icon",loadImage("res/playerImages/NewPlayerIcon.png") );
 			
-			images.put("trainingDummy", loadImage("res/training.png") );
+			images.put("trainingDummy", loadImage("res/otherGameStuff/training.png") );
 			
-			images.put("sword", loadImage("res/Sword.png") );
+			images.put("sword", loadImage("res/otherGameStuff/Sword.png") );
 			
-			sprites.put("tiles", loadSprite("res/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
+			images.put("menuBackground", loadImage("res/menuImages/MenuImage.png") );
+			images.put("smallButton", loadImage("res/menuImages/SmallButtonTemplate.png") );
+			images.put("largeButton", loadImage("res/menuImages/LargeButtonTemplate.png") );
+			
+			sprites.put("tiles", loadSprite("res/maps/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

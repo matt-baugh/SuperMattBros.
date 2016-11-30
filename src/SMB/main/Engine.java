@@ -55,8 +55,9 @@ public class Engine extends StateBasedGame{
 			System.err.println("Map does not exist");
 		}
 		
-		this.addState(new GameState());
 		this.addState(new MenuState());
+		this.addState(new LocalGameState());
+		
 		
 	}
 

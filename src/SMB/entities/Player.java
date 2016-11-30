@@ -10,7 +10,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
-import SMB.states.GameState;
+import SMB.states.LocalGameState;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
@@ -547,8 +547,8 @@ public class Player extends Entity {
 	public void indivRender(GameContainer gc, Graphics g){
 		
 		playerIcon.draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60),playerIcon.getWidth()*Tile.SCALE/1.5f ,playerIcon.getHeight()*Tile.SCALE/1.5f, playerColor );
-		GameState.infoFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
-		GameState.infoFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
+		Resources.normalFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
+		Resources.normalFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
 
 	
 		
