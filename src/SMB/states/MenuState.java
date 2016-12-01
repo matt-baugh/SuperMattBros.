@@ -13,7 +13,7 @@ import SMB.main.Resources;
 public class MenuState extends BasicGameState {
 	
 	public Image background, smallButton, largeButton;
-	public int firstButtonX, firstButtonY;
+	public int firstButtonX, firstButtonY, smallButtonWidth, largeButtonWidth, buttonHeight;
 	
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
@@ -22,6 +22,10 @@ public class MenuState extends BasicGameState {
 		largeButton  = Resources.getImage("largeButton");
 		firstButtonX = 1200;
 		firstButtonY = 400;
+		smallButtonWidth = 210;
+		largeButtonWidth = 440;
+		buttonHeight = 120;
+		
 	}
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
@@ -58,6 +62,49 @@ public class MenuState extends BasicGameState {
 			throws SlickException {
 		// TODO Auto-generated method stub
 		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) s.enterState(States.GAME);
+		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc);
+		
+	}
+	
+	private void handleButtons(GameContainer gc){
+		
+		// 2 player server button
+		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
+				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
+			System.out.println("2 player server");
+		}
+		// 2 player client button
+		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY 
+				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
+			System.out.println("2 player client");
+		}
+		// 4 player server button
+		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
+				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
+			System.out.println("4 player server");
+		}
+		// 4 player client button
+		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY +140
+				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
+			System.out.println("4 player client");
+		}
+		//Local game button
+		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +280
+				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 280){
+			System.out.println("Local game");
+		}
+		//Local game button
+		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +420
+				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 420){
+			System.out.println("Exit");
+			System.exit(0);
+		}
 		
 	}
 
