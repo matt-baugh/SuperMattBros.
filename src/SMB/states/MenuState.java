@@ -61,12 +61,12 @@ public class MenuState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
 		// TODO Auto-generated method stub
-		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) s.enterState(States.GAME);
-		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc);
+		
+		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
 		
 	}
 	
-	private void handleButtons(GameContainer gc){
+	private void handleButtons(GameContainer gc, StateBasedGame s) throws SlickException{
 		
 		// 2 player server button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
@@ -97,8 +97,11 @@ public class MenuState extends BasicGameState {
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 280){
 			System.out.println("Local game");
+			s.addState(new LocalGameState());
+			s.getState(States.LOCALGAME).init(gc,s);
+			s.enterState(States.LOCALGAME);
 		}
-		//Local game button
+		//Exit game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +420
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 420){

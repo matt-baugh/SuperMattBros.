@@ -33,11 +33,12 @@ public class LocalGameState extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		
-		entities = new ArrayList<Entity>();
-		startGame();
+			entities = new ArrayList<Entity>();
+			startGame();
 		
-		toRemove = new ArrayList<Entity>();
-		 
+			toRemove = new ArrayList<Entity>();
+			
+		
 		
 	}
 
@@ -55,6 +56,8 @@ public class LocalGameState extends BasicGameState {
 		}
 		if(winner!=null){
 			Resources.bigFont.drawString(2000, 2000, winner+" is the winner", Color.black);
+			Resources.bigFont.drawString(1950, 2000+Resources.bigFont.getLineHeight(), "Press enter to play again", Color.black);
+			Resources.bigFont.drawString(1800, 2000+(Resources.bigFont.getLineHeight()*2), "or press escape to return to the menu", Color.black);
 		}
 		g.resetTransform();
 	}
@@ -62,7 +65,7 @@ public class LocalGameState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
 		
-		if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) s.enterState(States.MENU);
+		
 
 		if(!gameOver){
 		
@@ -90,6 +93,10 @@ public class LocalGameState extends BasicGameState {
 			checkForWinner();
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
+			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+				System.out.println(s.getStateCount());
+				s.enterState(States.MENU);
+			}
 		}
 	}
 	
@@ -266,7 +273,7 @@ public class LocalGameState extends BasicGameState {
 	}
 
 	public int getID() {
-		return States.GAME;
+		return States.LOCALGAME;
 	}
 
 }

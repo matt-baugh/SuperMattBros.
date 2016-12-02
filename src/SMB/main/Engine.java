@@ -56,9 +56,9 @@ public class Engine extends StateBasedGame{
 		}
 		
 		this.addState(new MenuState());
-		this.addState(new LocalGameState());
 		
 		
 	}
+	
 
 }
