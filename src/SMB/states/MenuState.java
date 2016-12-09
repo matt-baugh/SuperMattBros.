@@ -73,6 +73,9 @@ public class MenuState extends BasicGameState {
 				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
 			System.out.println("2 player server");
+			s.addState(new TwoPlayerServerState());
+			s.getState(States.SERVERTWOPLAYER).init(gc,s);
+			s.enterState(States.SERVERTWOPLAYER);
 		}
 		// 2 player client button
 		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY 
