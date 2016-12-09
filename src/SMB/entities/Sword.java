@@ -1,7 +1,11 @@
 package SMB.entities;
 
+
+
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
 import SMB.world.Tile;
@@ -16,10 +20,11 @@ public class Sword extends Entity{
 		label = "Sword";
 		width = 9 * Tile.SCALE / 1.5f;
 		height = 24 * Tile.SCALE / 1.5f;
+		color = Color.white;
 	}
 
 	@Override
-	protected void indivUpdate(GameContainer gc, int delta) {
+	protected void indivUpdate(GameContainer gc, int delta, Input newInput) {
 		if(isOnPSolid()){
 			vPY = 0;
 		}

@@ -180,7 +180,7 @@ public class Player extends Entity {
 	}
 
 	@Override
-	public void indivUpdate(GameContainer gc, int delta) {
+	public void indivUpdate(GameContainer gc, int delta, Input newInput) {
 		
 		if (currentAnimation != null) {
 			image = currentAnimation.getCurrentFrame();
@@ -195,7 +195,7 @@ public class Player extends Entity {
 
 			
 			
-		input = gc.getInput();
+		input = newInput;
 		
 		if (!input.isKeyDown(DOWN_KEY) && isOnPSolid()) {
 			if (vPY >= 0) {

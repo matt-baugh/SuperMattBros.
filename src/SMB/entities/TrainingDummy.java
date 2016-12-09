@@ -3,6 +3,7 @@ package SMB.entities;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
 import SMB.world.Tile;
@@ -21,7 +22,7 @@ public class TrainingDummy extends Entity{
 	}
 
 	@Override
-	protected void indivUpdate(GameContainer gc, int delta) {
+	protected void indivUpdate(GameContainer gc, int delta, Input newInput) {
 		
 		if(isOnPSolid()){
 			if(vPY>=0){

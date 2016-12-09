@@ -23,6 +23,8 @@ import SMB.world.World;
 public class LocalGameState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
+	public ArrayList<Input> inputs;
+	public Input p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
 	
@@ -34,6 +36,7 @@ public class LocalGameState extends BasicGameState {
 			throws SlickException {
 		
 			entities = new ArrayList<Entity>();
+			inputs = new ArrayList<Input>();
 			startGame();
 		
 			toRemove = new ArrayList<Entity>();
@@ -72,8 +75,12 @@ public class LocalGameState extends BasicGameState {
 		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
 		
 			for (int i = 0; i <entities.size();i++){
-		
-				entities.get(i).update(gc, delta);
+				if(i<inputs.size()){
+					inputs.set(i, gc.getInput());
+					entities.get(i).update(gc, delta, inputs.get(i));
+				}else{
+					entities.get(i).update(gc, delta,null);
+				}
 				if(entities.get(i).label.equals("Training")) continue;
 				if(entities.get(i).label.equals("Sword")) continue;
 			
@@ -265,7 +272,9 @@ public class LocalGameState extends BasicGameState {
 	public void startGame(){
 		entities.clear();
 		entities.add(new Player(1));
+		inputs.add(p1Input);
 		entities.add(new Player(2));
+		inputs.add(p2Input);
 		//entities.add(new TrainingDummy());
 		//entities.add(new Sword());
 		winner = null;

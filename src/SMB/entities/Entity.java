@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
@@ -50,11 +51,11 @@ public abstract class Entity extends Hitbox{
 	
 	protected abstract void indivRender(GameContainer gc, Graphics g);
 	
-	protected abstract void indivUpdate(GameContainer gc, int delta);
+	protected abstract void indivUpdate(GameContainer gc, int delta, Input input);
 	
 	abstract void spawn();
 	
-	public void update(GameContainer gc, int delta){
+	public void update(GameContainer gc, int delta, Input input){
 		
 		height = image.getHeight()*Tile.SCALE/1.5f;
 		
@@ -122,7 +123,7 @@ public abstract class Entity extends Hitbox{
 		while(isWithin()){ 
 			y --;
 		}
-		indivUpdate(gc, delta);
+		indivUpdate(gc, delta, input);
 	}
 	
 	public void respawn(){
