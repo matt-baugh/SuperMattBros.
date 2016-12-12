@@ -1,5 +1,6 @@
 package SMB.states;
 
+import java.io.BufferedInputStream;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Inet4Address;
@@ -36,7 +37,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
 	private Thread serverInitialiser;
-	//private String IPAddress ;
+	private String IPAddress ;
 	
 	public boolean preGame = true, gameOver;
 	
@@ -49,11 +50,11 @@ public class TwoPlayerServerState extends BasicGameState {
 			entities = new ArrayList<Entity>();
 			inputs = new ArrayList<Input>();
 			outputStreams = new ArrayList<PrintWriter>();
-			/*try{
-				IPAddress = Inet4Address.getLocalHost().getHostAddress();
+			try{
+				IPAddress = InetAddress.getLocalHost().getHostAddress();
 			}catch(Exception e){
 				e.printStackTrace();
-			}*/
+			}
 		
 		
 			toRemove = new ArrayList<Entity>();
@@ -74,7 +75,7 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 		if(preGame){
 			Resources.bigFont.drawString(2000, 2000, "Waiting for players", Color.black);
-			//*Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ IPAddress, Color.black);
+			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ IPAddress, Color.black);
 		}else{
 			for (int i = 0; i <entities.size();i++){
 				entities.get(i).render(gc, g);
@@ -88,14 +89,14 @@ public class TwoPlayerServerState extends BasicGameState {
 		g.resetTransform();
 	}
 
-	@SuppressWarnings("deprecation")
+	
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
 		
 		if(preGame){
 			
 		} else if(!gameOver){
-			if(serverInitialiser.isAlive())serverInitialiser.stop();
+			
 			updateClients();
 			
 		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
@@ -315,7 +316,7 @@ public class TwoPlayerServerState extends BasicGameState {
 			try{
 				playerNum = ID;
 				socket = clientSocket;
-				ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+				inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -342,24 +343,24 @@ public class TwoPlayerServerState extends BasicGameState {
 			
 		}
 		public void run(){
-			while(preGame){
+
 			try{
 				ServerSocket serverSocket = new ServerSocket(10305);
 				for(int i = 1; i <desiredPlayers;i++){
 					Socket clientSocket = serverSocket.accept();
 					PrintWriter printToClient = new PrintWriter(clientSocket.getOutputStream());
 					outputStreams.add(printToClient);
-					
+
 					Thread clientHandler = new Thread(new ClientHandler(clientSocket, i));
 					clientHandler.start();
 					System.out.println("A connection has occurred");
 				}
 				serverSocket.close();
 			}catch(Exception ex){ex.printStackTrace();}
-			
+
 			startGame();
 			preGame = false;
-			}
+
 			
 		}
 		
@@ -369,11 +370,11 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
-				PrintWriter writer = (PrintWriter) outputStreams.get(i);
-				writer.print("newEntities");
-				writer.print(entities);
-				writer.flush();
-				writer.close();
+				PrintWriter writeToClient = (PrintWriter) outputStreams.get(i);
+				writeToClient.print("newEntities");
+				writeToClient.print(entities);
+				writeToClient.flush();
+				writeToClient.close();
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -384,10 +385,10 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
-				PrintWriter writer = (PrintWriter) outputStreams.get(i);
-				writer.print(message);
-				writer.flush();
-				writer.close();
+				PrintWriter writeToClient = (PrintWriter) outputStreams.get(i);
+				writeToClient.print(message);
+				writeToClient.flush();
+				writeToClient.close();
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}

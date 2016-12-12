@@ -2,6 +2,12 @@ package SMB.states;
 
 
 import java.awt.Font;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
@@ -29,8 +35,11 @@ public class TwoPlayerClientState extends BasicGameState {
 	
 	public String winner = null;
 	
-	public void init(GameContainer gc, StateBasedGame s)
-			throws SlickException {
+	public Socket socket;
+	public ObjectInputStream inputStream;
+	public PrintWriter writeToServer; 
+	
+	public void init(GameContainer gc, StateBasedGame s) throws SlickException {
 		
 			entities = new ArrayList<Entity>();
 			startGame();
@@ -79,6 +88,18 @@ public class TwoPlayerClientState extends BasicGameState {
 		winner = null;
 		gameOver = false;
 	}
+	public void initialiseConnection(){
+		try {
+			socket = new Socket("127.0.0.1 " , 10305);
+			inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+			writeToServer = new PrintWriter(socket.getOutputStream());
+			System.out.println ("Connection made") ;
+		} catch (IOException ex){
+			ex.printStackTrace () ; 
+		}
+	}
+	
+	
 
 	public int getID() {
 		return States.LOCALGAME;
