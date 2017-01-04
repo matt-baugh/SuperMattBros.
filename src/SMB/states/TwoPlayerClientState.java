@@ -1,12 +1,10 @@
 package SMB.states;
 
 
-import java.awt.Font;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -15,7 +13,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -37,12 +34,12 @@ public class TwoPlayerClientState extends BasicGameState {
 	
 	public Socket socket;
 	public ObjectInputStream inputStream;
-	public PrintWriter writeToServer; 
+	public ObjectOutputStream writeToServer; 
 	
 	public void init(GameContainer gc, StateBasedGame s) throws SlickException {
 		
 			entities = new ArrayList<Entity>();
-			startGame();
+			initialiseConnection();
 		
 			toRemove = new ArrayList<Entity>();
 			
@@ -60,7 +57,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		
 		
 		for (int i = 0; i <entities.size();i++){
-			entities.get(i).render(gc, g);
+			entities.get(i).clientRender(gc, g);
 		}
 		if(winner!=null){
 			Resources.bigFont.drawString(2000, 2000, winner+" is the winner", Color.black);
@@ -72,7 +69,10 @@ public class TwoPlayerClientState extends BasicGameState {
 
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-		
+		System.out.println("update");
+		while(!gameOver){
+			sendInputToServer(gc);
+		}
 		
 	}
 	
@@ -90,16 +90,76 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 	public void initialiseConnection(){
 		try {
+			System.out.println("Initialising connection");
 			socket = new Socket("127.0.0.1 " , 10305);
-			inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			writeToServer = new PrintWriter(socket.getOutputStream());
+			System.out.println("Made a socket");
+			inputStream = new ObjectInputStream(socket.getInputStream());
+			System.out.println("Made input stream");
+			writeToServer = new ObjectOutputStream(socket.getOutputStream());
+			writeToServer.flush();
+			System.out.println("Made output stream");
 			System.out.println ("Connection made") ;
+			Thread serverHandler = new Thread(new ServerHandler());
+			serverHandler.start();
+			startGame();
 		} catch (IOException ex){
 			ex.printStackTrace () ; 
 		}
 	}
 	
-	
+	public class ServerHandler implements Runnable{
+		
+		public ServerHandler(){
+			
+		}
+		@SuppressWarnings("unchecked")
+		public void run(){
+			String message;
+			try{
+				while(true){
+					message = (String) inputStream.readObject(); 
+					switch(message){
+					
+						case "newEntities":
+							
+							entities = (ArrayList<Entity>) inputStream.readObject();
+							
+						break;
+						
+						case "startGame":
+							System.out.println("game started(?)");
+							startGame();
+
+						break;
+							
+						case "gameOver":
+							gameOver = true;
+						break;	
+					}
+				}
+			}catch(EOFException ex){
+				
+				ex.printStackTrace();
+
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	public void sendInputToServer(GameContainer gc){
+		try {
+			writeToServer.writeObject(gc.getInput());
+			writeToServer.flush();
+			System.out.println("Input sent");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public int getID() {
 		return States.LOCALGAME;

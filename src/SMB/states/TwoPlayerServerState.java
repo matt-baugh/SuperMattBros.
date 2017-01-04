@@ -2,20 +2,20 @@ package SMB.states;
 
 import java.io.BufferedInputStream;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
+
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -31,7 +31,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
 	public ArrayList<Input> inputs;
-	public ArrayList<PrintWriter> outputStreams;
+	public ArrayList<ObjectOutputStream> outputStreams;
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
@@ -49,7 +49,7 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 			entities = new ArrayList<Entity>();
 			inputs = new ArrayList<Input>();
-			outputStreams = new ArrayList<PrintWriter>();
+			outputStreams = new ArrayList<ObjectOutputStream>();
 			try{
 				IPAddress = InetAddress.getLocalHost().getHostAddress();
 			}catch(Exception e){
@@ -292,12 +292,14 @@ public class TwoPlayerServerState extends BasicGameState {
 				winner = temp;
 				gameOver = true;
 				tellClients("gameOver");
+				System.out.println("GameOver");
 			}
 		}
 	}
 	
 	public void startGame(){
 		entities.clear();
+		inputs.clear();
 		entities.add(new Player(1));
 		inputs.add(p1Input);
 		entities.add(new Player(2));
@@ -307,6 +309,7 @@ public class TwoPlayerServerState extends BasicGameState {
 		winner = null;
 		gameOver = false;
 		tellClients("startGame");
+		System.out.println("clients told to start game");
 	}
 	public class ClientHandler implements Runnable{
 		ObjectInputStream inputStream;
@@ -316,7 +319,8 @@ public class TwoPlayerServerState extends BasicGameState {
 			try{
 				playerNum = ID;
 				socket = clientSocket;
-				inputStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+				inputStream = new ObjectInputStream(socket.getInputStream());
+				System.out.println("input stream from client made");
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -328,6 +332,7 @@ public class TwoPlayerServerState extends BasicGameState {
 					
 					
 					inputs.set(playerNum,newInput);
+					System.out.println("Input received");
 				}
 			}catch(Exception ex){
 				ex.printStackTrace();
@@ -348,17 +353,21 @@ public class TwoPlayerServerState extends BasicGameState {
 				ServerSocket serverSocket = new ServerSocket(10305);
 				for(int i = 1; i <desiredPlayers;i++){
 					Socket clientSocket = serverSocket.accept();
-					PrintWriter printToClient = new PrintWriter(clientSocket.getOutputStream());
-					outputStreams.add(printToClient);
+					System.out.println("Connection attempted");
+					ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+					outputStream.flush();
+					System.out.println("output to client made");
+					outputStreams.add(outputStream);
 
 					Thread clientHandler = new Thread(new ClientHandler(clientSocket, i));
 					clientHandler.start();
-					System.out.println("A connection has occurred");
+					System.out.println("client handler started");
 				}
 				serverSocket.close();
 			}catch(Exception ex){ex.printStackTrace();}
 
 			startGame();
+			System.out.println("Game starting");
 			preGame = false;
 
 			
@@ -370,11 +379,11 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
-				PrintWriter writeToClient = (PrintWriter) outputStreams.get(i);
-				writeToClient.print("newEntities");
-				writeToClient.print(entities);
-				writeToClient.flush();
-				writeToClient.close();
+				
+				outputStreams.get(i).flush();
+				outputStreams.get(i).writeObject("newEntities");
+				outputStreams.get(i).writeObject(entities);
+
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
@@ -385,10 +394,9 @@ public class TwoPlayerServerState extends BasicGameState {
 		
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
-				PrintWriter writeToClient = (PrintWriter) outputStreams.get(i);
-				writeToClient.print(message);
-				writeToClient.flush();
-				writeToClient.close();
+				ObjectOutputStream outputToClient = (ObjectOutputStream) outputStreams.get(i);
+				outputToClient.flush();
+				outputToClient.writeObject(message);
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}

@@ -1,19 +1,23 @@
 package SMB.entities;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
+import SMB.main.Resources;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 import SMB.world.World;
 
 
-public abstract class Entity extends Hitbox{
+public abstract class Entity extends Hitbox implements Serializable{
 	
-	public Image image;
+	public transient Image image;
 	public Color color;
 
 	private final double TERMINAL_V = 2.25;
@@ -22,7 +26,7 @@ public abstract class Entity extends Hitbox{
 	public boolean grabbed = false; 
 	public boolean grabbing = false; 
 	public boolean canJump = true;
-	public String label;
+	public String label, imageResourceLocation;
 	public int lives;
 	public boolean invulnerable;
 	public int invulnerableTimer;
@@ -48,6 +52,16 @@ public abstract class Entity extends Hitbox{
 		}
 		indivRender(gc, g);
 	}
+	public void clientRender(GameContainer gc, Graphics g){
+		if (image != null){
+			try {
+				Resources.loadImage(imageResourceLocation).getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
+		indivRender(gc, g);
+	}
 	
 	protected abstract void indivRender(GameContainer gc, Graphics g);
 	
@@ -58,6 +72,7 @@ public abstract class Entity extends Hitbox{
 	public void update(GameContainer gc, int delta, Input input){
 		
 		height = image.getHeight()*Tile.SCALE/1.5f;
+		imageResourceLocation = image.getResourceReference();
 		
 		if(busyTimer>0){
 			busy = true;
@@ -123,7 +138,9 @@ public abstract class Entity extends Hitbox{
 		while(isWithin()){ 
 			y --;
 		}
-		indivUpdate(gc, delta, input);
+		
+			indivUpdate(gc, delta, input);
+		
 	}
 	
 	public void respawn(){

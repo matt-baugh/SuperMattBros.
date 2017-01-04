@@ -19,9 +19,9 @@ public class Player extends Entity {
 	private float speed = 0.35f;
 	private int jumpsRemaining = 1;
 
-	private Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
+	private transient Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS, LAS, HAS, HASD;
-	private Input input;
+	private transient Input input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
 	public int startingX, startingY;
@@ -29,7 +29,7 @@ public class Player extends Entity {
 	public int swordTimer = 0;
 	public float jumpHeight = -1.75f;
 	public Color playerColor;
-	public Image playerIcon = Resources.getImage("p1Icon");  
+	
 	
 	
 	public Player(int playerNumber) {
@@ -192,8 +192,7 @@ public class Player extends Entity {
 		}else{
 			xImageOffset = 0;
 		}
-
-			
+		
 			
 		input = newInput;
 		
@@ -546,7 +545,7 @@ public class Player extends Entity {
 	
 	public void indivRender(GameContainer gc, Graphics g){
 		
-		playerIcon.draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60),playerIcon.getWidth()*Tile.SCALE/1.5f ,playerIcon.getHeight()*Tile.SCALE/1.5f, playerColor );
+		 Resources.getImage("p1Icon").draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), Resources.getImage("p1Icon").getWidth()*Tile.SCALE/1.5f , Resources.getImage("p1Icon").getHeight()*Tile.SCALE/1.5f, playerColor );
 		Resources.normalFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
 		Resources.normalFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
 
