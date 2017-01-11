@@ -11,6 +11,7 @@ import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
 import SMB.states.LocalGameState;
+import SMB.tools.EntityInput;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
@@ -21,7 +22,7 @@ public class Player extends Entity {
 
 	private transient Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS, LAS, HAS, HASD;
-	private transient Input input;
+	private transient EntityInput input;
 	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
 	public int startingX, startingY;
@@ -180,7 +181,7 @@ public class Player extends Entity {
 	}
 
 	@Override
-	public void indivUpdate(GameContainer gc, int delta, Input newInput) {
+	public void indivUpdate(GameContainer gc, int delta, EntityInput newInput) {
 		
 		if (currentAnimation != null) {
 			image = currentAnimation.getCurrentFrame();
@@ -196,7 +197,7 @@ public class Player extends Entity {
 			
 		input = newInput;
 		
-		if (!input.isKeyDown(DOWN_KEY) && isOnPSolid()) {
+		if (!input.isDownKeyDown() && isOnPSolid()) {
 			if (vPY >= 0) {
 				vPY = 0;
 				vTY = 0;
@@ -262,14 +263,8 @@ public class Player extends Entity {
 	}
 	
 	public void normalInput(){
-		
-		if(input.isKeyDown(input.KEY_K)&&label.equals("Player1")){
-			System.out.println("x: "+ x+"; y: "+y);
-			
-		}
-		
-		
-		if (input.isKeyDown(UP_KEY)&&!input.isKeyDown(HA_KEY)) {
+
+		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {
 				vPY = jumpHeight;
 			} else if (jumpsRemaining == 1&&canJump) {
@@ -281,12 +276,12 @@ public class Player extends Entity {
 			canJump = true;
 		}
 
-		if (input.isKeyDown(LEFT_KEY)) {
+		if (input.isLeftKeyDown()) {
 			currentAnimation = Walking;
 			currentAnimation.setLooping(true);
 			vPX = -speed;
 			facingRight = false;
-		} else if (input.isKeyDown(RIGHT_KEY)) {
+		} else if (input.isRightKeyDown()) {
 			
 			currentAnimation = Walking;
 			currentAnimation.setLooping(true);
@@ -312,9 +307,9 @@ public class Player extends Entity {
 		}
 		
 
-		if (input.isKeyPressed(LA_KEY) ) {
+		if (input.isLAKeyDown() ) {
 			busyTimer = LATime;
-			if (input.isKeyDown(RIGHT_KEY) || input.isKeyDown(LEFT_KEY)) {
+			if (input.isRightKeyDown() || input.isLeftKeyDown()) {
 				if(isOnSolid() || isOnPSolid()){
 					currentAnimation = LGR;
 					currentAnimation.setLooping(false);
@@ -329,7 +324,7 @@ public class Player extends Entity {
 					currentAnimation.restart();
 				}
 				
-			} else if (input.isKeyDown(DOWN_KEY)) {
+			} else if (input.isDownKeyDown()) {
 				if(isOnSolid() || isOnPSolid()){
 					currentAnimation = LGD;
 					currentAnimation.setLooping(false);
@@ -350,10 +345,10 @@ public class Player extends Entity {
 					currentAnimation.restart();
 				}
 			}
-		} else if (input.isKeyPressed(HA_KEY)) {
+		} else if (input.isHAKeyDown()) {
 			busyTimer = HATime*2;
-			if (input.isKeyDown(RIGHT_KEY)
-					|| input.isKeyDown(LEFT_KEY)) {
+			if (input.isRightKeyDown()
+					|| input.isLeftKeyDown()) {
 				if(isOnSolid() || isOnPSolid()){
 					currentAnimation = HGR;
 					currentAnimation.setLooping(false);
@@ -366,7 +361,7 @@ public class Player extends Entity {
 						vKX = -0.5f;
 						vPX = -0.1f;}
 				}
-			} else if (input.isKeyDown(DOWN_KEY)) {
+			} else if (input.isDownKeyDown()) {
 				if(isOnSolid() || isOnPSolid()){
 					currentAnimation = HGD;
 					currentAnimation.setLooping(false);
@@ -376,7 +371,7 @@ public class Player extends Entity {
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
-			}else if (input.isKeyDown(UP_KEY)&&!(isOnSolid() || isOnPSolid())) {
+			}else if (input.isUpKeyDown()&&!(isOnSolid() || isOnPSolid())) {
 				currentAnimation = HAU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
@@ -394,7 +389,7 @@ public class Player extends Entity {
 					currentAnimation.restart();
 				}
 			}
-		} else if (input.isKeyPressed(G_KEY) ) {
+		} else if (input.isGrKeyDown() ) {
 			if(isOnSolid() || isOnPSolid()){
 				currentAnimation = GGAttempt;
 				currentAnimation.setLooping(false);
@@ -415,28 +410,28 @@ public class Player extends Entity {
 		currentAnimation = GGSuccess;
 		currentAnimation.setLooping(false);
 		currentAnimation.restart();
-		if (input.isKeyDown(RIGHT_KEY)) {
+		if (input.isRightKeyDown()) {
 			busyTimer = GTime;
 			facingRight = true;
 			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
 			else  currentAnimation = TAR;
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
-		}else if(input.isKeyDown(LEFT_KEY)){
+		}else if(input.isLeftKeyDown()){
 			busyTimer = GTime;
 			facingRight = false;
 			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
 			else  currentAnimation = TAR;
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
-		}else if(input.isKeyDown(UP_KEY)){	
+		}else if(input.isUpKeyDown()){	
 			busyTimer = GTime;
 			if(isOnSolid()||isOnPSolid()) currentAnimation = TGU;
 			else  currentAnimation = TAU;
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
 			
-		} else if (input.isKeyDown(DOWN_KEY)) {
+		} else if (input.isDownKeyDown()) {
 			busyTimer = GTime;
 			if(isOnSolid()||isOnPSolid()) currentAnimation = TGD;
 			else  currentAnimation = TAD;
@@ -448,7 +443,7 @@ public class Player extends Entity {
 	public void swordInput(){
 		color = color.lightGray;
 		
-		if (input.isKeyDown(UP_KEY)&&!input.isKeyDown(HA_KEY)) {
+		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {
 				vPY = jumpHeight;
 			} else if (jumpsRemaining == 1&&canJump) {
@@ -460,12 +455,12 @@ public class Player extends Entity {
 			canJump = true;
 		}
 
-		if (input.isKeyDown(LEFT_KEY)) {
+		if (input.isLeftKeyDown()) {
 			currentAnimation = WalkingSword;
 			currentAnimation.setLooping(true);
 			vPX = -speed;
 			facingRight = false;
-		} else if (input.isKeyDown(RIGHT_KEY)) {
+		} else if (input.isRightKeyDown()) {
 			
 			currentAnimation = WalkingSword;
 			currentAnimation.setLooping(true);
@@ -490,7 +485,7 @@ public class Player extends Entity {
 			currentAnimation = null;
 		}
 		if((image == Resources.getImage("p1HeavyAirSwordDown"))){
-			if(isOnSolid()||(isOnPSolid()&&!input.isKeyDown(DOWN_KEY))){
+			if(isOnSolid()||(isOnPSolid()&&!input.isDownKeyDown())){
 				image = Resources.getImage("p1IdleSword");
 				currentAnimation = null;
 			}else{
@@ -499,7 +494,7 @@ public class Player extends Entity {
 		}
 		
 		
-		if (input.isKeyPressed(LA_KEY) ) {
+		if (input.isLAKeyDown() ) {
 			busyTimer = LATime;
 			
 				if(isOnSolid() || isOnPSolid()){
@@ -512,14 +507,14 @@ public class Player extends Entity {
 					currentAnimation.restart();
 				}
 			
-		} else if (input.isKeyPressed(HA_KEY)) {
+		} else if (input.isHAKeyDown()) {
 			busyTimer = HATime*2;
 			if(isOnSolid()||isOnPSolid()){
 				currentAnimation = HGS;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else{
-				if(input.isKeyDown (DOWN_KEY)){
+				if(input.isDownKeyDown()){
 					currentAnimation = HASD;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();

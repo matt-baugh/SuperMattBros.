@@ -19,6 +19,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import SMB.entities.Entity;
 import SMB.entities.Player;
 import SMB.main.Resources;
+import SMB.tools.EntityInput;
 import SMB.world.World;
 
 public class TwoPlayerClientState extends BasicGameState {
@@ -50,7 +51,7 @@ public class TwoPlayerClientState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
 		
-		
+		System.out.println("what is render");
 		
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
@@ -87,6 +88,20 @@ public class TwoPlayerClientState extends BasicGameState {
 		//entities.add(new Sword());
 		winner = null;
 		gameOver = false;
+	}
+	
+	public EntityInput getClientInput(GameContainer gc){
+		EntityInput newInput = new EntityInput();
+		
+		newInput.setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_W));
+		newInput.setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_A));
+		newInput.setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_D));
+		newInput.setDownKeyDown(gc.getInput().isKeyDown(Input.KEY_S));
+		newInput.setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_X));
+		newInput.setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_C));
+		newInput.setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_V));
+		
+		return newInput;
 	}
 	public void initialiseConnection(){
 		try {
@@ -153,9 +168,9 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 	public void sendInputToServer(GameContainer gc){
 		try {
-			writeToServer.writeObject(gc.getInput());
+			writeToServer.writeObject(getClientInput(gc));
 			writeToServer.flush();
-			System.out.println("Input sent");
+			//System.out.println("Input sent");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

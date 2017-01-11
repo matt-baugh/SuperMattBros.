@@ -23,6 +23,7 @@ import SMB.entities.Entity;
 import SMB.entities.Player;
 import SMB.entities.Sword;
 import SMB.main.Resources;
+import SMB.tools.EntityInput;
 import SMB.world.Tile;
 import SMB.world.World;
 
@@ -30,9 +31,9 @@ import SMB.world.World;
 public class TwoPlayerServerState extends BasicGameState {
 	
 	public ArrayList<Entity> entities, toRemove;
-	public ArrayList<Input> inputs;
+	public ArrayList<EntityInput> inputs;
 	public ArrayList<ObjectOutputStream> outputStreams;
-	public Input p1Input, p2Input;
+	public EntityInput p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
@@ -48,7 +49,9 @@ public class TwoPlayerServerState extends BasicGameState {
 		System.out.println("Waiting for players");
 		
 			entities = new ArrayList<Entity>();
-			inputs = new ArrayList<Input>();
+			inputs = new ArrayList<EntityInput>();
+			p1Input = new EntityInput();
+			p2Input = new EntityInput();
 			outputStreams = new ArrayList<ObjectOutputStream>();
 			try{
 				IPAddress = InetAddress.getLocalHost().getHostAddress();
@@ -100,7 +103,7 @@ public class TwoPlayerServerState extends BasicGameState {
 			updateClients();
 			
 		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
-		inputs.set(0, gc.getInput());
+		getPlayer1Input(gc);
 			for (int i = 0; i <entities.size();i++){
 				if(i<inputs.size()){
 					entities.get(i).update(gc, delta, inputs.get(i));
@@ -311,6 +314,15 @@ public class TwoPlayerServerState extends BasicGameState {
 		tellClients("startGame");
 		System.out.println("clients told to start game");
 	}
+	public void getPlayer1Input(GameContainer gc){
+		inputs.get(0).setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_UP));
+		inputs.get(0).setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_LEFT));
+		inputs.get(0).setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_RIGHT));
+		inputs.get(0).setDownKeyDown(gc.getInput().isKeyDown(Input.KEY_DOWN));
+		inputs.get(0).setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_M));
+		inputs.get(0).setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_COMMA));
+		inputs.get(0).setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_PERIOD));
+	}
 	public class ClientHandler implements Runnable{
 		ObjectInputStream inputStream;
 		Socket socket;
@@ -326,19 +338,18 @@ public class TwoPlayerServerState extends BasicGameState {
 			}
 		}
 		public void run(){
-			Input newInput;
+			EntityInput newInput;
 			try{
-				while((newInput = (Input) inputStream.readObject()) != null){
+				while((newInput = (EntityInput) inputStream.readObject()) != null){
 					
 					
 					inputs.set(playerNum,newInput);
-					System.out.println("Input received");
+					//System.out.println("Input received");
 				}
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}
 		}
-		
 	}
 	public class ServerInit implements Runnable{
 		ObjectInputStream inputStream;

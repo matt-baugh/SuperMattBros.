@@ -6,10 +6,10 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 import SMB.main.Resources;
+import SMB.tools.EntityInput;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 import SMB.world.World;
@@ -65,11 +65,11 @@ public abstract class Entity extends Hitbox implements Serializable{
 	
 	protected abstract void indivRender(GameContainer gc, Graphics g);
 	
-	protected abstract void indivUpdate(GameContainer gc, int delta, Input input);
+	protected abstract void indivUpdate(GameContainer gc, int delta, EntityInput input);
 	
 	abstract void spawn();
 	
-	public void update(GameContainer gc, int delta, Input input){
+	public void update(GameContainer gc, int delta, EntityInput input){
 		
 		height = image.getHeight()*Tile.SCALE/1.5f;
 		imageResourceLocation = image.getResourceReference();

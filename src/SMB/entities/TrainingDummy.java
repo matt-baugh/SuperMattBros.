@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import SMB.main.Resources;
+import SMB.tools.EntityInput;
 import SMB.world.Tile;
 
 public class TrainingDummy extends Entity{
@@ -22,7 +23,7 @@ public class TrainingDummy extends Entity{
 	}
 
 	@Override
-	protected void indivUpdate(GameContainer gc, int delta, Input newInput) {
+	protected void indivUpdate(GameContainer gc, int delta, EntityInput newInput) {
 		
 		if(isOnPSolid()){
 			if(vPY>=0){
