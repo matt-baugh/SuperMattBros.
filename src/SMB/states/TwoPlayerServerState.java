@@ -344,7 +344,7 @@ public class TwoPlayerServerState extends BasicGameState {
 					
 					
 					inputs.set(playerNum,newInput);
-					//System.out.println("Input received");
+					
 				}
 			}catch(Exception ex){
 				ex.printStackTrace();
@@ -394,7 +394,7 @@ public class TwoPlayerServerState extends BasicGameState {
 				outputStreams.get(i).flush();
 				outputStreams.get(i).writeObject("newEntities");
 				outputStreams.get(i).writeObject(entities);
-
+				
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}

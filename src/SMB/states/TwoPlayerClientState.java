@@ -51,8 +51,6 @@ public class TwoPlayerClientState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
 		
-		System.out.println("what is render");
-		
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
 		
@@ -70,8 +68,7 @@ public class TwoPlayerClientState extends BasicGameState {
 
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-		System.out.println("update");
-		while(!gameOver){
+		if(!gameOver){
 			sendInputToServer(gc);
 		}
 		
@@ -136,13 +133,12 @@ public class TwoPlayerClientState extends BasicGameState {
 					switch(message){
 					
 						case "newEntities":
-							
 							entities = (ArrayList<Entity>) inputStream.readObject();
 							
 						break;
 						
 						case "startGame":
-							System.out.println("game started(?)");
+							
 							startGame();
 
 						break;
@@ -170,7 +166,6 @@ public class TwoPlayerClientState extends BasicGameState {
 		try {
 			writeToServer.writeObject(getClientInput(gc));
 			writeToServer.flush();
-			//System.out.println("Input sent");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

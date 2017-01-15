@@ -2,12 +2,15 @@ package SMB.entities;
 
 
 
+import java.io.Serializable;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 import SMB.main.Resources;
 import SMB.states.LocalGameState;
@@ -15,7 +18,7 @@ import SMB.tools.EntityInput;
 import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
-public class Player extends Entity {
+public class Player extends Entity{
 
 	private float speed = 0.35f;
 	private int jumpsRemaining = 1;
@@ -23,7 +26,6 @@ public class Player extends Entity {
 	private transient Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS, LAS, HAS, HASD;
 	private transient EntityInput input;
-	private int UP_KEY, LEFT_KEY, RIGHT_KEY, DOWN_KEY, LA_KEY, HA_KEY, G_KEY;
 	public int LATime, HATime, GTime;
 	public int startingX, startingY;
 	public boolean hasSword = false;
@@ -38,13 +40,6 @@ public class Player extends Entity {
 		if(playerNumber == 1){
 			color = Color.red;
 			playerColor = Color.red;
-			UP_KEY = Input.KEY_UP;
-			LEFT_KEY = Input.KEY_LEFT;
-			RIGHT_KEY = Input.KEY_RIGHT;
-			DOWN_KEY = Input.KEY_DOWN;
-			LA_KEY = Input.KEY_M;
-			HA_KEY = Input.KEY_COMMA;
-			G_KEY = Input.KEY_PERIOD;
 			label = "Player1";
 			startingX = 1985;
 			startingY = 2353;
@@ -53,13 +48,6 @@ public class Player extends Entity {
 		if(playerNumber ==2){
 			color = Color.blue;
 			playerColor = Color.blue;
-			UP_KEY = Input.KEY_W;
-			LEFT_KEY = Input.KEY_A;
-			RIGHT_KEY = Input.KEY_D;
-			DOWN_KEY = Input.KEY_S;
-			LA_KEY = Input.KEY_X;
-			HA_KEY = Input.KEY_C;
-			G_KEY = Input.KEY_V;
 			label = "Player2";
 			startingX = 2623;
 			startingY = 2353;
@@ -539,8 +527,24 @@ public class Player extends Entity {
 	}
 	
 	public void indivRender(GameContainer gc, Graphics g){
+		switch(Integer.parseInt(label.replaceAll("[\\D]", ""))){
+			case 1:
+				playerColor = Color.red;
+				break;
+			case 2:
+				playerColor = Color.blue;
+				break;
 		
-		 Resources.getImage("p1Icon").draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), Resources.getImage("p1Icon").getWidth()*Tile.SCALE/1.5f , Resources.getImage("p1Icon").getHeight()*Tile.SCALE/1.5f, playerColor );
+		}
+		try {
+			Resources.loadImage("res/playerImages/NewPlayerIcon.png").draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), Resources.loadImage("res/playerImages/NewPlayerIcon.png").getWidth()*Tile.SCALE/1.5f , Resources.loadImage("res/playerImages/NewPlayerIcon.png").getHeight()*Tile.SCALE/1.5f, playerColor);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Resources.normalFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
 		Resources.normalFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
 

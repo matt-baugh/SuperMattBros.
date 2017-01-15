@@ -16,23 +16,22 @@ import SMB.world.World;
 
 
 public abstract class Entity extends Hitbox implements Serializable{
-	
 	public transient Image image;
 	public Color color;
 
-	private final double TERMINAL_V = 2.25;
-	protected float AmountDamaged = 0;
-	public boolean facingRight = true; 
-	public boolean grabbed = false; 
-	public boolean grabbing = false; 
-	public boolean canJump = true;
+	private transient final double TERMINAL_V = 2.25;
+	protected transient float AmountDamaged = 0;
+	public transient boolean facingRight = true; 
+	public transient boolean grabbed = false; 
+	public transient boolean grabbing = false; 
+	public transient boolean canJump = true;
 	public String label, imageResourceLocation;
-	public int lives;
-	public boolean invulnerable;
-	public int invulnerableTimer;
-	public boolean busy;
-	public int busyTimer;
-	public float xImageOffset = 0;
+	public transient int lives;
+	public transient boolean invulnerable;
+	public transient int invulnerableTimer;
+	public transient boolean busy;
+	public transient int busyTimer;
+	public transient float xImageOffset = 0;
 	
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
@@ -53,9 +52,10 @@ public abstract class Entity extends Hitbox implements Serializable{
 		indivRender(gc, g);
 	}
 	public void clientRender(GameContainer gc, Graphics g){
-		if (image != null){
+		if (imageResourceLocation != null){
 			try {
 				Resources.loadImage(imageResourceLocation).getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
+				System.out.println(imageResourceLocation);
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}

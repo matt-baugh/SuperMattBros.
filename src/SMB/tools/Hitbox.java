@@ -1,6 +1,8 @@
 package SMB.tools;
 
-public class Hitbox {
+import java.io.Serializable;
+
+public class Hitbox  implements Serializable{
 	public float x, y, width, height;
 	
 	public Hitbox(){
