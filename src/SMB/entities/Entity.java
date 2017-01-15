@@ -20,7 +20,7 @@ public abstract class Entity extends Hitbox implements Serializable{
 	public Color color;
 
 	private transient final double TERMINAL_V = 2.25;
-	protected transient float AmountDamaged = 0;
+	public transient float AmountDamaged = 0;
 	public transient boolean facingRight = true; 
 	public transient boolean grabbed = false; 
 	public transient boolean grabbing = false; 
@@ -54,8 +54,10 @@ public abstract class Entity extends Hitbox implements Serializable{
 	public void clientRender(GameContainer gc, Graphics g){
 		if (imageResourceLocation != null){
 			try {
-				Resources.loadImage(imageResourceLocation).getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(image.getWidth()*Tile.SCALE/1.5f - width),y,image.getWidth()*Tile.SCALE/1.5f, image.getHeight()*Tile.SCALE/1.5f, color);
-				System.out.println(imageResourceLocation);
+				Image temp = Resources.loadImage(imageResourceLocation);
+				
+				temp.getFlippedCopy(!facingRight, false ).draw((facingRight) ? x-xImageOffset: x+xImageOffset-(temp.getWidth()*Tile.SCALE/1.5f - width),y,temp.getWidth()*Tile.SCALE/1.5f, temp.getHeight()*Tile.SCALE/1.5f, color);
+				
 			} catch (SlickException e) {
 				e.printStackTrace();
 			}

@@ -23,6 +23,7 @@ import SMB.entities.Entity;
 import SMB.entities.Player;
 import SMB.entities.Sword;
 import SMB.main.Resources;
+import SMB.tools.ClientEntityInfo;
 import SMB.tools.EntityInput;
 import SMB.world.Tile;
 import SMB.world.World;
@@ -393,8 +394,29 @@ public class TwoPlayerServerState extends BasicGameState {
 				
 				outputStreams.get(i).flush();
 				outputStreams.get(i).writeObject("newEntities");
-				outputStreams.get(i).writeObject(entities);
-				
+				outputStreams.get(i).writeInt(entities.size());
+				for(int n = 0; n < entities.size(); n++){
+					if(entities.get(i).label.contains("Sword")){
+						outputStreams.get(i).writeObject("Sword");
+					}else{
+						outputStreams.get(i).writeObject("Player");
+					}
+					outputStreams.get(i).writeObject(entities.get(n));
+					ClientEntityInfo temp = new ClientEntityInfo();
+					temp.setX(entities.get(n).x);
+					temp.setY(entities.get(n).y);
+					temp.setxOffset(entities.get(n).xImageOffset);
+					temp.setImageResourceLocation(entities.get(n).imageResourceLocation);
+					temp.setFacingRight(entities.get(n).facingRight);
+					temp.setAmountDamaged(entities.get(n).AmountDamaged);
+					temp.setLives(entities.get(n).lives);
+					temp.setrColor(entities.get(n).color.getRed());
+					temp.setgColor(entities.get(n).color.getGreen());
+					temp.setbColor(entities.get(n).color.getBlue());
+					temp.setaColor(entities.get(n).color.getAlpha());
+					
+					outputStreams.get(i).writeObject(temp);
+				}
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}

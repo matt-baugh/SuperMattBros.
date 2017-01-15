@@ -18,43 +18,45 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import SMB.entities.Entity;
 import SMB.entities.Player;
+import SMB.entities.Sword;
 import SMB.main.Resources;
+import SMB.tools.ClientEntityInfo;
 import SMB.tools.EntityInput;
 import SMB.world.World;
 
 public class TwoPlayerClientState extends BasicGameState {
-	
+
 	public ArrayList<Entity> entities, toRemove;
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
-	
+
 	public boolean gameOver;
-	
+
 	public String winner = null;
-	
+
 	public Socket socket;
 	public ObjectInputStream inputStream;
 	public ObjectOutputStream writeToServer; 
-	
+
 	public void init(GameContainer gc, StateBasedGame s) throws SlickException {
-		
-			entities = new ArrayList<Entity>();
-			initialiseConnection();
-		
-			toRemove = new ArrayList<Entity>();
-			
-		
-		
+
+		entities = new ArrayList<Entity>();
+		initialiseConnection();
+
+		toRemove = new ArrayList<Entity>();
+
+
+
 	}
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
-		
+
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
-		
-		
+
+
 		for (int i = 0; i <entities.size();i++){
 			entities.get(i).clientRender(gc, g);
 		}
@@ -71,12 +73,12 @@ public class TwoPlayerClientState extends BasicGameState {
 		if(!gameOver){
 			sendInputToServer(gc);
 		}
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 	public void startGame(){
 		entities.clear();
 		entities.add(new Player(1));
@@ -86,10 +88,10 @@ public class TwoPlayerClientState extends BasicGameState {
 		winner = null;
 		gameOver = false;
 	}
-	
+
 	public EntityInput getClientInput(GameContainer gc){
 		EntityInput newInput = new EntityInput();
-		
+
 		newInput.setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_W));
 		newInput.setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_A));
 		newInput.setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_D));
@@ -97,7 +99,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		newInput.setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_X));
 		newInput.setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_C));
 		newInput.setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_V));
-		
+
 		return newInput;
 	}
 	public void initialiseConnection(){
@@ -118,11 +120,11 @@ public class TwoPlayerClientState extends BasicGameState {
 			ex.printStackTrace () ; 
 		}
 	}
-	
+
 	public class ServerHandler implements Runnable{
-		
+
 		public ServerHandler(){
-			
+
 		}
 		@SuppressWarnings("unchecked")
 		public void run(){
@@ -131,25 +133,55 @@ public class TwoPlayerClientState extends BasicGameState {
 				while(true){
 					message = (String) inputStream.readObject(); 
 					switch(message){
+
+					case "newEntities":
+
+						ArrayList<Entity> temp = new ArrayList<Entity>();
+						int size = inputStream.readInt();
+						for(int i = 0; i <size;i++){
+							switch((String) inputStream.readObject()){
+
+							case "Player":
+								temp.add((Player)inputStream.readObject());
+								
+								break;
+
+							case "Sword":
+								temp.add((Sword)inputStream.readObject());
+								break;	
+							}
+							ClientEntityInfo info = (ClientEntityInfo) inputStream.readObject();
+							temp.get(i).x = info.getX();
+							temp.get(i).y = info.getY();
+							temp.get(i).xImageOffset = info.getxOffset();
+							
+							temp.get(i).imageResourceLocation = info.getImageResourceLocation();
+							temp.get(i).facingRight = info.isFacingRight();
+							temp.get(i).AmountDamaged = info.getAmountDamaged();
+							temp.get(i).lives = info.getLives();
+							
 					
-						case "newEntities":
-							entities = (ArrayList<Entity>) inputStream.readObject();
+							temp.get(i).color = new Color(info.getrColor(), info.getgColor(), info.getbColor(), info.getaColor());
 							
-						break;
+							
+						}
 						
-						case "startGame":
-							
-							startGame();
+						entities = new ArrayList<Entity>(temp);
+						break;
+
+					case "startGame":
+
+						startGame();
 
 						break;
-							
-						case "gameOver":
-							gameOver = true;
+
+					case "gameOver":
+						gameOver = true;
 						break;	
 					}
 				}
 			}catch(EOFException ex){
-				
+
 				ex.printStackTrace();
 
 			} catch (ClassNotFoundException e) {
@@ -160,7 +192,7 @@ public class TwoPlayerClientState extends BasicGameState {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 	public void sendInputToServer(GameContainer gc){
 		try {
