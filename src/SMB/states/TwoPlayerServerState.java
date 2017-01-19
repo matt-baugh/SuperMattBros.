@@ -30,7 +30,7 @@ import SMB.world.World;
 
 
 public class TwoPlayerServerState extends BasicGameState {
-	
+
 	public ArrayList<Entity> entities, toRemove;
 	public ArrayList<EntityInput> inputs;
 	public ArrayList<ObjectOutputStream> outputStreams;
@@ -40,43 +40,39 @@ public class TwoPlayerServerState extends BasicGameState {
 	private int desiredPlayers = 2;
 	private Thread serverInitialiser;
 	private String IPAddress ;
-	
+
 	public boolean preGame = true, gameOver;
-	
+
 	public String winner = null;
-	
+
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		System.out.println("Waiting for players");
-		
-			entities = new ArrayList<Entity>();
-			inputs = new ArrayList<EntityInput>();
-			p1Input = new EntityInput();
-			p2Input = new EntityInput();
-			outputStreams = new ArrayList<ObjectOutputStream>();
-			try{
-				IPAddress = InetAddress.getLocalHost().getHostAddress();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		
-		
-			toRemove = new ArrayList<Entity>();
-			serverInitialiser = new Thread(new ServerInit());
-			serverInitialiser.start();
-			
-		
-		
+
+		entities = new ArrayList<Entity>();
+		inputs = new ArrayList<EntityInput>();
+		p1Input = new EntityInput();
+		p2Input = new EntityInput();
+		outputStreams = new ArrayList<ObjectOutputStream>();
+		try{
+			IPAddress = InetAddress.getLocalHost().getHostAddress();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		toRemove = new ArrayList<Entity>();
+		serverInitialiser = new Thread(new ServerInit());
+		serverInitialiser.start();
 	}
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
-		
-	 
-		
+
+
+
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
-		
+
 		if(preGame){
 			Resources.bigFont.drawString(2000, 2000, "Waiting for players", Color.black);
 			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ IPAddress, Color.black);
@@ -93,19 +89,19 @@ public class TwoPlayerServerState extends BasicGameState {
 		g.resetTransform();
 	}
 
-	
+
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-		
+
 		if(preGame){
-			
+
 		} else if(!gameOver){
-			
-			updateClients();
-			
-		if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
-		getPlayer1Input(gc);
+
+
+			if(gc.getInput().isKeyPressed(Input.KEY_Y))entities.add(new Sword());
+			getPlayer1Input(gc);
 			for (int i = 0; i <entities.size();i++){
+				System.out.println(entities.get(i).label);
 				if(i<inputs.size()){
 					entities.get(i).update(gc, delta, inputs.get(i));
 				}else{
@@ -113,7 +109,7 @@ public class TwoPlayerServerState extends BasicGameState {
 				}
 				if(entities.get(i).label.equals("Training")) continue;
 				if(entities.get(i).label.equals("Sword")) continue;
-			
+
 				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
 					entities.get(i).respawn();
 					if(entities.get(i).lives<0){
@@ -127,6 +123,8 @@ public class TwoPlayerServerState extends BasicGameState {
 				entities.removeAll(toRemove);
 				toRemove.clear();
 			}
+			updateClients();
+
 			checkForWinner();
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
@@ -134,98 +132,99 @@ public class TwoPlayerServerState extends BasicGameState {
 				System.out.println(s.getStateCount());
 				s.enterState(States.MENU);
 			}
+			
 		}
 	}
-	
+
 	public void combat(Entity player){
-			
-			for(Entity opponent : entities){
-				if(player==opponent) continue;
-				if(opponent.invulnerable)continue;
-				
-				
-				if(player.image == Resources.getImage("p1LightGroundNeutral")&& ((Player) player).getLGNHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1LightGroundDown")&&((Player) player).getLGDHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1LightGroundRight")&&((Player) player).getLGRHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1LightAirNeutral")&&((Player) player).getLANHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 0.5f : -0.5f, -3, 5);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1LightAirRight")&&((Player) player).getLARHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 1.5f : -1.5f, 1.5f, 3);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				
-				
-				if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&((Player) player).getHGNHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
+
+		for(Entity opponent : entities){
+			if(player==opponent) continue;
+			if(opponent.invulnerable)continue;
+
+
+			if(player.image == Resources.getImage("p1LightGroundNeutral")&& ((Player) player).getLGNHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 5);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1LightGroundDown")&&((Player) player).getLGDHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1LightGroundRight")&&((Player) player).getLGRHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1LightAirNeutral")&&((Player) player).getLANHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 0.5f : -0.5f, -3, 5);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1LightAirRight")&&((Player) player).getLARHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 1.5f : -1.5f, 1.5f, 3);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+
+
+			if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&((Player) player).getHGNHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyGroundDown2")&&((Player) player).getHGDHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyGroundRight2")&&((Player) player).getHGRHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyAirDown")&&((Player) player).getHADHitBox().intersects(opponent)){
+				opponent.getHit(0, 3.5f, 8);
+				opponent.invulnerableTimer = ((Player) (player)).HATime + 100;
+				continue;
+			}
+
+			if(player.image == Resources.getImage("p1HeavyAirUp2")&&((Player) player).getHAUHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyAirNeutral2")){
+				if(((Player) player).getHAN1HitBox().intersects(opponent)){
+					opponent.getHit( 2f, 0, 11);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1HeavyGroundDown2")&&((Player) player).getHGDHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+				}else if(((Player) player).getHAN2HitBox().intersects(opponent)){
+					opponent.getHit( -2f, 0, 11);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
+				}
+				continue;
+			}
+
+
+			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&((Player) player).getGrabHitBox().intersects(opponent)){
+				if(opponent.label.equals("Sword")){
+					((Player) player).pickUpSword();
+					toRemove.add(opponent);
 					continue;
 				}
-				if(player.image == Resources.getImage("p1HeavyGroundRight2")&&((Player) player).getHGRHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
-					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
+				player.grabbing = true;
+				opponent.grabbed = true;
+				if(player.facingRight){
+					opponent.x = player.x + 14* Tile.SCALE / 1.5f;
+				}else{
+					opponent.x = player.x - 14* Tile.SCALE / 1.5f;
 				}
-				if(player.image == Resources.getImage("p1HeavyAirDown")&&((Player) player).getHADHitBox().intersects(opponent)){
-					opponent.getHit(0, 3.5f, 8);
-					opponent.invulnerableTimer = ((Player) (player)).HATime + 100;
-					continue;
-				}
-				
-				if(player.image == Resources.getImage("p1HeavyAirUp2")&&((Player) player).getHAUHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
-					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1HeavyAirNeutral2")){
-					if(((Player) player).getHAN1HitBox().intersects(opponent)){
-						opponent.getHit( 2f, 0, 11);
-						opponent.invulnerableTimer = ((Player) (player)).HATime;
-					}else if(((Player) player).getHAN2HitBox().intersects(opponent)){
-						opponent.getHit( -2f, 0, 11);
-						opponent.invulnerableTimer = ((Player) (player)).HATime;
-					}
-					continue;
-				}
-				
-				
-				if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&((Player) player).getGrabHitBox().intersects(opponent)){
-					if(opponent.label.equals("Sword")){
-						((Player) player).pickUpSword();
-						toRemove.add(opponent);
-						continue;
-					}
-					player.grabbing = true;
-					opponent.grabbed = true;
-					if(player.facingRight){
-						opponent.x = player.x + 14* Tile.SCALE / 1.5f;
-					}else{
-						opponent.x = player.x - 14* Tile.SCALE / 1.5f;
-					}
-					opponent.y = player.y - 20* Tile.SCALE / 1.5f;
-				}
-				
-				if(opponent.grabbed){
+				opponent.y = player.y - 20* Tile.SCALE / 1.5f;
+			}
+
+			if(opponent.grabbed){
 				if(player.image == Resources.getImage("p1ThrowGroundUp")||player.image == Resources.getImage("p1ThrowAirUp")){
 					player.grabbing = false;
 					opponent.grabbed = false;
@@ -253,36 +252,38 @@ public class TwoPlayerServerState extends BasicGameState {
 					else player.image = player.image = Resources.getImage("p1IdleAir");
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
 				}
-				}
-				if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightGroundSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 4f : -4f, 0, 10);
-					opponent.invulnerableTimer = ((Player) (player)).LATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1HeavyGroundSword2")&& ((Player) player).getHGSwordHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 7f : -7f, 0, 20);
-					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1HeavyAirSword2")&& ((Player) player).getHASwordHitBox().intersects(opponent)){
-					opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 20);
-					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
-				}
-				if(player.image == Resources.getImage("p1HeavyAirSwordDown")&& ((Player) player).getHADownSwordHitBox().intersects(opponent)){
-					opponent.getHit(0, 8f, 20);
-					opponent.invulnerableTimer = ((Player) (player)).HATime;
-					continue;
-				}
-				
 			}
-		
-		
+			if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightGroundSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 4f : -4f, 0, 10);
+				opponent.invulnerableTimer = ((Player) (player)).LATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyGroundSword2")&& ((Player) player).getHGSwordHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 7f : -7f, 0, 20);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyAirSword2")&& ((Player) player).getHASwordHitBox().intersects(opponent)){
+				opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 20);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+			if(player.image == Resources.getImage("p1HeavyAirSwordDown")&& ((Player) player).getHADownSwordHitBox().intersects(opponent)){
+				opponent.getHit(0, 8f, 20);
+				opponent.invulnerableTimer = ((Player) (player)).HATime;
+				continue;
+			}
+
+		}
+
+
 	}
 	public void checkForWinner(){
 		if(entities.size()==1){
 			winner = entities.get(0).label;
 			gameOver = true;
+			tellClients("gameOver");
+			tellClients(winner);
 		}else if(entities.size()==2){
 			int playersLeft = 0;
 			String temp = null;
@@ -296,11 +297,11 @@ public class TwoPlayerServerState extends BasicGameState {
 				winner = temp;
 				gameOver = true;
 				tellClients("gameOver");
-				System.out.println("GameOver");
+				tellClients(winner);
 			}
 		}
 	}
-	
+
 	public void startGame(){
 		entities.clear();
 		inputs.clear();
@@ -342,10 +343,10 @@ public class TwoPlayerServerState extends BasicGameState {
 			EntityInput newInput;
 			try{
 				while((newInput = (EntityInput) inputStream.readObject()) != null){
-					
-					
+
+
 					inputs.set(playerNum,newInput);
-					
+
 				}
 			}catch(Exception ex){
 				ex.printStackTrace();
@@ -357,7 +358,7 @@ public class TwoPlayerServerState extends BasicGameState {
 		Socket socket;
 		int playerNum;
 		public ServerInit(){
-			
+
 		}
 		public void run(){
 
@@ -382,27 +383,29 @@ public class TwoPlayerServerState extends BasicGameState {
 			System.out.println("Game starting");
 			preGame = false;
 
-			
+
 		}
-		
+
 	}
-	
+
 	public void updateClients(){
-		
+
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
-				
+
 				outputStreams.get(i).flush();
 				outputStreams.get(i).writeObject("newEntities");
 				outputStreams.get(i).writeInt(entities.size());
 				for(int n = 0; n < entities.size(); n++){
-					if(entities.get(i).label.contains("Sword")){
+					if(entities.get(n).label.equals("Sword")){
 						outputStreams.get(i).writeObject("Sword");
 					}else{
 						outputStreams.get(i).writeObject("Player");
 					}
 					outputStreams.get(i).writeObject(entities.get(n));
+					
 					ClientEntityInfo temp = new ClientEntityInfo();
+					
 					temp.setX(entities.get(n).x);
 					temp.setY(entities.get(n).y);
 					temp.setxOffset(entities.get(n).xImageOffset);
@@ -414,7 +417,7 @@ public class TwoPlayerServerState extends BasicGameState {
 					temp.setgColor(entities.get(n).color.getGreen());
 					temp.setbColor(entities.get(n).color.getBlue());
 					temp.setaColor(entities.get(n).color.getAlpha());
-					
+
 					outputStreams.get(i).writeObject(temp);
 				}
 			}catch(Exception ex){
@@ -422,11 +425,11 @@ public class TwoPlayerServerState extends BasicGameState {
 			}
 		}
 	}
-	
+
 	public void tellClients(String message){
-		
 		for(int i = 0; i < outputStreams.size();i++){
 			try{
+
 				ObjectOutputStream outputToClient = (ObjectOutputStream) outputStreams.get(i);
 				outputToClient.flush();
 				outputToClient.writeObject(message);

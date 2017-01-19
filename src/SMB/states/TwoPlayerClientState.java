@@ -177,6 +177,7 @@ public class TwoPlayerClientState extends BasicGameState {
 
 					case "gameOver":
 						gameOver = true;
+						winner = (String) inputStream.readObject();
 						break;	
 					}
 				}
