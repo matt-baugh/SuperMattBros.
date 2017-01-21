@@ -30,6 +30,8 @@ public class LocalGameState extends BasicGameState {
 	public boolean gameOver;
 
 	public String winner = null;
+	
+	public int swordSpawnTimer = 0;
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
@@ -100,6 +102,16 @@ public class LocalGameState extends BasicGameState {
 				entities.removeAll(toRemove);
 				toRemove.clear();
 			}
+			
+			if(!isSwordInPlay()){
+				swordSpawnTimer++;
+				System.out.println("test");
+			}
+			if(swordSpawnTimer >= 2000){
+				swordSpawnTimer = 0;
+				entities.add(new Sword());
+			}
+			
 			checkForWinner();
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
@@ -301,6 +313,20 @@ public class LocalGameState extends BasicGameState {
 		inputs.get(1).setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_X));
 		inputs.get(1).setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_C));
 		inputs.get(1).setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_V));
+	}
+	
+	public boolean isSwordInPlay(){
+		boolean inPlay = false;
+		for(int i = 0;i<entities.size();i++){
+			if(entities.get(i).label.equals("Sword")){
+				inPlay = true;
+				i = entities.size();
+			}else if(entities.get(i).label.contains("Player")&&(((Player) entities.get(i)).hasSword)){
+				inPlay = true;
+				i = entities.size();
+			}
+		}
+		return inPlay;
 	}
 
 	public int getID() {

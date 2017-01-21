@@ -31,13 +31,14 @@ public class TwoPlayerClientState extends BasicGameState {
 	private int xRender = 1366;
 	private int yRender = 1791;
 
-	public boolean gameOver;
+	public boolean gameOver, leaveGame = false;
 
 	public String winner = null;
 
 	public Socket socket;
 	public ObjectInputStream inputStream;
-	public ObjectOutputStream writeToServer; 
+	public ObjectOutputStream writeToServer;
+	public Thread serverHandler;
 
 	public void init(GameContainer gc, StateBasedGame s) throws SlickException {
 
@@ -45,7 +46,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		initialiseConnection();
 
 		toRemove = new ArrayList<Entity>();
-
+		
 
 
 	}
@@ -62,7 +63,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		}
 		if(winner!=null){
 			Resources.bigFont.drawString(2000, 2000, winner+" is the winner", Color.black);
-			Resources.bigFont.drawString(1950, 2000+Resources.bigFont.getLineHeight(), "Press enter to play again", Color.black);
+			Resources.bigFont.drawString(1950, 2000+Resources.bigFont.getLineHeight(), "Wait for the server to restart the game", Color.black);
 			Resources.bigFont.drawString(1800, 2000+(Resources.bigFont.getLineHeight()*2), "or press escape to return to the menu", Color.black);
 		}
 		g.resetTransform();
@@ -72,6 +73,13 @@ public class TwoPlayerClientState extends BasicGameState {
 			throws SlickException {
 		if(!gameOver){
 			sendInputToServer(gc);
+		}else if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			
+			leaveGame();
+			
+		}
+		if(leaveGame){
+			s.enterState(States.MENU);
 		}
 
 	}
@@ -113,7 +121,7 @@ public class TwoPlayerClientState extends BasicGameState {
 			writeToServer.flush();
 			System.out.println("Made output stream");
 			System.out.println ("Connection made") ;
-			Thread serverHandler = new Thread(new ServerHandler());
+			serverHandler = new Thread(new ServerHandler());
 			serverHandler.start();
 			startGame();
 		} catch (IOException ex){
@@ -179,6 +187,9 @@ public class TwoPlayerClientState extends BasicGameState {
 						gameOver = true;
 						winner = (String) inputStream.readObject();
 						break;	
+					case "leaveGame":
+						leaveGame();
+					break;	
 					}
 				}
 			}catch(EOFException ex){
@@ -202,6 +213,21 @@ public class TwoPlayerClientState extends BasicGameState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void leaveGame() {
+		
+		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		leaveGame = true;
+		serverHandler.stop();
+
+
 	}
 
 	public int getID() {

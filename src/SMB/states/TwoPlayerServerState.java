@@ -1,6 +1,7 @@
 package SMB.states;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
@@ -34,7 +35,11 @@ public class TwoPlayerServerState extends BasicGameState {
 	public ArrayList<Entity> entities, toRemove;
 	public ArrayList<EntityInput> inputs;
 	public ArrayList<ObjectOutputStream> outputStreams;
+	public ArrayList<Socket> sockets;
+	public ArrayList<Thread> threads;
+	
 	public EntityInput p1Input, p2Input;
+	
 	private int xRender = 1366;
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
@@ -44,6 +49,8 @@ public class TwoPlayerServerState extends BasicGameState {
 	public boolean preGame = true, gameOver;
 
 	public String winner = null;
+	
+	public int swordSpawnTimer = 0;
 
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
@@ -61,6 +68,10 @@ public class TwoPlayerServerState extends BasicGameState {
 		}
 
 		toRemove = new ArrayList<Entity>();
+		
+		sockets = new ArrayList<Socket>();
+		threads = new ArrayList<Thread>();
+		
 		serverInitialiser = new Thread(new ServerInit());
 		serverInitialiser.start();
 	}
@@ -123,12 +134,33 @@ public class TwoPlayerServerState extends BasicGameState {
 				entities.removeAll(toRemove);
 				toRemove.clear();
 			}
+			
+			if(!isSwordInPlay()){
+				swordSpawnTimer++;
+				System.out.println("test");
+			}
+			if(swordSpawnTimer >= 2000){
+				swordSpawnTimer = 0;
+				entities.add(new Sword());
+			}
+			
 			updateClients();
 
 			checkForWinner();
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
 			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+				tellClients("leaveGame");
+				for(int i = 0; i< sockets.size(); i ++){
+					threads.get(i).stop();
+					try {
+						sockets.get(i).close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}	
 				System.out.println(s.getStateCount());
 				s.enterState(States.MENU);
 			}
@@ -316,6 +348,21 @@ public class TwoPlayerServerState extends BasicGameState {
 		tellClients("startGame");
 		System.out.println("clients told to start game");
 	}
+	
+	public boolean isSwordInPlay(){
+		boolean inPlay = false;
+		for(int i = 0;i<entities.size();i++){
+			if(entities.get(i).label.equals("Sword")){
+				inPlay = true;
+				i = entities.size();
+			}else if(entities.get(i).label.contains("Player")&&(((Player) entities.get(i)).hasSword)){
+				inPlay = true;
+				i = entities.size();
+			}
+		}
+		return inPlay;
+	}
+	
 	public void getPlayer1Input(GameContainer gc){
 		inputs.get(0).setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_UP));
 		inputs.get(0).setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_LEFT));
@@ -366,6 +413,7 @@ public class TwoPlayerServerState extends BasicGameState {
 				ServerSocket serverSocket = new ServerSocket(10305);
 				for(int i = 1; i <desiredPlayers;i++){
 					Socket clientSocket = serverSocket.accept();
+					sockets.add(clientSocket);
 					System.out.println("Connection attempted");
 					ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 					outputStream.flush();
@@ -373,6 +421,7 @@ public class TwoPlayerServerState extends BasicGameState {
 					outputStreams.add(outputStream);
 
 					Thread clientHandler = new Thread(new ClientHandler(clientSocket, i));
+					threads.add(clientHandler);
 					clientHandler.start();
 					System.out.println("client handler started");
 				}
