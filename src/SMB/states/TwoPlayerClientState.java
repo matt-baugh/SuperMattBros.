@@ -74,8 +74,11 @@ public class TwoPlayerClientState extends BasicGameState {
 		if(!gameOver){
 			sendInputToServer(gc);
 		}else if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
-			
-			leaveGame();
+			try{
+			writeToServer.writeObject("clientLeft");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			
 		}
 		if(leaveGame){
@@ -208,6 +211,7 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 	public void sendInputToServer(GameContainer gc){
 		try {
+			writeToServer.writeObject("newInput");
 			writeToServer.writeObject(getClientInput(gc));
 			writeToServer.flush();
 		} catch (IOException e) {

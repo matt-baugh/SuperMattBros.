@@ -46,7 +46,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	private Thread serverInitialiser;
 	private String IPAddress ;
 
-	public boolean preGame = true, gameOver;
+	public boolean preGame = true, gameOver, exitGame = false;;
 
 	public String winner = null;
 	
@@ -150,21 +150,23 @@ public class TwoPlayerServerState extends BasicGameState {
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
 			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
-				tellClients("leaveGame");
-				for(int i = 0; i< sockets.size(); i ++){
-					threads.get(i).stop();
-					try {
-						sockets.get(i).close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-				}	
-				System.out.println(s.getStateCount());
-				s.enterState(States.MENU);
+				exitGame = true;
 			}
 			
+		}
+		if(exitGame){
+			tellClients("leaveGame");
+			for(int i = 0; i< sockets.size(); i ++){
+				threads.get(i).stop();
+				try {
+					sockets.get(i).close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}	
+			System.out.println(s.getStateCount());
+			s.enterState(States.MENU);
 		}
 	}
 
@@ -388,12 +390,18 @@ public class TwoPlayerServerState extends BasicGameState {
 		}
 		public void run(){
 			EntityInput newInput;
+			String identifier;
 			try{
-				while((newInput = (EntityInput) inputStream.readObject()) != null){
-
-
-					inputs.set(playerNum,newInput);
-
+				while(true){
+					switch(identifier = (String) inputStream.readObject()){
+						case"newInput":
+							newInput = (EntityInput) inputStream.readObject();
+							inputs.set(playerNum,newInput);
+						break;	
+						case"clientLeft":
+							exitGame = true;
+						break;	
+					}
 				}
 			}catch(Exception ex){
 				ex.printStackTrace();
