@@ -40,15 +40,24 @@ public class TwoPlayerClientState extends BasicGameState {
 	public ObjectOutputStream writeToServer;
 	public Thread serverHandler;
 
-	public void init(GameContainer gc, StateBasedGame s) throws SlickException {
+	public void init(GameContainer gc, StateBasedGame s, String IPAddress) throws SlickException {
 
 		entities = new ArrayList<Entity>();
-		initialiseConnection();
+		initialiseConnection(IPAddress);
 
 		toRemove = new ArrayList<Entity>();
 		
 
 
+	}
+	@Override
+	public void init(GameContainer arg0, StateBasedGame arg1)
+			throws SlickException {
+		entities = new ArrayList<Entity>();
+		initialiseConnection();
+
+		toRemove = new ArrayList<Entity>();
+		
 	}
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
@@ -113,10 +122,28 @@ public class TwoPlayerClientState extends BasicGameState {
 
 		return newInput;
 	}
+	public void initialiseConnection(String IP){
+		try {
+			System.out.println("Initialising connection");
+			socket = new Socket(IP , 10305);
+			System.out.println("Made a socket");
+			inputStream = new ObjectInputStream(socket.getInputStream());
+			System.out.println("Made input stream");
+			writeToServer = new ObjectOutputStream(socket.getOutputStream());
+			writeToServer.flush();
+			System.out.println("Made output stream");
+			System.out.println ("Connection made") ;
+			serverHandler = new Thread(new ServerHandler());
+			serverHandler.start();
+			startGame();
+		} catch (IOException ex){
+			ex.printStackTrace () ; 
+		}
+	}
 	public void initialiseConnection(){
 		try {
 			System.out.println("Initialising connection");
-			socket = new Socket("127.0.0.1 " , 10305);
+			socket = new Socket("127.0.0.1" , 10305);
 			System.out.println("Made a socket");
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			System.out.println("Made input stream");
@@ -235,7 +262,9 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 
 	public int getID() {
-		return States.LOCALGAME;
+		return States.CLIENTTWOPLAYER;
 	}
+
+	
 
 }

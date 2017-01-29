@@ -45,8 +45,8 @@ public class MenuState extends BasicGameState {
 		Resources.normalFont.drawString(firstButtonX+50, firstButtonY+160+Resources.normalFont.getLineHeight(), "server");
 		
 		smallButton.draw(firstButtonX+230, firstButtonY+140);
-		Resources.normalFont.drawString(firstButtonX+265, firstButtonY+160, "4 player");
-		Resources.normalFont.drawString(firstButtonX+285, firstButtonY+160+Resources.normalFont.getLineHeight(), "client");
+		Resources.normalFont.drawString(firstButtonX+263, firstButtonY+160, "Enter IP");
+		Resources.normalFont.drawString(firstButtonX+255, firstButtonY+160+Resources.normalFont.getLineHeight(), "manually");
 		
 		
 		largeButton.draw(firstButtonX, firstButtonY+280);
@@ -63,6 +63,8 @@ public class MenuState extends BasicGameState {
 		// TODO Auto-generated method stub
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
+		
+		
 		
 	}
 	
@@ -93,11 +95,14 @@ public class MenuState extends BasicGameState {
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
 			System.out.println("4 player server");
 		}
-		// 4 player client button
+		// manual IP button
 		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY +140
 				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
-			System.out.println("4 player client");
+			System.out.println("manual IP");
+			s.addState(new ManualInputState());
+			s.getState(States.IPINPUT).init(gc,s);
+			s.enterState(States.IPINPUT);
 		}
 		//Local game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +280

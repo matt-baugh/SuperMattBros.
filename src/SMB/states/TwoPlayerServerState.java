@@ -497,7 +497,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	}
 
 	public int getID() {
-		return States.LOCALGAME;
+		return States.SERVERTWOPLAYER;
 	}
 
 }
