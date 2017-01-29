@@ -44,7 +44,6 @@ public class TwoPlayerServerState extends BasicGameState {
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
 	private Thread serverInitialiser;
-	private String IPAddress ;
 
 	public boolean preGame = true, gameOver, exitGame = false;;
 
@@ -61,11 +60,6 @@ public class TwoPlayerServerState extends BasicGameState {
 		p1Input = new EntityInput();
 		p2Input = new EntityInput();
 		outputStreams = new ArrayList<ObjectOutputStream>();
-		try{
-			IPAddress = InetAddress.getLocalHost().getHostAddress();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 
 		toRemove = new ArrayList<Entity>();
 		
@@ -85,8 +79,9 @@ public class TwoPlayerServerState extends BasicGameState {
 		World.render(xRender, yRender);
 
 		if(preGame){
-			Resources.bigFont.drawString(2000, 2000, "Waiting for players", Color.black);
-			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ IPAddress, Color.black);
+			Resources.bigFont.drawString(2050, 2000, "Waiting for players", Color.black);
+			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ Resources.getLocalIP(), Color.black);
+			Resources.bigFont.drawString(1750, 2000+(Resources.bigFont.getLineHeight()*2), "Your public IP address is "+ Resources.getPublicIP(), Color.black);
 		}else{
 			for (int i = 0; i <entities.size();i++){
 				entities.get(i).render(gc, g);

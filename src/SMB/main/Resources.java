@@ -8,6 +8,15 @@ import org.newdawn.slick.*;
 import SMB.world.Tile;
 
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.*;
 
 
@@ -18,6 +27,7 @@ public class Resources {
 	public static Map<String, Sound> sounds;
 	public static TrueTypeFont normalFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 30), false);
 	public static TrueTypeFont bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
+	public static String publicIP, localIP;
 	
 	public Resources(){
 		images = new HashMap<String, Image>();
@@ -78,7 +88,31 @@ public class Resources {
 			images.put("largeButton", loadImage("res/menuImages/LargeButtonTemplate.png") );
 			
 			sprites.put("tiles", loadSprite("res/maps/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
-		} catch (SlickException e) {
+		
+		
+			Enumeration e1 = NetworkInterface.getNetworkInterfaces();
+			while(e1.hasMoreElements()){
+				NetworkInterface net = (NetworkInterface) e1.nextElement();
+				Enumeration e2 = net.getInetAddresses();
+				while(e2.hasMoreElements()){
+					InetAddress address = (InetAddress) e2.nextElement();
+					String temp = address.getHostAddress();
+					System.out.println(temp);
+					if(temp.contains("192.168")){
+						localIP = temp;
+					}
+				}
+			}
+			
+			URL IPWebsite = new URL("http://checkip.amazonaws.com");
+			BufferedReader in = new BufferedReader(new InputStreamReader(IPWebsite.openStream()));
+			publicIP = in.readLine();
+			
+			System.out.println("local ip"+localIP);
+			System.out.println("public ip"+publicIP);
+		
+		
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -98,9 +132,6 @@ public class Resources {
 		
 		return sprites.get(getter);
 	}
-	
-	
-	
 	public static Image getImage(String getter){
 		
 		return images.get(getter);
@@ -108,6 +139,12 @@ public class Resources {
 	public static Sound getSound(String getter){
 		
 		return sounds.get(getter);
+	}
+	public static String getLocalIP(){
+		return localIP;
+	}
+	public static String getPublicIP(){
+		return publicIP;
 	}
 
 }
