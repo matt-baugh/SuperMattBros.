@@ -51,7 +51,7 @@ public class TwoPlayerClientState extends BasicGameState {
 
 	}
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		entities = new ArrayList<Entity>();
 		initialiseConnection();

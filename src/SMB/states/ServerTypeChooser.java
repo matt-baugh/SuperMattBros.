@@ -1,6 +1,5 @@
 package SMB.states;
 
-import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,10 +11,11 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import SMB.main.Resources;
 
-public class ManualInputState extends BasicGameState{
-	String errorMessage;
-	public Image background, largeButton;
-	public int largeButtonWidth, largeButtonHeight, firstComponentX, firstComponentY;
+public class ServerTypeChooser extends BasicGameState{
+
+
+	public Image background, largeButton, smallButton;
+	public int largeButtonWidth, smallButtonWidth, largeButtonHeight, firstComponentX, firstComponentY;
 	public TextField inputTextField;
 
 	@Override
@@ -23,12 +23,14 @@ public class ManualInputState extends BasicGameState{
 			throws SlickException {
 		background  = Resources.getImage("menuBackground");
 		largeButton  = Resources.getImage("largeButton");
+		smallButton  = Resources.getImage("smallButton");
 		firstComponentX = 1200;
 		firstComponentY =  400;
 		largeButtonWidth = 440;
+		smallButtonWidth = 210;
 		largeButtonHeight = 120;
 		inputTextField = new TextField(gc, Resources.normalFont, 1200,400, largeButtonWidth, largeButtonHeight);
-		inputTextField.setText("Input IP here");
+		inputTextField.setText("Input name of your server here");
 		inputTextField.setFocus(true);
 
 	}
@@ -37,11 +39,19 @@ public class ManualInputState extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
 		background.draw(0,0);
+		
 		inputTextField.render(gc, g);
 
-		largeButton.draw(firstComponentX, firstComponentY+140);
-		Resources.normalFont.drawString(firstComponentX+70, firstComponentY+180, "Connect to server");
-
+		smallButton.draw(firstComponentX, firstComponentY+140);
+		Resources.normalFont.drawString(firstComponentX+13, firstComponentY+140+20, "2 player");
+		Resources.normalFont.drawString(firstComponentX+25, firstComponentY+140+20+Resources.normalFont.getLineHeight(), "server");
+		
+		smallButton.draw(firstComponentX + smallButtonWidth + 20, firstComponentY+140);
+		Resources.normalFont.drawString(firstComponentX+230+13, firstComponentY+140+20,  "4 player");
+		Resources.normalFont.drawString(firstComponentX+230+25, firstComponentY+140+20+Resources.normalFont.getLineHeight(), "server");
+		
+		
+		
 		largeButton.draw(firstComponentX, firstComponentY+280);
 		Resources.normalFont.drawString(firstComponentX+80, firstComponentY+320, "Return to menu");
 
@@ -57,27 +67,15 @@ public class ManualInputState extends BasicGameState{
 		
 	}
 
-	private void handleButtons(GameContainer gc, StateBasedGame s){
-		//Enter IP button
+	private void handleButtons(GameContainer gc, StateBasedGame s) throws SlickException{
+		//2 player server button
 		if(gc.getInput().getMouseX() > firstComponentX && gc.getInput().getMouseY() > firstComponentY +140
-				&& gc.getInput().getMouseX() < firstComponentX + largeButtonWidth
+				&& gc.getInput().getMouseX() < firstComponentX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstComponentY + largeButtonHeight + 140){
-			System.out.println("Enter IP");
-			if(checkIfValidIP(inputTextField.getText())){
-				System.out.println("valid");
-
-				s.addState(new TwoPlayerClientState());
-				System.out.println(s.getStateCount());
-				System.out.println(s.getCurrentStateID());
-				try {
-					((TwoPlayerClientState) s.getState(States.CLIENTTWOPLAYER)).init(gc,s, inputTextField.getText());
-				} catch (SlickException e) {
-					e.printStackTrace();
-				}
-				s.enterState(States.CLIENTTWOPLAYER);
-			}else{
-				System.out.println("invalid");
-			}
+			System.out.println("2 player server");
+			s.addState(new TwoPlayerServerState(2, inputTextField.getText()));
+			s.getState(States.SERVERTWOPLAYER).init(gc,s);
+			s.enterState(States.SERVERTWOPLAYER);
 		}
 		//Exit game button
 		if(gc.getInput().getMouseX() > firstComponentX && gc.getInput().getMouseY() > firstComponentY +280
@@ -113,10 +111,11 @@ public class ManualInputState extends BasicGameState{
 			return false;
 		}
 	}
+
 	@Override
 	public int getID() {
-
-		return States.IPINPUT;
+		// TODO Auto-generated method stub
+		return States.SERVERTYPECHOOSER;
 	}
 
 }

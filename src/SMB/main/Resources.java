@@ -25,9 +25,11 @@ public class Resources {
 	public static Map<String, Image> images;
 	public static Map<String, SpriteSheet> sprites;
 	public static Map<String, Sound> sounds;
+	public static TrueTypeFont smallFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 20), false);
 	public static TrueTypeFont normalFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 30), false);
 	public static TrueTypeFont bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
 	public static String publicIP, localIP;
+	public static Enumeration networkInterfaces;
 	
 	public Resources(){
 		images = new HashMap<String, Image>();
@@ -86,27 +88,32 @@ public class Resources {
 			images.put("menuBackground", loadImage("res/menuImages/MenuImage.png") );
 			images.put("smallButton", loadImage("res/menuImages/SmallButtonTemplate.png") );
 			images.put("largeButton", loadImage("res/menuImages/LargeButtonTemplate.png") );
+			images.put("gameCoordinatorBackground", loadImage("res/menuImages/GameCoordinatorImage.png"));
 			
 			sprites.put("tiles", loadSprite("res/maps/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		
 		
-			Enumeration e1 = NetworkInterface.getNetworkInterfaces();
-			while(e1.hasMoreElements()){
-				NetworkInterface net = (NetworkInterface) e1.nextElement();
-				Enumeration e2 = net.getInetAddresses();
-				while(e2.hasMoreElements()){
-					InetAddress address = (InetAddress) e2.nextElement();
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+			while(networkInterfaces.hasMoreElements()){
+				NetworkInterface net = (NetworkInterface) networkInterfaces.nextElement();
+				Enumeration addresses = net.getInetAddresses();
+				while(addresses.hasMoreElements()){
+					InetAddress address = (InetAddress) addresses.nextElement();
 					String temp = address.getHostAddress();
 					System.out.println(temp);
 					if(temp.contains("192.168")){
 						localIP = temp;
+						System.out.println("local ip"+localIP);
 					}
 				}
 			}
-			
+			System.out.println("making url");
 			URL IPWebsite = new URL("http://checkip.amazonaws.com");
+			System.out.println("making buffered reader");
 			BufferedReader in = new BufferedReader(new InputStreamReader(IPWebsite.openStream()));
+			System.out.println("getting external ip");
 			publicIP = in.readLine();
+			System.out.println("got external ip");
 			
 			System.out.println("local ip"+localIP);
 			System.out.println("public ip"+publicIP);

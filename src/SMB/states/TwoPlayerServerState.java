@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -43,6 +45,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	private int xRender = 1366;
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
+	public String nameOfServer;
 	private Thread serverInitialiser;
 
 	public boolean preGame = true, gameOver, exitGame = false;;
@@ -50,7 +53,15 @@ public class TwoPlayerServerState extends BasicGameState {
 	public String winner = null;
 	
 	public int swordSpawnTimer = 0;
-
+	
+	public TwoPlayerServerState(int playerNum, String serverName){
+		desiredPlayers = playerNum;
+		if(serverName!=null){
+			nameOfServer = serverName;
+		}
+	}
+	
+	
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		System.out.println("Waiting for players");
@@ -369,6 +380,60 @@ public class TwoPlayerServerState extends BasicGameState {
 		inputs.get(0).setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_COMMA));
 		inputs.get(0).setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_PERIOD));
 	}
+	public void updateClients(){
+	
+		for(int i = 0; i < outputStreams.size();i++){
+			try{
+	
+				outputStreams.get(i).flush();
+				outputStreams.get(i).writeObject("newEntities");
+				outputStreams.get(i).writeInt(entities.size());
+				for(int n = 0; n < entities.size(); n++){
+					if(entities.get(n).label.equals("Sword")){
+						outputStreams.get(i).writeObject("Sword");
+					}else{
+						outputStreams.get(i).writeObject("Player");
+					}
+					outputStreams.get(i).writeObject(entities.get(n));
+					
+					ClientEntityInfo temp = new ClientEntityInfo();
+					
+					temp.setX(entities.get(n).x);
+					temp.setY(entities.get(n).y);
+					temp.setxOffset(entities.get(n).xImageOffset);
+					temp.setImageResourceLocation(entities.get(n).imageResourceLocation);
+					temp.setFacingRight(entities.get(n).facingRight);
+					temp.setAmountDamaged(entities.get(n).AmountDamaged);
+					temp.setLives(entities.get(n).lives);
+					temp.setrColor(entities.get(n).color.getRed());
+					temp.setgColor(entities.get(n).color.getGreen());
+					temp.setbColor(entities.get(n).color.getBlue());
+					temp.setaColor(entities.get(n).color.getAlpha());
+	
+					outputStreams.get(i).writeObject(temp);
+				}
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public void tellClients(String message){
+		for(int i = 0; i < outputStreams.size();i++){
+			try{
+	
+				ObjectOutputStream outputToClient = (ObjectOutputStream) outputStreams.get(i);
+				outputToClient.flush();
+				outputToClient.writeObject(message);
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public int getID() {
+		return States.SERVERTWOPLAYER;
+	}
 	public class ClientHandler implements Runnable{
 		ObjectInputStream inputStream;
 		Socket socket;
@@ -411,7 +476,8 @@ public class TwoPlayerServerState extends BasicGameState {
 
 		}
 		public void run(){
-
+			Thread serverAnnouncer = new Thread(new ServerAnnouncer());
+			serverAnnouncer.start();
 			try{
 				ServerSocket serverSocket = new ServerSocket(10305);
 				for(int i = 1; i <desiredPlayers;i++){
@@ -429,6 +495,7 @@ public class TwoPlayerServerState extends BasicGameState {
 					System.out.println("client handler started");
 				}
 				serverSocket.close();
+				serverAnnouncer.stop();
 			}catch(Exception ex){ex.printStackTrace();}
 
 			startGame();
@@ -439,60 +506,54 @@ public class TwoPlayerServerState extends BasicGameState {
 		}
 
 	}
-
-	public void updateClients(){
-
-		for(int i = 0; i < outputStreams.size();i++){
+	
+	public class ServerAnnouncer implements Runnable{
+		
+		DatagramSocket datagramSocket;
+		byte[] messageForClients = "ImHere".getBytes();
+		byte[] serverDetails = (nameOfServer+"/"+desiredPlayers).getBytes();
+		@Override
+		public void run() {
 			try{
+				datagramSocket = new DatagramSocket(10306, InetAddress.getByName("0.0.0.0"));
+				datagramSocket.setBroadcast(true);
+				
+				System.out.println("ServerAnnouncer waiting to recieve broadcast");
+					
+				byte[] receiveBuffer = new byte[15000];
+				
+				DatagramPacket inboundPacket = new DatagramPacket(receiveBuffer , receiveBuffer.length);
+				
+				while(true){
+					
+					datagramSocket.receive(inboundPacket);
+					
+					System.out.print("ServerAnnouncer received datagram from "+inboundPacket.getAddress().getHostAddress());
+					String contents = new String(inboundPacket.getData()).trim();
+					if(contents.equals("SMBServerAvailible?")){
+						
+						System.out.println("Message recieved was for me <3");
+						
+						DatagramPacket outboundPacket = new DatagramPacket(messageForClients, messageForClients.length, inboundPacket.getAddress(), inboundPacket.getPort());
+						datagramSocket.send(outboundPacket);
+						
+						System.out.println("ServerAnnouncer replied to"+inboundPacket.getAddress().getHostAddress());
+						
+						outboundPacket = new DatagramPacket(serverDetails, serverDetails.length, inboundPacket.getAddress(), inboundPacket.getPort());
+						datagramSocket.send(outboundPacket);
 
-				outputStreams.get(i).flush();
-				outputStreams.get(i).writeObject("newEntities");
-				outputStreams.get(i).writeInt(entities.size());
-				for(int n = 0; n < entities.size(); n++){
-					if(entities.get(n).label.equals("Sword")){
-						outputStreams.get(i).writeObject("Sword");
+						
 					}else{
-						outputStreams.get(i).writeObject("Player");
+						System.out.println("Message wasnt for me :((");
 					}
-					outputStreams.get(i).writeObject(entities.get(n));
-					
-					ClientEntityInfo temp = new ClientEntityInfo();
-					
-					temp.setX(entities.get(n).x);
-					temp.setY(entities.get(n).y);
-					temp.setxOffset(entities.get(n).xImageOffset);
-					temp.setImageResourceLocation(entities.get(n).imageResourceLocation);
-					temp.setFacingRight(entities.get(n).facingRight);
-					temp.setAmountDamaged(entities.get(n).AmountDamaged);
-					temp.setLives(entities.get(n).lives);
-					temp.setrColor(entities.get(n).color.getRed());
-					temp.setgColor(entities.get(n).color.getGreen());
-					temp.setbColor(entities.get(n).color.getBlue());
-					temp.setaColor(entities.get(n).color.getAlpha());
-
-					outputStreams.get(i).writeObject(temp);
 				}
-			}catch(Exception ex){
-				ex.printStackTrace();
+				
+			}catch (IOException e){
+				e.printStackTrace();
 			}
+			
 		}
-	}
-
-	public void tellClients(String message){
-		for(int i = 0; i < outputStreams.size();i++){
-			try{
-
-				ObjectOutputStream outputToClient = (ObjectOutputStream) outputStreams.get(i);
-				outputToClient.flush();
-				outputToClient.writeObject(message);
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-		}
-	}
-
-	public int getID() {
-		return States.SERVERTWOPLAYER;
+		
 	}
 
 }

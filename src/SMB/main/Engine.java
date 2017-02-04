@@ -16,7 +16,6 @@ public class Engine extends StateBasedGame{
 
 	public Engine() {
 		super("SuperMattBros");
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static void main(String[] args){
@@ -31,7 +30,6 @@ public class Engine extends StateBasedGame{
 			game.setDisplayMode(Window.WIDTH, Window.HEIGHT, false);
 			game.start();
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

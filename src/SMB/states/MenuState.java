@@ -33,21 +33,15 @@ public class MenuState extends BasicGameState {
 		background.draw(0, 0);
 		
 		smallButton.draw(firstButtonX, firstButtonY);
-		Resources.normalFont.drawString(firstButtonX+35, firstButtonY+20, "2 player");
-		Resources.normalFont.drawString(firstButtonX+50, firstButtonY+20+Resources.normalFont.getLineHeight(), "server");
+		Resources.normalFont.drawString(firstButtonX+13, firstButtonY+20, "Find server");
+		Resources.normalFont.drawString(firstButtonX+25, firstButtonY+20+Resources.normalFont.getLineHeight(), "manually");
 		
 		smallButton.draw(firstButtonX+230, firstButtonY);
-		Resources.normalFont.drawString(firstButtonX+265, firstButtonY+20, "2 player");
-		Resources.normalFont.drawString(firstButtonX+285, firstButtonY+20+Resources.normalFont.getLineHeight(), "client");
+		Resources.normalFont.drawString(firstButtonX+250, firstButtonY+20, "Start local");
+		Resources.normalFont.drawString(firstButtonX+235, firstButtonY+20+Resources.normalFont.getLineHeight(), "game finder");
 		
-		smallButton.draw(firstButtonX, firstButtonY+140);
-		Resources.normalFont.drawString(firstButtonX+35, firstButtonY+160, "4 player");
-		Resources.normalFont.drawString(firstButtonX+50, firstButtonY+160+Resources.normalFont.getLineHeight(), "server");
-		
-		smallButton.draw(firstButtonX+230, firstButtonY+140);
-		Resources.normalFont.drawString(firstButtonX+263, firstButtonY+160, "Enter IP");
-		Resources.normalFont.drawString(firstButtonX+255, firstButtonY+160+Resources.normalFont.getLineHeight(), "manually");
-		
+		largeButton.draw(firstButtonX, firstButtonY+140);
+		Resources.normalFont.drawString(firstButtonX+95, firstButtonY+180, "Start a server");
 		
 		largeButton.draw(firstButtonX, firstButtonY+280);
 		Resources.normalFont.drawString(firstButtonX+45, firstButtonY+320, "Local play (2 player)");
@@ -64,46 +58,46 @@ public class MenuState extends BasicGameState {
 		
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
 		
-		
+		if(gc.getInput().isKeyDown(Input.KEY_L)){
+			//state tester
+			s.addState(new ServerTypeChooser());
+			s.getState(States.SERVERTYPECHOOSER).init(gc,s);
+			s.enterState(States.SERVERTYPECHOOSER);
+		}
 		
 	}
 	
 	private void handleButtons(GameContainer gc, StateBasedGame s) throws SlickException{
 		
-		// 2 player server button
+		// manual IP button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
 				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
-			System.out.println("2 player server");
-			s.addState(new TwoPlayerServerState());
-			s.getState(States.SERVERTWOPLAYER).init(gc,s);
-			s.enterState(States.SERVERTWOPLAYER);
-		}
-		// 2 player client button
-		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY 
-				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
-				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
-			System.out.println("2 player client");
-			s.addState(new TwoPlayerClientState());
-			s.getState(States.CLIENTTWOPLAYER).init(gc,s);
-			s.enterState(States.CLIENTTWOPLAYER);
-			System.out.println("2 player client entered");
-		}
-		// 4 player server button
-		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
-				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
-				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
-			System.out.println("4 player server");
-		}
-		// manual IP button
-		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY +140
-				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
-				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
 			System.out.println("manual IP");
 			s.addState(new ManualInputState());
 			s.getState(States.IPINPUT).init(gc,s);
 			s.enterState(States.IPINPUT);
 		}
+		// game coordinator button
+		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY 
+				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
+			
+			s.addState(new GameCoordinator());
+			s.getState(States.GAMECOORDINATOR).init(gc,s);
+			s.enterState(States.GAMECOORDINATOR);
+			
+		}
+		// 2 player server button
+		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
+				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
+				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
+			System.out.println("2 player server");
+			s.addState(new TwoPlayerServerState(2, "default"));
+			s.getState(States.SERVERTWOPLAYER).init(gc,s);
+			s.enterState(States.SERVERTWOPLAYER);
+		}
+		
 		//Local game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +280
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth

@@ -7,5 +7,7 @@ public class States {
 	public static final int SERVERTWOPLAYER = 2;
 	public static final int CLIENTTWOPLAYER = 3;
 	public static final int IPINPUT = 4;
+	public static final int GAMECOORDINATOR = 5;
+	public static final int SERVERTYPECHOOSER = 6;
 
 }
