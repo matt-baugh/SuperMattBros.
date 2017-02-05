@@ -105,7 +105,6 @@ public class LocalGameState extends BasicGameState {
 			
 			if(!isSwordInPlay()){
 				swordSpawnTimer++;
-				System.out.println("test");
 			}
 			if(swordSpawnTimer >= 2000){
 				swordSpawnTimer = 0;
@@ -116,7 +115,6 @@ public class LocalGameState extends BasicGameState {
 		}else{
 			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
 			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
-				System.out.println(s.getStateCount());
 				s.enterState(States.MENU);
 			}
 		}

@@ -32,7 +32,7 @@ import SMB.world.Tile;
 import SMB.world.World;
 
 
-public class TwoPlayerServerState extends BasicGameState {
+public class ServerState extends BasicGameState {
 
 	public ArrayList<Entity> entities, toRemove;
 	public ArrayList<EntityInput> inputs;
@@ -40,7 +40,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	public ArrayList<Socket> sockets;
 	public ArrayList<Thread> threads;
 	
-	public EntityInput p1Input, p2Input;
+	public EntityInput p1Input, p2Input, p3Input, p4Input;
 	
 	private int xRender = 1366;
 	private int yRender = 1791;
@@ -54,7 +54,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	
 	public int swordSpawnTimer = 0;
 	
-	public TwoPlayerServerState(int playerNum, String serverName){
+	public ServerState(int playerNum, String serverName){
 		desiredPlayers = playerNum;
 		if(serverName!=null){
 			nameOfServer = serverName;
@@ -70,6 +70,20 @@ public class TwoPlayerServerState extends BasicGameState {
 		inputs = new ArrayList<EntityInput>();
 		p1Input = new EntityInput();
 		p2Input = new EntityInput();
+		if(desiredPlayers==4){
+			p3Input = new EntityInput();
+			p4Input = new EntityInput();
+		}
+		entities.add(new Player(1));
+		inputs.add(p1Input);
+		entities.add(new Player(2));
+		inputs.add(p2Input);
+		if(desiredPlayers==4){
+			entities.add(new Player(3));
+			inputs.add(p3Input);
+			entities.add(new Player(4));
+			inputs.add(p4Input);
+		}
 		outputStreams = new ArrayList<ObjectOutputStream>();
 
 		toRemove = new ArrayList<Entity>();
@@ -93,6 +107,7 @@ public class TwoPlayerServerState extends BasicGameState {
 			Resources.bigFont.drawString(2050, 2000, "Waiting for players", Color.black);
 			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ Resources.getLocalIP(), Color.black);
 			Resources.bigFont.drawString(1750, 2000+(Resources.bigFont.getLineHeight()*2), "Your public IP address is "+ Resources.getPublicIP(), Color.black);
+			Resources.bigFont.drawString(2300-(Resources.bigFont.getWidth("Server name is: "+ nameOfServer))/2, 2000+(Resources.bigFont.getLineHeight()*3), "Server name is: "+ nameOfServer, Color.black);
 		}else{
 			for (int i = 0; i <entities.size();i++){
 				entities.get(i).render(gc, g);
@@ -345,10 +360,17 @@ public class TwoPlayerServerState extends BasicGameState {
 	public void startGame(){
 		entities.clear();
 		inputs.clear();
+		
 		entities.add(new Player(1));
 		inputs.add(p1Input);
 		entities.add(new Player(2));
 		inputs.add(p2Input);
+		if(desiredPlayers==4){
+			entities.add(new Player(3));
+			inputs.add(p3Input);
+			entities.add(new Player(4));
+			inputs.add(p4Input);
+		}
 		//entities.add(new TrainingDummy());
 		//entities.add(new Sword());
 		winner = null;
@@ -432,7 +454,7 @@ public class TwoPlayerServerState extends BasicGameState {
 	}
 
 	public int getID() {
-		return States.SERVERTWOPLAYER;
+		return States.SERVER;
 	}
 	public class ClientHandler implements Runnable{
 		ObjectInputStream inputStream;
@@ -519,7 +541,7 @@ public class TwoPlayerServerState extends BasicGameState {
 				datagramSocket.setBroadcast(true);
 				
 				System.out.println("ServerAnnouncer waiting to recieve broadcast");
-					
+				System.out.println(nameOfServer+"/"+desiredPlayers);	
 				byte[] receiveBuffer = new byte[15000];
 				
 				DatagramPacket inboundPacket = new DatagramPacket(receiveBuffer , receiveBuffer.length);

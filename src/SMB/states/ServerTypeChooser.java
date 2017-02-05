@@ -30,7 +30,7 @@ public class ServerTypeChooser extends BasicGameState{
 		smallButtonWidth = 210;
 		largeButtonHeight = 120;
 		inputTextField = new TextField(gc, Resources.normalFont, 1200,400, largeButtonWidth, largeButtonHeight);
-		inputTextField.setText("Input name of your server here");
+		inputTextField.setText("Input name of your server");
 		inputTextField.setFocus(true);
 
 	}
@@ -73,9 +73,17 @@ public class ServerTypeChooser extends BasicGameState{
 				&& gc.getInput().getMouseX() < firstComponentX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstComponentY + largeButtonHeight + 140){
 			System.out.println("2 player server");
-			s.addState(new TwoPlayerServerState(2, inputTextField.getText()));
-			s.getState(States.SERVERTWOPLAYER).init(gc,s);
-			s.enterState(States.SERVERTWOPLAYER);
+			s.addState(new ServerState(2, inputTextField.getText()));
+			s.getState(States.SERVER).init(gc,s);
+			s.enterState(States.SERVER);
+		}
+		if(gc.getInput().getMouseX() > firstComponentX + smallButtonWidth + 20 && gc.getInput().getMouseY() > firstComponentY +140
+				&& gc.getInput().getMouseX() < firstComponentX + smallButtonWidth + 20 + smallButtonWidth
+				&& gc.getInput().getMouseY() < firstComponentY + largeButtonHeight + 140){
+			System.out.println("4 player server");
+			s.addState(new ServerState(4, inputTextField.getText()));
+			s.getState(States.SERVER).init(gc,s);
+			s.enterState(States.SERVER);
 		}
 		//Exit game button
 		if(gc.getInput().getMouseX() > firstComponentX && gc.getInput().getMouseY() > firstComponentY +280

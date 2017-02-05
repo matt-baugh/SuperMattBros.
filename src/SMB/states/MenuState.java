@@ -60,10 +60,17 @@ public class MenuState extends BasicGameState {
 		
 		if(gc.getInput().isKeyDown(Input.KEY_L)){
 			//state tester
-			s.addState(new ServerTypeChooser());
-			s.getState(States.SERVERTYPECHOOSER).init(gc,s);
-			s.enterState(States.SERVERTYPECHOOSER);
+			s.addState(new ServerState(4, "default"));
+			s.getState(States.SERVER).init(gc,s);
+			s.enterState(States.SERVER);
 		}
+		if(gc.getInput().isKeyDown(Input.KEY_K)){
+			//state tester 2
+			s.addState(new ClientState());
+			((ClientState) s.getState(States.CLIENT)).init(gc,s, "127.0.0.1");
+			s.enterState(States.CLIENT);
+		}
+		
 		
 	}
 	
@@ -73,7 +80,6 @@ public class MenuState extends BasicGameState {
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
 				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
-			System.out.println("manual IP");
 			s.addState(new ManualInputState());
 			s.getState(States.IPINPUT).init(gc,s);
 			s.enterState(States.IPINPUT);
@@ -92,17 +98,15 @@ public class MenuState extends BasicGameState {
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
-			System.out.println("2 player server");
-			s.addState(new TwoPlayerServerState(2, "default"));
-			s.getState(States.SERVERTWOPLAYER).init(gc,s);
-			s.enterState(States.SERVERTWOPLAYER);
+			s.addState(new ServerTypeChooser());
+			s.getState(States.SERVERTYPECHOOSER).init(gc,s);
+			s.enterState(States.SERVERTYPECHOOSER);
 		}
 		
 		//Local game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +280
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 280){
-			System.out.println("Local game");
 			s.addState(new LocalGameState());
 			s.getState(States.LOCALGAME).init(gc,s);
 			s.enterState(States.LOCALGAME);
@@ -111,7 +115,6 @@ public class MenuState extends BasicGameState {
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +420
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 420){
-			System.out.println("Exit");
 			System.exit(0);
 		}
 		

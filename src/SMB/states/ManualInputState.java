@@ -66,15 +66,15 @@ public class ManualInputState extends BasicGameState{
 			if(checkIfValidIP(inputTextField.getText())){
 				System.out.println("valid");
 
-				s.addState(new TwoPlayerClientState());
+				s.addState(new ClientState());
 				System.out.println(s.getStateCount());
 				System.out.println(s.getCurrentStateID());
 				try {
-					((TwoPlayerClientState) s.getState(States.CLIENTTWOPLAYER)).init(gc,s, inputTextField.getText());
+					((ClientState) s.getState(States.CLIENT)).init(gc,s, inputTextField.getText());
 				} catch (SlickException e) {
 					e.printStackTrace();
 				}
-				s.enterState(States.CLIENTTWOPLAYER);
+				s.enterState(States.CLIENT);
 			}else{
 				System.out.println("invalid");
 			}

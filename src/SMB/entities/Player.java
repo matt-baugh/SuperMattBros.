@@ -52,6 +52,20 @@ public class Player extends Entity{
 			startingX = 2623;
 			startingY = 2353;
 			}
+		if(playerNumber ==3){
+			color = Color.green;
+			playerColor = Color.green;
+			label = "Player3";
+			startingX = 2157;
+			startingY = 2065;
+			}
+		if(playerNumber ==4){
+			color = Color.yellow;
+			playerColor = Color.yellow;
+			label = "Player4";
+			startingX = 2476;
+			startingY = 2017;
+			}
 		spawn();
 	}
 
@@ -534,15 +548,18 @@ public class Player extends Entity{
 			case 2:
 				playerColor = Color.blue;
 				break;
-		
+			case 3:
+				playerColor = Color.green;
+				break;
+			case 4:
+				playerColor = Color.yellow;
+				break;
 		}
 		try {
 			Resources.loadImage("res/playerImages/NewPlayerIcon.png").draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), Resources.loadImage("res/playerImages/NewPlayerIcon.png").getWidth()*Tile.SCALE/1.5f , Resources.loadImage("res/playerImages/NewPlayerIcon.png").getHeight()*Tile.SCALE/1.5f, playerColor);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Resources.normalFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);

@@ -24,14 +24,14 @@ import SMB.tools.ClientEntityInfo;
 import SMB.tools.EntityInput;
 import SMB.world.World;
 
-public class TwoPlayerClientState extends BasicGameState {
+public class ClientState extends BasicGameState {
 
 	public ArrayList<Entity> entities, toRemove;
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
 
-	public boolean gameOver, leaveGame = false;
+	public boolean gameOver, leaveGame = false, pregame = true;
 
 	public String winner = null;
 
@@ -44,11 +44,7 @@ public class TwoPlayerClientState extends BasicGameState {
 
 		entities = new ArrayList<Entity>();
 		initialiseConnection(IPAddress);
-
 		toRemove = new ArrayList<Entity>();
-		
-
-
 	}
 	@Override
 	public void init(GameContainer gc, StateBasedGame s)
@@ -57,7 +53,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		initialiseConnection();
 
 		toRemove = new ArrayList<Entity>();
-		
+
 	}
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
@@ -65,8 +61,10 @@ public class TwoPlayerClientState extends BasicGameState {
 
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
-
-
+		
+		if(pregame){
+			Resources.bigFont.drawString(1900, 2000, "Waiting for players to connect", Color.black);
+		}
 		for (int i = 0; i <entities.size();i++){
 			entities.get(i).clientRender(gc, g);
 		}
@@ -84,11 +82,11 @@ public class TwoPlayerClientState extends BasicGameState {
 			sendInputToServer(gc);
 		}else if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
 			try{
-			writeToServer.writeObject("clientLeft");
+				writeToServer.writeObject("clientLeft");
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			
+
 		}
 		if(leaveGame){
 			s.enterState(States.MENU);
@@ -107,6 +105,7 @@ public class TwoPlayerClientState extends BasicGameState {
 		//entities.add(new Sword());
 		winner = null;
 		gameOver = false;
+		pregame = false;
 	}
 
 	public EntityInput getClientInput(GameContainer gc){
@@ -124,36 +123,24 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 	public void initialiseConnection(String IP){
 		try {
-			System.out.println("Initialising connection");
 			socket = new Socket(IP , 10305);
-			System.out.println("Made a socket");
 			inputStream = new ObjectInputStream(socket.getInputStream());
-			System.out.println("Made input stream");
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
 			writeToServer.flush();
-			System.out.println("Made output stream");
-			System.out.println ("Connection made") ;
 			serverHandler = new Thread(new ServerHandler());
-			serverHandler.start();
-			startGame();
+			serverHandler.start();	
 		} catch (IOException ex){
 			ex.printStackTrace () ; 
 		}
 	}
 	public void initialiseConnection(){
 		try {
-			System.out.println("Initialising connection");
 			socket = new Socket("127.0.0.1" , 10305);
-			System.out.println("Made a socket");
 			inputStream = new ObjectInputStream(socket.getInputStream());
-			System.out.println("Made input stream");
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
 			writeToServer.flush();
-			System.out.println("Made output stream");
-			System.out.println ("Connection made") ;
 			serverHandler = new Thread(new ServerHandler());
 			serverHandler.start();
-			startGame();
 		} catch (IOException ex){
 			ex.printStackTrace () ; 
 		}
@@ -181,7 +168,7 @@ public class TwoPlayerClientState extends BasicGameState {
 
 							case "Player":
 								temp.add((Player)inputStream.readObject());
-								
+
 								break;
 
 							case "Sword":
@@ -192,18 +179,18 @@ public class TwoPlayerClientState extends BasicGameState {
 							temp.get(i).x = info.getX();
 							temp.get(i).y = info.getY();
 							temp.get(i).xImageOffset = info.getxOffset();
-							
+
 							temp.get(i).imageResourceLocation = info.getImageResourceLocation();
 							temp.get(i).facingRight = info.isFacingRight();
 							temp.get(i).AmountDamaged = info.getAmountDamaged();
 							temp.get(i).lives = info.getLives();
-							
-					
+
+
 							temp.get(i).color = new Color(info.getrColor(), info.getgColor(), info.getbColor(), info.getaColor());
-							
-							
+
+
 						}
-						
+
 						entities = new ArrayList<Entity>(temp);
 						break;
 
@@ -219,7 +206,7 @@ public class TwoPlayerClientState extends BasicGameState {
 						break;	
 					case "leaveGame":
 						leaveGame();
-					break;	
+						break;	
 					}
 				}
 			}catch(EOFException ex){
@@ -245,10 +232,10 @@ public class TwoPlayerClientState extends BasicGameState {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void leaveGame() {
-		
-		
+
+
 		try {
 			socket.close();
 		} catch (IOException e) {
@@ -262,9 +249,9 @@ public class TwoPlayerClientState extends BasicGameState {
 	}
 
 	public int getID() {
-		return States.CLIENTTWOPLAYER;
+		return States.CLIENT;
 	}
 
-	
+
 
 }

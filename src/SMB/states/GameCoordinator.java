@@ -86,9 +86,10 @@ public class GameCoordinator extends BasicGameState{
 			if(gc.getInput().getMouseX() > firstServerButtonX+xOffset*(smallButtonWidth+20) && gc.getInput().getMouseY() > firstServerButtonY+yOffset*(buttonHeight+20) 
 					&& gc.getInput().getMouseX() < firstServerButtonX+xOffset*(smallButtonWidth+20) + smallButtonWidth
 					&& gc.getInput().getMouseY() < firstServerButtonY+yOffset*(buttonHeight+20) + buttonHeight){
-				s.addState(new TwoPlayerClientState());
-				((TwoPlayerClientState)s.getState(States.CLIENTTWOPLAYER)).init(gc,s, availibleServers.get(i).getIPAddress());
-				s.enterState(States.CLIENTTWOPLAYER);
+				s.addState(new ClientState());
+				((ClientState)s.getState(States.CLIENT)).init(gc,s, availibleServers.get(i).getIPAddress());
+				searcher.stop();
+				s.enterState(States.CLIENT);
 			}
 		}
 		
@@ -97,7 +98,6 @@ public class GameCoordinator extends BasicGameState{
 				&& gc.getInput().getMouseY() > refreshButtonY
 				&& gc.getInput().getMouseX() < refreshButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < refreshButtonY + buttonHeight ){
-			System.out.println("refresh search");
 			searcher.stop();
 			searcher = new Thread(new searchForGames());
 			searcher.start();
@@ -107,7 +107,6 @@ public class GameCoordinator extends BasicGameState{
 				&& gc.getInput().getMouseY() > refreshButtonY 
 				&& gc.getInput().getMouseX() < refreshButtonX +(2*largeButtonWidth)+70
 				&& gc.getInput().getMouseY() < refreshButtonY + buttonHeight ){
-			System.out.println("return to menu");
 			searcher.stop();
 			s.enterState(States.MENU);
 		}
@@ -136,7 +135,6 @@ public class GameCoordinator extends BasicGameState{
 				try{
 					outboundPacket = new DatagramPacket(message, message.length, InetAddress.getByName("255.255.255.255"), 10306);
 					datagramSocket.send(outboundPacket);
-					System.out.println("Message broadcast to 255.255.255.255");
 				}catch(Exception e){
 					e.printStackTrace();
 				}
@@ -153,7 +151,6 @@ public class GameCoordinator extends BasicGameState{
 						try{
 							outboundPacket.setAddress(broadcastAddress);
 							datagramSocket.send(outboundPacket);
-							System.out.println("Message broadcast to "+broadcastAddress.getHostAddress());
 						} catch(Exception e){
 							e.printStackTrace();
 						}
@@ -166,22 +163,17 @@ public class GameCoordinator extends BasicGameState{
 				while(searching){
 					try {
 						datagramSocket.receive(inboundPacket);
-						System.out.println("Reply from "+ inboundPacket.getAddress().getHostAddress());
 						
 						String message = new String(inboundPacket.getData()).trim();
-						
-						System.out.println("Message: "+ message);
-						
+												
 						datagramSocket.receive(inboundPacket);
 						String serverDetails = new String(inboundPacket.getData()).trim();
-						System.out.println("ServerDetails: "+  serverDetails);
 						String[] indivDetails = serverDetails.split("/");
 						AvailibleServer newServer = new AvailibleServer(inboundPacket.getAddress().getHostAddress(), Integer.valueOf(indivDetails[1]), indivDetails[0]);
 						availibleServers.add(newServer);
 						
 					} catch (IOException e) {
 						searching = false;
-						System.out.println("Server reply timeout");
 					}
 				}
 				datagramSocket.close();
