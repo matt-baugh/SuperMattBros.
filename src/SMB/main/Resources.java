@@ -25,6 +25,7 @@ public class Resources {
 	public static Map<String, Image> images;
 	public static Map<String, SpriteSheet> sprites;
 	public static Map<String, Sound> sounds;
+	//have all my fonts here so dont need to be remade each time they are used
 	public static TrueTypeFont smallFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 20), false);
 	public static TrueTypeFont normalFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 30), false);
 	public static TrueTypeFont bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
@@ -35,8 +36,9 @@ public class Resources {
 		images = new HashMap<String, Image>();
 		sprites = new HashMap<String, SpriteSheet>();
 		sounds = new HashMap<String, Sound>();
-		
+		//left sounds in as if i had unlimited time i would use sounds
 		try {
+			//load all the images
 			images.put("p1Idle", loadImage("res/playerImages/NewPlayerIdle.png") );
 			images.put("p1HeavyGroundDown1", loadImage("res/playerImages/NewPlayerHAGD1.png") );
 			images.put("p1HeavyGroundDown2", loadImage("res/playerImages/NewPlayerHAGD2.png") );
@@ -92,7 +94,7 @@ public class Resources {
 			
 			sprites.put("tiles", loadSprite("res/maps/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
 		
-		
+			//gets the relevant local IP address
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			while(networkInterfaces.hasMoreElements()){
 				NetworkInterface net = (NetworkInterface) networkInterfaces.nextElement();
@@ -107,6 +109,8 @@ public class Resources {
 					}
 				}
 			}
+			
+			//gets external IP
 			System.out.println("making url");
 			URL IPWebsite = new URL("http://checkip.amazonaws.com");
 			System.out.println("making buffered reader");

@@ -10,7 +10,10 @@ import SMB.tools.EntityInput;
 import SMB.world.Tile;
 
 public class TrainingDummy extends Entity{
-
+	//this is just a dummy i used to test combat when creating the game,
+	//doesnt actually get used in the game but left in as
+	//if i had more time one thing i could do would be to make a practice mode
+	//including this
 	@Override
 	public void init() {
 		color = Color.white;

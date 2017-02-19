@@ -19,10 +19,19 @@ import SMB.tools.Hitbox;
 import SMB.world.Tile;
 
 public class Player extends Entity{
-
-	private float speed = 0.35f;
+	
+	//Initialize variables
+	
+	private float speed = 0.35f; 
 	private int jumpsRemaining = 1;
-
+	
+	//KEY FOR ANIMATIONS/COMBAT MOVES (most not all):
+	//first letter is the type of move, L for Light, H for Heavy, G for Grab and T for Throw
+	//second letter is whether the move is in the air (A) or on the ground (G)
+	//third letter is the direction of the move, R for Right/Left (remember facingRight determines which), U for Up, D for Down and N for Neutral
+	//exception of this is when the third letter is an S, this indicates it is a Sword move
+	//here take the 4th letter as the third (if there is one)
+	//Sword has a lot less directional options so there isnt always a 4th letter, if there is none consider it to be neutral
 	private transient Animation currentAnimation, LGN, LGR, LGD, LAN, LAR, HGN, HGD, HGR, HAN, HAU, HAD,
 			GGAttempt, GGSuccess, GAAttempt, GASuccess, TGR, TGU, TGD, TAR, TAU, TAD, Walking, WalkingSword, LGS, HGS, LAS, HAS, HASD;
 	private transient EntityInput input;
@@ -31,11 +40,13 @@ public class Player extends Entity{
 	public boolean hasSword = false;
 	public int swordTimer = 0;
 	public float jumpHeight = -1.75f;
-	public Color playerColor;
+	public Color playerColor; //this remains the same to keep track of which player is which
+	//even when the color of the image changes to grey when the player has a sword
 	
 	
 	
 	public Player(int playerNumber) {
+		//define player colour and starting spawn point depending on the player number
 		lives = 4;
 		if(playerNumber == 1){
 			color = Color.red;
@@ -72,17 +83,21 @@ public class Player extends Entity{
 	@Override
 	public void init() {
 		
+		//sets the height and the width of the player
 		width = 21 * Tile.SCALE / 1.5f;
 		height = 47 * Tile.SCALE / 1.5f;
 		image = Resources.getImage("p1Idle");
 		
+		//have these constants here so balancing the game is easier, defines the amountof time each frame in the respective moves lasts
 		LATime = 100;
 		HATime = 400;
 		GTime = 300;
 		
+		
 		Walking = new Animation(new Image[]{Resources.getImage("p1Walking1"),Resources.getImage("p1Walking2")}, 100, false);
 		WalkingSword = new Animation(new Image[]{Resources.getImage("p1WalkingSword1"),Resources.getImage("p1WalkingSword2")}, 100, false);
 		
+		//uses same key as described earlier, the last boolean in the new Animation is whether the animation loops
 		LGN = new Animation(new Image[] {
 				Resources.getImage("p1LightGroundNeutral"),
 				Resources.getImage("p1Idle") }, LATime, false);
@@ -184,21 +199,22 @@ public class Player extends Entity{
 
 	@Override
 	public void indivUpdate(GameContainer gc, int delta, EntityInput newInput) {
-		
+		//updates the current animation if there is one
 		if (currentAnimation != null) {
 			image = currentAnimation.getCurrentFrame();
 			currentAnimation.update(delta);
 
 		}
+		//this is the only image which starts further to the left than the default image, meaning it requires an image offset
 		if(image == Resources.getImage("p1HeavyAirNeutral2")){
 			xImageOffset = 13*Tile.SCALE/1.5f;
 		}else{
 			xImageOffset = 0;
 		}
 		
-			
+		//updates the players current input	
 		input = newInput;
-		
+		//means that the player will fall through partially solid objects if the down key is not pressed
 		if (!input.isDownKeyDown() && isOnPSolid()) {
 			if (vPY >= 0) {
 				vPY = 0;
@@ -206,11 +222,12 @@ public class Player extends Entity{
 				jumpsRemaining = 1;
 			}
 		}
+		
 		if (isOnSolid()) {
 			jumpsRemaining = 1;
 			canJump = true;
 		}
-		if(!busy){
+		if(!busy){ //all the inputs are handled in here
 			if (!grabbing&&!hasSword) {
 				normalInput();
 			}else if (grabbing){
@@ -225,12 +242,13 @@ public class Player extends Entity{
 	@Override
 	void spawn() {
 		if(lives == 4){
+			//spawns in the original spawn points if full lives (therefore start of game)
 			x = startingX;
 			y = startingY;
 			lives--;
 		}else{
 			int i  = (int)(Math.random()*4);
-			switch(i) {
+			switch(i) { //randomly spawns between 4 spawn points
 				case 0:
 					x = 1985;
 					y = 2353;
@@ -266,10 +284,10 @@ public class Player extends Entity{
 	
 	public void normalInput(){
 
-		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {
-			if ((isOnSolid() || isOnPSolid())&&canJump) {
+		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {   
+			if ((isOnSolid() || isOnPSolid())&&canJump) { //normal jump
 				vPY = jumpHeight;
-			} else if (jumpsRemaining == 1&&canJump) {
+			} else if (jumpsRemaining == 1&&canJump) { //double jump funcitonality
 				vPY = jumpHeight;
 				jumpsRemaining = 0;
 			}
@@ -278,19 +296,19 @@ public class Player extends Entity{
 			canJump = true;
 		}
 
-		if (input.isLeftKeyDown()) {
+		if (input.isLeftKeyDown()) {           //walks left
 			currentAnimation = Walking;
 			currentAnimation.setLooping(true);
 			vPX = -speed;
 			facingRight = false;
-		} else if (input.isRightKeyDown()) {
+		} else if (input.isRightKeyDown()) { //walks right
 			
 			currentAnimation = Walking;
 			currentAnimation.setLooping(true);
 			
 			vPX = speed;
 			facingRight = true;
-		} else {
+		} else { //stands still
 			
 			vPX = 0;
 			if(currentAnimation == Walking){
@@ -299,7 +317,8 @@ public class Player extends Entity{
 				
 			}
 		}
-
+	
+		//changes player's idle image depending on whether they are in the air or not
 		if(image == Resources.getImage("p1Idle")&&!(isOnSolid()||isOnPSolid())){
 			image = Resources.getImage("p1IdleAir");
 		}
@@ -309,146 +328,146 @@ public class Player extends Entity{
 		}
 		
 
-		if (input.isLAKeyDown() ) {
-			busyTimer = LATime;
-			if (input.isRightKeyDown() || input.isLeftKeyDown()) {
-				if(isOnSolid() || isOnPSolid()){
+		if (input.isLAKeyDown() ) { //light attack
+			busyTimer = LATime;		//forces player to commit to attack
+			if (input.isRightKeyDown() || input.isLeftKeyDown()) { //left or right
+				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = LGR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-					if (facingRight)
+					if (facingRight)//determines direction of lunge
 						vKX = 0.5f;
 					else
 						vKX = -0.5f;
-				}else{
+				}else{ //if in air
 					currentAnimation = LAR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
 				
-			} else if (input.isDownKeyDown()) {
-				if(isOnSolid() || isOnPSolid()){
+			} else if (input.isDownKeyDown()) {//downwards attack
+				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = LGD;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}else{
+				}else{ //if in air
 					currentAnimation = LAR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
-			} else {
-				if(isOnSolid() || isOnPSolid()){
+			} else { //if none of the other keys are down it must be a neitral attack
+				if(isOnSolid() || isOnPSolid()){ //if on ground
 					currentAnimation = LGN;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}else{
+				}else{ //if in air
 					currentAnimation = LAN;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
 			}
-		} else if (input.isHAKeyDown()) {
-			busyTimer = HATime*2;
+		} else if (input.isHAKeyDown()) { //heavy attacks
+			busyTimer = HATime*2; // *2 as has a wind up
 			if (input.isRightKeyDown()
-					|| input.isLeftKeyDown()) {
-				if(isOnSolid() || isOnPSolid()){
+					|| input.isLeftKeyDown()) { //for left or right
+				if(isOnSolid() || isOnPSolid()){ //if on ground
 					currentAnimation = HGR;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 					
-					if (facingRight){
+					if (facingRight){ //direction of lunge
 						vKX = 0.5f;
 						vPX = 0.1f;}
 					else{
 						vKX = -0.5f;
 						vPX = -0.1f;}
 				}
-			} else if (input.isDownKeyDown()) {
-				if(isOnSolid() || isOnPSolid()){
+			} else if (input.isDownKeyDown()) {//downwards attack
+				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = HGD;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}else{
+				}else{ //if in air
 					currentAnimation = HAD;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}
-			}else if (input.isUpKeyDown()&&!(isOnSolid() || isOnPSolid())) {
+				}     
+			}else if (input.isUpKeyDown()&&!(isOnSolid() || isOnPSolid())) {//upwards air attack (as there is no upwards ground attack)
 				currentAnimation = HAU;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 				vPY = jumpHeight;
 				
 				
-			}else {
-				if(isOnSolid() || isOnPSolid()){
+			}else {//if no direction, then must be neutral
+				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = HGN;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}else{
+				}else{//if in air
 					currentAnimation = HAN;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
 			}
-		} else if (input.isGrKeyDown() ) {
-			if(isOnSolid() || isOnPSolid()){
+		} else if (input.isGrKeyDown() ) {//grab move
+			if(isOnSolid() || isOnPSolid()){//if on ground
 				currentAnimation = GGAttempt;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}else{
-				currentAnimation = GAAttempt;
+				currentAnimation = GAAttempt;//if in air
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
 			}
 			busyTimer = GTime;
-			vPX = 0;
+			vPX = 0;//forces player to stand still when grabbing
 
 		}
 	}
 	
-	public void grabbingInput(){
+	public void grabbingInput(){//input handling when player is already grabbing
 
 		currentAnimation = GGSuccess;
 		currentAnimation.setLooping(false);
 		currentAnimation.restart();
-		if (input.isRightKeyDown()) {
+		if (input.isRightKeyDown()) {//throw to right
 			busyTimer = GTime;
 			facingRight = true;
-			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
-			else  currentAnimation = TAR;
+			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;//if on ground
+			else  currentAnimation = TAR;//if in air
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
-		}else if(input.isLeftKeyDown()){
+		}else if(input.isLeftKeyDown()){//throw to left
 			busyTimer = GTime;
 			facingRight = false;
-			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;
-			else  currentAnimation = TAR;
+			if(isOnSolid()||isOnPSolid()) currentAnimation = TGR;//if on ground
+			else  currentAnimation = TAR;//if in air
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
-		}else if(input.isUpKeyDown()){	
+		}else if(input.isUpKeyDown()){	//throw up
 			busyTimer = GTime;
-			if(isOnSolid()||isOnPSolid()) currentAnimation = TGU;
-			else  currentAnimation = TAU;
+			if(isOnSolid()||isOnPSolid()) currentAnimation = TGU;//if on ground
+			else  currentAnimation = TAU;//if in air
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
 			
-		} else if (input.isDownKeyDown()) {
+		} else if (input.isDownKeyDown()) {//throw down
 			busyTimer = GTime;
-			if(isOnSolid()||isOnPSolid()) currentAnimation = TGD;
-			else  currentAnimation = TAD;
+			if(isOnSolid()||isOnPSolid()) currentAnimation = TGD;//if on ground
+			else  currentAnimation = TAD;//if in air
 			currentAnimation.setLooping(false);
 			currentAnimation.restart();
 		}
 	}
 	
-	public void swordInput(){
-		color = color.lightGray;
+	public void swordInput(){//input handling when has a sword
+		color = color.lightGray;//makes player look grey
 		
 		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {
-			if ((isOnSolid() || isOnPSolid())&&canJump) {
+			if ((isOnSolid() || isOnPSolid())&&canJump) {//normal jump
 				vPY = jumpHeight;
-			} else if (jumpsRemaining == 1&&canJump) {
+			} else if (jumpsRemaining == 1&&canJump) {//double jump
 				vPY = jumpHeight;
 				jumpsRemaining = 0;
 			}
@@ -457,20 +476,19 @@ public class Player extends Entity{
 			canJump = true;
 		}
 
-		if (input.isLeftKeyDown()) {
+		if (input.isLeftKeyDown()) {//walking left with sword
 			currentAnimation = WalkingSword;
 			currentAnimation.setLooping(true);
 			vPX = -speed;
 			facingRight = false;
-		} else if (input.isRightKeyDown()) {
+		} else if (input.isRightKeyDown()) {//walking right with sword
 			
 			currentAnimation = WalkingSword;
 			currentAnimation.setLooping(true);
 			
 			vPX = speed;
 			facingRight = true;
-		} else {
-			
+		} else {//standing still
 			vPX = 0;
 			if(currentAnimation == WalkingSword){
 				currentAnimation = null;
@@ -478,6 +496,7 @@ public class Player extends Entity{
 				
 			}
 		}
+		//setting idle sword image depending on whether you have a 
 		if(image == Resources.getImage("p1IdleSword")&&!(isOnSolid()||isOnPSolid())){
 			image = Resources.getImage("p1IdleAirSword");
 			currentAnimation = null;
@@ -486,7 +505,8 @@ public class Player extends Entity{
 			image = Resources.getImage("p1IdleSword");
 			currentAnimation = null;
 		}
-		if((image == Resources.getImage("p1HeavyAirSwordDown"))){
+		
+		if((image == Resources.getImage("p1HeavyAirSwordDown"))){//stops the player ground pounding if so desired
 			if(isOnSolid()||(isOnPSolid()&&!input.isDownKeyDown())){
 				image = Resources.getImage("p1IdleSword");
 				currentAnimation = null;
@@ -496,26 +516,25 @@ public class Player extends Entity{
 		}
 		
 		
-		if (input.isLAKeyDown() ) {
+		if (input.isLAKeyDown() ) {//light attacks
 			busyTimer = LATime;
-			
-				if(isOnSolid() || isOnPSolid()){
+				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = LGS;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
-				}else{
+				}else{//if in air
 					currentAnimation = LAS;
 					currentAnimation.setLooping(false);
 					currentAnimation.restart();
 				}
 			
-		} else if (input.isHAKeyDown()) {
+		} else if (input.isHAKeyDown()) {//heavy attacks
 			busyTimer = HATime*2;
-			if(isOnSolid()||isOnPSolid()){
+			if(isOnSolid()||isOnPSolid()){//if on ground
 				currentAnimation = HGS;
 				currentAnimation.setLooping(false);
 				currentAnimation.restart();
-			}else{
+			}else{//if in air
 				if(input.isDownKeyDown()){
 					currentAnimation = HASD;
 					currentAnimation.setLooping(false);
@@ -541,6 +560,7 @@ public class Player extends Entity{
 	}
 	
 	public void indivRender(GameContainer gc, Graphics g){
+		//sets the colour again (needed for the client)
 		switch(Integer.parseInt(label.replaceAll("[\\D]", ""))){
 			case 1:
 				playerColor = Color.red;
@@ -555,6 +575,7 @@ public class Player extends Entity{
 				playerColor = Color.yellow;
 				break;
 		}
+		//renders players icon in top right
 		try {
 			Resources.loadImage("res/playerImages/NewPlayerIcon.png").draw(3150, 1750+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), Resources.loadImage("res/playerImages/NewPlayerIcon.png").getWidth()*Tile.SCALE/1.5f , Resources.loadImage("res/playerImages/NewPlayerIcon.png").getHeight()*Tile.SCALE/1.5f, playerColor);
 		} catch (NumberFormatException e) {
@@ -562,12 +583,15 @@ public class Player extends Entity{
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+		//renders how damaged the player if and how many lives they have left
 		Resources.normalFont.drawString(3050f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(AmountDamaged) , playerColor);
 		Resources.normalFont.drawString(3200f,1760+(Integer.parseInt(label.replaceAll("[\\D]", ""))*60), String.valueOf(lives) , playerColor);
 
 	
 		
 	}
+	
+	//all the hit boxes for the relevant moves
 	
 	public Hitbox getLGNHitBox(){
 		if(facingRight) return new Hitbox(x+18*Tile.SCALE/1.5f, y+ 18*Tile.SCALE/1.5f, 6*Tile.SCALE/1.5f, 4*Tile.SCALE/1.5f);

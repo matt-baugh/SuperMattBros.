@@ -555,13 +555,11 @@ public class ServerState extends BasicGameState {
 					if(contents.equals("SMBServerAvailible?")){
 						
 						System.out.println("Message recieved was for me <3");
-						
 						DatagramPacket outboundPacket = new DatagramPacket(messageForClients, messageForClients.length, inboundPacket.getAddress(), inboundPacket.getPort());
 						datagramSocket.send(outboundPacket);
-						
 						System.out.println("ServerAnnouncer replied to"+inboundPacket.getAddress().getHostAddress());
-						
 						outboundPacket = new DatagramPacket(serverDetails, serverDetails.length, inboundPacket.getAddress(), inboundPacket.getPort());
+						System.out.println(new String(outboundPacket.getData()));
 						datagramSocket.send(outboundPacket);
 
 						

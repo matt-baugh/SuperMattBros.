@@ -21,7 +21,8 @@ public class Sword extends Entity{
 		label = "Sword";
 		width = 9 * Tile.SCALE / 1.5f;
 		height = 24 * Tile.SCALE / 1.5f;
-		color = Color.white;
+		color = Color.white; 
+		//white, meaning no filter is on it, which is desired as the image itself has the correct amount of grey
 	}
 
 	@Override
@@ -31,11 +32,11 @@ public class Sword extends Entity{
 		}
 		vKY = 0;
 		vKX = 0;
-		
+		//stops the sword being knocked back, which makes sense as its a sword
 	}
 
 	@Override
-	void spawn() {
+	void spawn() { //chooses 1 of 5 locations for the sword to spawn
 		int i  = (int)(Math.random()*5);
 		switch(i) {
 			case 0:
@@ -64,8 +65,7 @@ public class Sword extends Entity{
 
 	@Override
 	protected void indivRender(GameContainer gc, Graphics g) {
-		// TODO Auto-generated method stub
-		
+		//nothing to do here, as no extra elements specific to the sword to render
 	}
 
 }

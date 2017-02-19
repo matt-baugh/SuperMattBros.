@@ -24,7 +24,7 @@ public class Engine extends StateBasedGame{
 		File f = new File("natives");
 		if (f.exists())System.setProperty("org.lwjgl.librarypath", f.getAbsolutePath());
 		
-		
+		//sets up the window the game will be displayed in
 		try {
 			AppGameContainer game = new AppGameContainer(new Engine());
 			game.setDisplayMode(Window.WIDTH, Window.HEIGHT, false);
@@ -35,25 +35,22 @@ public class Engine extends StateBasedGame{
 	}
 	
 	public void initStatesList(GameContainer gc) throws SlickException {
-		gc.setTargetFrameRate(60);
-		gc.setAlwaysRender(true);
+		gc.setTargetFrameRate(60); //sets frame rate of game
+		gc.setAlwaysRender(true); //means that the game is always rendered, even if window is not focused on
 		gc.setMaximumLogicUpdateInterval(60);
 		gc.setVSync(true);
 		gc.setShowFPS(false);
 		
 		new Resources();
 		
-		try {
-			World.load("res/maps/RealMap.json");
-			
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		try { //load the map
+			World.load("res/maps/RealMap.json");} catch (Exception e) 
+			{
 			e.printStackTrace();
 			System.err.println("Map does not exist");
 		}
 		
-		this.addState(new MenuState());
+		this.addState(new MenuState()); //so the game starts in the menu
 		
 		
 	}

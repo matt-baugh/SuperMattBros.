@@ -28,23 +28,23 @@ public class GameCoordinator extends BasicGameState{
 	public int firstServerButtonX, firstServerButtonY, 
 	smallButtonWidth, largeButtonWidth, buttonHeight,
 	refreshButtonX, refreshButtonY;
-	
+
 	@Override
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
 		background  = Resources.getImage("gameCoordinatorBackground");
 		smallButton = Resources.getImage("smallButton");
 		largeButton  = Resources.getImage("largeButton");
-		
+
 		firstServerButtonX = 400;
 		firstServerButtonY = 400;
 		smallButtonWidth = 210;
 		largeButtonWidth = 440;
 		buttonHeight = 120;
-		
+
 		refreshButtonX = 560;
 		refreshButtonY = 775;
-		
+
 		searcher = new Thread(new searchForGames());
 		searcher.start();
 	}
@@ -53,13 +53,13 @@ public class GameCoordinator extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
 		background.draw(0,0);
-		
+
 		largeButton.draw(refreshButtonX, refreshButtonY);
 		Resources.normalFont.drawString(refreshButtonX+90, refreshButtonY+40, "Refresh Search");
-		
+
 		largeButton.draw(refreshButtonX +largeButtonWidth+70, refreshButtonY);
 		Resources.normalFont.drawString(refreshButtonX+largeButtonWidth+160, refreshButtonY+40, "Return to menu");
-	
+
 		for(int i = 0;i<availibleServers.size();i++){
 			int xOffset = i % 5;
 			int yOffset = i/5;
@@ -68,7 +68,7 @@ public class GameCoordinator extends BasicGameState{
 			Resources.smallFont.drawString(firstServerButtonX+xOffset*(smallButtonWidth+20)+13, firstServerButtonY+yOffset*(buttonHeight+20)+25+Resources.smallFont.getLineHeight(), "IP: "+availibleServers.get(i).getIPAddress());
 			Resources.smallFont.drawString(firstServerButtonX+xOffset*(smallButtonWidth+20)+22, firstServerButtonY+yOffset*(buttonHeight+20)+25+2*Resources.smallFont.getLineHeight(), "Server size: "+availibleServers.get(i).getNumberOfPlayers());		
 		}
-	
+
 	}
 
 	@Override
@@ -77,9 +77,9 @@ public class GameCoordinator extends BasicGameState{
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
 
 	}
-	
+
 	private void handleButtons(GameContainer gc, StateBasedGame s) throws SlickException{
-		
+
 		for(int i = 0;i<availibleServers.size();i++){
 			int xOffset = i % 5;
 			int yOffset = i/5;
@@ -92,7 +92,7 @@ public class GameCoordinator extends BasicGameState{
 				s.enterState(States.CLIENT);
 			}
 		}
-		
+
 		//refresh search
 		if(gc.getInput().getMouseX() > refreshButtonX 
 				&& gc.getInput().getMouseY() > refreshButtonY
@@ -111,9 +111,9 @@ public class GameCoordinator extends BasicGameState{
 			s.enterState(States.MENU);
 		}
 	}
-	
-	
-	
+
+
+
 	@Override
 	public int getID() {
 		return States.GAMECOORDINATOR;
@@ -147,7 +147,7 @@ public class GameCoordinator extends BasicGameState{
 						InetAddress broadcastAddress = interfaceAddress.getBroadcast();
 
 						if(broadcastAddress == null) continue;
-						
+
 						try{
 							outboundPacket.setAddress(broadcastAddress);
 							datagramSocket.send(outboundPacket);
@@ -156,22 +156,30 @@ public class GameCoordinator extends BasicGameState{
 						}
 					}
 				}
-				
-				
+
+
 				DatagramPacket inboundPacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-				
+
 				while(searching){
-					try {
+						try {
+						//receives confirmation message here
 						datagramSocket.receive(inboundPacket);
-						
+						System.out.println("message received");
 						String message = new String(inboundPacket.getData()).trim();
-												
-						datagramSocket.receive(inboundPacket);
-						String serverDetails = new String(inboundPacket.getData()).trim();
-						String[] indivDetails = serverDetails.split("/");
-						AvailibleServer newServer = new AvailibleServer(inboundPacket.getAddress().getHostAddress(), Integer.valueOf(indivDetails[1]), indivDetails[0]);
-						availibleServers.add(newServer);
-						
+						System.out.println(message);
+						//receives details message here
+						if(message.equals("ImHere")){
+							datagramSocket.receive(inboundPacket);
+
+							String serverDetails = new String(inboundPacket.getData(), inboundPacket.getOffset(),
+									inboundPacket.getLength()).trim();
+							System.out.println(serverDetails);
+							String[] indivDetails = serverDetails.split("/");
+
+							AvailibleServer newServer = new AvailibleServer(inboundPacket.getAddress().getHostAddress(),
+									Integer.valueOf(indivDetails[1]), indivDetails[0]);
+							availibleServers.add(newServer);
+						}
 					} catch (IOException e) {
 						searching = false;
 					}

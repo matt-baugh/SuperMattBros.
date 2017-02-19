@@ -25,7 +25,7 @@ import SMB.tools.EntityInput;
 import SMB.world.World;
 
 public class ClientState extends BasicGameState {
-
+	//initialises variables
 	public ArrayList<Entity> entities, toRemove;
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
@@ -39,7 +39,9 @@ public class ClientState extends BasicGameState {
 	public ObjectInputStream inputStream;
 	public ObjectOutputStream writeToServer;
 	public Thread serverHandler;
-
+	
+	
+	//2 optional init methods, depending on whether an IPAddress has been input
 	public void init(GameContainer gc, StateBasedGame s, String IPAddress) throws SlickException {
 
 		entities = new ArrayList<Entity>();
@@ -59,16 +61,20 @@ public class ClientState extends BasicGameState {
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
 
+		//renders map
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
 		
 		if(pregame){
+			//displays this text if game hasnt started yet
 			Resources.bigFont.drawString(1900, 2000, "Waiting for players to connect", Color.black);
 		}
+		//renders all entities
 		for (int i = 0; i <entities.size();i++){
 			entities.get(i).clientRender(gc, g);
 		}
 		if(winner!=null){
+			//displays end of game text when there's a winner
 			Resources.bigFont.drawString(2000, 2000, winner+" is the winner", Color.black);
 			Resources.bigFont.drawString(1950, 2000+Resources.bigFont.getLineHeight(), "Wait for the server to restart the game", Color.black);
 			Resources.bigFont.drawString(1800, 2000+(Resources.bigFont.getLineHeight()*2), "or press escape to return to the menu", Color.black);
@@ -78,17 +84,21 @@ public class ClientState extends BasicGameState {
 
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-		if(!gameOver){
+		//no updating of entities as thats all server side
+		if(!gameOver){      
 			sendInputToServer(gc);
 		}else if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			//client exits game, by telling the server it wants to leave
+			//then the server shuts down for everyone
 			try{
-				writeToServer.writeObject("clientLeft");
+				writeToServer.writeObject("clientLeft");    
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 
 		}
 		if(leaveGame){
+			//actually causes the player to leave the game
 			s.enterState(States.MENU);
 		}
 
@@ -101,8 +111,6 @@ public class ClientState extends BasicGameState {
 		entities.clear();
 		entities.add(new Player(1));
 		entities.add(new Player(2));
-		//entities.add(new TrainingDummy());
-		//entities.add(new Sword());
 		winner = null;
 		gameOver = false;
 		pregame = false;
