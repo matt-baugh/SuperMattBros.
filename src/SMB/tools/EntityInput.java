@@ -3,10 +3,12 @@ package SMB.tools;
 import java.io.Serializable;
 
 public class EntityInput implements Serializable{
+	//Declares and initialises variables
 	public boolean UpKeyDown = false, LeftKeyDown = false, RightKeyDown = false,
 			DownKeyDown = false, LAKeyDown = false, HAKeyDown = false,
 			GrKeyDown = false;
 
+	//getters and setters
 	public boolean isUpKeyDown() {
 		return UpKeyDown;
 	}

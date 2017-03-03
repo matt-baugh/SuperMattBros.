@@ -25,7 +25,7 @@ import SMB.tools.EntityInput;
 import SMB.world.World;
 
 public class ClientState extends BasicGameState {
-	//initialises variables
+	//declare and initialise where appropriate
 	public ArrayList<Entity> entities, toRemove;
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
@@ -39,8 +39,8 @@ public class ClientState extends BasicGameState {
 	public ObjectInputStream inputStream;
 	public ObjectOutputStream writeToServer;
 	public Thread serverHandler;
-	
-	
+
+
 	//2 optional init methods, depending on whether an IPAddress has been input
 	public void init(GameContainer gc, StateBasedGame s, String IPAddress) throws SlickException {
 
@@ -64,7 +64,7 @@ public class ClientState extends BasicGameState {
 		//renders map
 		g.translate(-xRender, -yRender);
 		World.render(xRender, yRender);
-		
+
 		if(pregame){
 			//displays this text if game hasnt started yet
 			Resources.bigFont.drawString(1900, 2000, "Waiting for players to connect", Color.black);
@@ -107,7 +107,7 @@ public class ClientState extends BasicGameState {
 
 
 
-	public void startGame(){
+	public void startGame(){//starts game
 		entities.clear();
 		entities.add(new Player(1));
 		entities.add(new Player(2));
@@ -117,6 +117,8 @@ public class ClientState extends BasicGameState {
 	}
 
 	public EntityInput getClientInput(GameContainer gc){
+		//creates an EntityInput object and fills it with all the clients current input
+
 		EntityInput newInput = new EntityInput();
 
 		newInput.setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_W));
@@ -131,10 +133,14 @@ public class ClientState extends BasicGameState {
 	}
 	public void initialiseConnection(String IP){
 		try {
+			//makes a socket going to the server
 			socket = new Socket(IP , 10305);
+			//makes input and output streams for that socket 
+			//are object streams so can send anything
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
-			writeToServer.flush();
+			writeToServer.flush(); 
+			//starts thread to handle messages being sent from the server
 			serverHandler = new Thread(new ServerHandler());
 			serverHandler.start();	
 		} catch (IOException ex){
@@ -143,6 +149,7 @@ public class ClientState extends BasicGameState {
 	}
 	public void initialiseConnection(){
 		try {
+			//does same as above, but connects to this machine (hence "127.0.0.1")
 			socket = new Socket("127.0.0.1" , 10305);
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
@@ -159,30 +166,36 @@ public class ClientState extends BasicGameState {
 		public ServerHandler(){
 
 		}
-		@SuppressWarnings("unchecked")
 		public void run(){
 			String message;
-			try{
-				while(true){
+
+			//so loops continuously
+			while(true){
+				try{
+					//gets message from server
 					message = (String) inputStream.readObject(); 
+					//does different things depending on message
 					switch(message){
 
 					case "newEntities":
-
+						//this message means the server is about to send the client 
+						//creates temporary Arraylist so as to lessen the impact on the client
+						//e.g. entities disappearing as new ones are sent
 						ArrayList<Entity> temp = new ArrayList<Entity>();
+						//this indicates the number of entities the client will receive
 						int size = inputStream.readInt();
 						for(int i = 0; i <size;i++){
+							//server then sends client another string saying what type of
+							//entity will be sent so it can be cast correctly
 							switch((String) inputStream.readObject()){
-
-							case "Player":
-								temp.add((Player)inputStream.readObject());
-
+								case "Player":
+									temp.add((Player)inputStream.readObject());
 								break;
-
-							case "Sword":
-								temp.add((Sword)inputStream.readObject());
+								case "Sword":
+									temp.add((Sword)inputStream.readObject());
 								break;	
 							}
+							//gets the info about the entity and then sets it to those values
 							ClientEntityInfo info = (ClientEntityInfo) inputStream.readObject();
 							temp.get(i).x = info.getX();
 							temp.get(i).y = info.getY();
@@ -192,48 +205,50 @@ public class ClientState extends BasicGameState {
 							temp.get(i).facingRight = info.isFacingRight();
 							temp.get(i).AmountDamaged = info.getAmountDamaged();
 							temp.get(i).lives = info.getLives();
-
-
 							temp.get(i).color = new Color(info.getrColor(), info.getgColor(), info.getbColor(), info.getaColor());
 
 
 						}
-
+						//sets the real list of entities to the temporary one
 						entities = new ArrayList<Entity>(temp);
 						break;
 
 					case "startGame":
-
+						//self explanatory
 						startGame();
-
 						break;
 
 					case "gameOver":
+						//this means someone has won the game
 						gameOver = true;
+						//receives string from server, which is the name of the winner
 						winner = (String) inputStream.readObject();
 						break;	
 					case "leaveGame":
+						//causes player to leave the game
 						leaveGame();
 						break;	
 					}
-				}
-			}catch(EOFException ex){
 
-				ex.printStackTrace();
+				}catch(EOFException ex){
 
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					ex.printStackTrace();
+
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
 			}
 		}
 
 	}
 	public void sendInputToServer(GameContainer gc){
 		try {
+			//sends the player the string "newInput" to indicate what it is 
+			//about to send
 			writeToServer.writeObject("newInput");
+			//sends the server the clients input
 			writeToServer.writeObject(getClientInput(gc));
 			writeToServer.flush();
 		} catch (IOException e) {
@@ -242,18 +257,15 @@ public class ClientState extends BasicGameState {
 	}
 
 	public void leaveGame() {
-
-
 		try {
+			//closes the socket
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		leaveGame = true;
+		//stops the server handler so nothing is left 
 		serverHandler.stop();
-
-
 	}
 
 	public int getID() {

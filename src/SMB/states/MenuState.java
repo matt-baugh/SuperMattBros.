@@ -11,12 +11,13 @@ import org.newdawn.slick.state.StateBasedGame;
 import SMB.main.Resources;
 
 public class MenuState extends BasicGameState {
-	
+	//declare variable
 	public Image background, smallButton, largeButton;
 	public int firstButtonX, firstButtonY, smallButtonWidth, largeButtonWidth, buttonHeight;
 	
 	public void init(GameContainer gc, StateBasedGame s)
 			throws SlickException {
+		//initialise variables
 		background = Resources.getImage("menuBackground");
 		smallButton  = Resources.getImage("smallButton");
 		largeButton  = Resources.getImage("largeButton");
@@ -30,22 +31,29 @@ public class MenuState extends BasicGameState {
 
 	public void render(GameContainer gc, StateBasedGame s, Graphics g)
 			throws SlickException {
+		//draw background graphic
 		background.draw(0, 0);
 		
+		//draws button to access manual server connecter
 		smallButton.draw(firstButtonX, firstButtonY);
 		Resources.normalFont.drawString(firstButtonX+13, firstButtonY+20, "Find server");
 		Resources.normalFont.drawString(firstButtonX+25, firstButtonY+20+Resources.normalFont.getLineHeight(), "manually");
 		
+		//draws button to access game coordinator
+		//(local game finder)
 		smallButton.draw(firstButtonX+230, firstButtonY);
 		Resources.normalFont.drawString(firstButtonX+250, firstButtonY+20, "Start local");
 		Resources.normalFont.drawString(firstButtonX+235, firstButtonY+20+Resources.normalFont.getLineHeight(), "game finder");
 		
+		//draws start server button
 		largeButton.draw(firstButtonX, firstButtonY+140);
 		Resources.normalFont.drawString(firstButtonX+95, firstButtonY+180, "Start a server");
 		
+		//draws local play button
 		largeButton.draw(firstButtonX, firstButtonY+280);
 		Resources.normalFont.drawString(firstButtonX+45, firstButtonY+320, "Local play (2 player)");
 		
+		//draws exit game button
 		largeButton.draw(firstButtonX, firstButtonY+420);
 		Resources.normalFont.drawString(firstButtonX+130, firstButtonY+460, "Exit game");
 		
@@ -54,29 +62,14 @@ public class MenuState extends BasicGameState {
 
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-		// TODO Auto-generated method stub
-		
+		//if the mouse is clicked, check to see if it clicked on a button
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
-		
-		if(gc.getInput().isKeyDown(Input.KEY_L)){
-			//state tester
-			s.addState(new ServerState(4, "default"));
-			s.getState(States.SERVER).init(gc,s);
-			s.enterState(States.SERVER);
-		}
-		if(gc.getInput().isKeyDown(Input.KEY_K)){
-			//state tester 2
-			s.addState(new ClientState());
-			((ClientState) s.getState(States.CLIENT)).init(gc,s, "127.0.0.1");
-			s.enterState(States.CLIENT);
-		}
-		
 		
 	}
 	
 	private void handleButtons(GameContainer gc, StateBasedGame s) throws SlickException{
 		
-		// manual IP button
+		//check if it clicked on the manual IP button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
 				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
@@ -84,7 +77,7 @@ public class MenuState extends BasicGameState {
 			s.getState(States.IPINPUT).init(gc,s);
 			s.enterState(States.IPINPUT);
 		}
-		// game coordinator button
+		//check if it clicked on the game coordinator button
 		if(gc.getInput().getMouseX() > firstButtonX +230 && gc.getInput().getMouseY() > firstButtonY 
 				&& gc.getInput().getMouseX() < firstButtonX + 230 + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
@@ -94,7 +87,7 @@ public class MenuState extends BasicGameState {
 			s.enterState(States.GAMECOORDINATOR);
 			
 		}
-		// 2 player server button
+		//check if it clicked on the start server button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
@@ -103,7 +96,7 @@ public class MenuState extends BasicGameState {
 			s.enterState(States.SERVERTYPECHOOSER);
 		}
 		
-		//Local game button
+		//check if it clicked on the local game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +280
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 280){
@@ -111,7 +104,7 @@ public class MenuState extends BasicGameState {
 			s.getState(States.LOCALGAME).init(gc,s);
 			s.enterState(States.LOCALGAME);
 		}
-		//Exit game button
+		//check if it clicked on the exit game button
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +420
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 420){
@@ -121,7 +114,6 @@ public class MenuState extends BasicGameState {
 	}
 
 	public int getID() {
-		// TODO Auto-generated method stub
 		return States.MENU;
 	}
 

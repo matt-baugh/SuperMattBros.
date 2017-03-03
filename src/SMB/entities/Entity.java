@@ -16,6 +16,7 @@ import SMB.world.World;
 
 
 public abstract class Entity extends Hitbox implements Serializable{
+	//declare variables and initialise where appropriate
 	public transient Image image;
 	public Color color;
 
@@ -39,7 +40,6 @@ public abstract class Entity extends Hitbox implements Serializable{
 	
 	
 	public Entity(){
-		
 		init();
 	}
 	

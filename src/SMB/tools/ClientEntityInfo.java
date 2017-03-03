@@ -5,13 +5,14 @@ import java.io.Serializable;
 import org.newdawn.slick.Color;
 
 public class ClientEntityInfo implements Serializable{
+	//Declares variables
 	public float x, y, xOffset, AmountDamaged;
 	public int lives, rColor, gColor, bColor, aColor;
 	public String imageResourceLocation;
 	public boolean facingRight;
 	
 	
-	
+	//getters and setters
 	public int getrColor() {
 		return rColor;
 	}

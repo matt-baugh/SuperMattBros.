@@ -16,12 +16,13 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.*;
 
 
 public class Resources {
-	
+	//declare variables
 	public static Map<String, Image> images;
 	public static Map<String, SpriteSheet> sprites;
 	public static Map<String, Sound> sounds;
@@ -31,8 +32,14 @@ public class Resources {
 	public static TrueTypeFont bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
 	public static String publicIP, localIP;
 	public static Enumeration networkInterfaces;
-	
+
 	public Resources(){
+		//initialise variables
+		smallFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 20), false);
+		normalFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 30), false);
+		bigFont = new TrueTypeFont(new Font("Trebuchet MS", Font.BOLD, 50), false);
+
+
 		images = new HashMap<String, Image>();
 		sprites = new HashMap<String, SpriteSheet>();
 		sounds = new HashMap<String, Sound>();
@@ -55,7 +62,7 @@ public class Resources {
 			images.put("p1ThrowGroundUp", loadImage("res/playerImages/NewPlayerTGU.png") );
 			images.put("p1Walking1", loadImage("res/playerImages/NewPlayerWalk1.png") );
 			images.put("p1Walking2", loadImage("res/playerImages/NewPlayerWalk2.png") );
-			
+
 			images.put("p1IdleAir", loadImage("res/playerImages/NewPlayerIdleAir.png") );
 			images.put("p1HeavyAirDown", loadImage("res/playerImages/NewPlayerHAAD.png") );
 			images.put("p1HeavyAirUp1", loadImage("res/playerImages/NewPlayerHAAU1.png") );
@@ -68,7 +75,7 @@ public class Resources {
 			images.put("p1ThrowAirDown", loadImage("res/playerImages/NewPlayerTAD.png") );
 			images.put("p1ThrowAirRight", loadImage("res/playerImages/NewPlayerTALR.png") );
 			images.put("p1ThrowAirUp", loadImage("res/playerImages/NewPlayerTAU.png") );
-			
+
 			images.put("p1IdleSword", loadImage("res/playerImages/NewPlayerIdleSword.png") );
 			images.put("p1IdleAirSword", loadImage("res/playerImages/NewPlayerIdleAirSword.png") );
 			images.put("p1HeavyGroundSword1", loadImage("res/playerImages/NewPlayerHAG1Sword.png") );
@@ -80,20 +87,20 @@ public class Resources {
 			images.put("p1LightAirSword", loadImage("res/playerImages/NewPlayerLAASword.png") );
 			images.put("p1WalkingSword1", loadImage("res/playerImages/NewPlayerWalk1Sword.png") );
 			images.put("p1WalkingSword2", loadImage("res/playerImages/NewPlayerWalk2Sword.png") );
-			
+
 			images.put("p1Icon",loadImage("res/playerImages/NewPlayerIcon.png") );
-			
+
 			images.put("trainingDummy", loadImage("res/otherGameStuff/training.png") );
-			
+
 			images.put("sword", loadImage("res/otherGameStuff/Sword.png") );
-			
+
 			images.put("menuBackground", loadImage("res/menuImages/MenuImage.png") );
 			images.put("smallButton", loadImage("res/menuImages/SmallButtonTemplate.png") );
 			images.put("largeButton", loadImage("res/menuImages/LargeButtonTemplate.png") );
 			images.put("gameCoordinatorBackground", loadImage("res/menuImages/GameCoordinatorImage.png"));
-			
+
 			sprites.put("tiles", loadSprite("res/maps/newTiles.png", Tile.SMALL_SIZE, Tile.SMALL_SIZE));
-		
+
 			//gets the relevant local IP address
 			networkInterfaces = NetworkInterface.getNetworkInterfaces();
 			while(networkInterfaces.hasMoreElements()){
@@ -109,20 +116,32 @@ public class Resources {
 					}
 				}
 			}
+			//is the localIP is null, the computer is not connected to a local network
+			if(localIP==null){
+				//in this case the local IP address will be set to this
+				localIP ="127.0.0.1";
+			}
 			
+
 			//gets external IP
-			System.out.println("making url");
+			//try{
+				System.out.println("making url");
 			URL IPWebsite = new URL("http://checkip.amazonaws.com");
-			System.out.println("making buffered reader");
-			BufferedReader in = new BufferedReader(new InputStreamReader(IPWebsite.openStream()));
-			System.out.println("getting external ip");
-			publicIP = in.readLine();
-			System.out.println("got external ip");
-			
+			//	URLConnection IPWebConnection = IPWebsite.openConnection();
+			//	IPWebConnection.connect();
+				System.out.println("making buffered reader");
+				BufferedReader in = new BufferedReader(new InputStreamReader(IPWebsite.openStream()));
+				System.out.println("getting external ip");
+				publicIP = in.readLine();
+				System.out.println("got external ip");
+			//	}catch(Exception e){
+			//	publicIP = "N/A";
+			//}
+
 			System.out.println("local ip"+localIP);
 			System.out.println("public ip"+publicIP);
-		
-		
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -130,25 +149,25 @@ public class Resources {
 	public static Image loadImage(String path) throws SlickException {
 		return new Image(path,false, Image.FILTER_NEAREST);
 	}
-	
+
 	public static SpriteSheet loadSprite(String path, int tw, int th) throws SlickException{
 		return new SpriteSheet(loadImage(path), tw, th);
 	}
-	
+
 	public static Image getSpriteImage(String getter,int x, int y){
-		
+
 		return sprites.get(getter).getSubImage(x, y);
 	}
 	public static Image getSprite(String getter){
-		
+
 		return sprites.get(getter);
 	}
 	public static Image getImage(String getter){
-		
+
 		return images.get(getter);
 	}
 	public static Sound getSound(String getter){
-		
+
 		return sounds.get(getter);
 	}
 	public static String getLocalIP(){

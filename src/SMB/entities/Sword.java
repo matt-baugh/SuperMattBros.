@@ -15,6 +15,7 @@ public class Sword extends Entity{
 
 	@Override
 	public void init() {
+		//initialise some variables
 		image = Resources.getImage("sword");
 		lives = 0;
 		spawn();

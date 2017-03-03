@@ -20,7 +20,7 @@ import SMB.world.Tile;
 
 public class Player extends Entity{
 	
-	//Initialize variables
+	//declare variables and initialise where appropriate
 	
 	private float speed = 0.35f; 
 	private int jumpsRemaining = 1;
@@ -241,6 +241,10 @@ public class Player extends Entity{
 	
 	@Override
 	void spawn() {
+		//stops the player holding a sword
+		hasSword = false;
+		image = Resources.getImage("p1Idle");
+		color = playerColor;
 		if(lives == 4){
 			//spawns in the original spawn points if full lives (therefore start of game)
 			x = startingX;
@@ -276,8 +280,12 @@ public class Player extends Entity{
 	
 	public void pickUpSword(){
 		hasSword = true;
+		//makes swordTimer 1000, which decreases and when it hits 0 
+		//the player loses the sword
 		swordTimer = 1000;
+		//sets the players images and color to the correct one for a sword
 		image = Resources.getImage("p1IdleSword");
+		color = Color.lightGray;
 		currentAnimation = null;
 		
 	}
