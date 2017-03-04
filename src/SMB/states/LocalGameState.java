@@ -154,7 +154,8 @@ public class LocalGameState extends BasicGameState {
 			//if the players image is that which means he is performing a specific attack
 			//in this case a light neutral attack on the ground
 			//and the hitbox of the opponent intersects the hitbox of that attack
-			if(player.image == Resources.getImage("p1LightGroundNeutral")&& ((Player) player).getLGNHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundNeutral")&& 
+					((Player) player).getLGNHitBox().intersects(opponent)){
 				//cause the opponent to be hit, with the horizontal direction depending on
 				//what direction the player is facing, as if the player is facing left
 				//when they punch the opponent it will cause the opponent to be hit towards
@@ -169,12 +170,14 @@ public class LocalGameState extends BasicGameState {
 				//skip checking all other attacks, as only 1 can occur at a time
 				continue;
 			}
-			if(player.image == Resources.getImage("p1LightGroundDown")&&((Player) player).getLGDHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundDown")&&
+					((Player) player).getLGDHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;
 			}
-			if(player.image == Resources.getImage("p1LightGroundRight")&&((Player) player).getLGRHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundRight")&&
+					((Player) player).getLGRHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;
@@ -231,7 +234,9 @@ public class LocalGameState extends BasicGameState {
 			}
 
 
-			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&((Player) player).getGrabHitBox().intersects(opponent)){
+			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&
+					((Player) player).getGrabHitBox().intersects(opponent)&&
+					!player.grabbing){
 				if(opponent.label.equals("Sword")){
 					//causes player to pick up sword if they grab a sword
 					((Player) player).pickUpSword();

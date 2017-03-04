@@ -305,7 +305,9 @@ public class ServerState extends BasicGameState {
 			}
 
 
-			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&((Player) player).getGrabHitBox().intersects(opponent)){
+			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&   
+					((Player) player).getGrabHitBox().intersects(opponent)&&
+					!player.grabbing){
 				if(opponent.label.equals("Sword")){
 					//causes player to pick up sword if they grab a sword
 					((Player) player).pickUpSword();
