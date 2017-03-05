@@ -1,6 +1,9 @@
 package SMB.world;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 import org.json.simple.JSONArray;
@@ -9,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
+import SMB.main.Engine;
 import SMB.main.Resources;
 import SMB.main.Window;
 
@@ -59,7 +63,8 @@ public class World {
 	public static void load(String path) throws Exception{
 		JSONParser parser = new JSONParser();
 		//loads object at a location
-		Object obj = parser.parse(new FileReader(path));
+		InputStream mapStream = Engine.class.getResourceAsStream(path);
+		Object obj = parser.parse(new InputStreamReader(mapStream));
 		//makes that into a JSON object
 		JSONObject jObj = (JSONObject) obj;
 		

@@ -109,13 +109,12 @@ public class Resources {
 				while(addresses.hasMoreElements()){
 					InetAddress address = (InetAddress) addresses.nextElement();
 					String temp = address.getHostAddress();
-					System.out.println(temp);
 					if(temp.contains("192.168")){
 						localIP = temp;
-						System.out.println("local ip"+localIP);
 					}
 				}
 			}
+			System.out.println(localIP);
 			//is the localIP is null, the computer is not connected to a local network
 			if(localIP==null){
 				//in this case the local IP address will be set to this
@@ -124,19 +123,20 @@ public class Resources {
 			
 
 			//gets external IP
-			//try{
+			
+			try{
 				System.out.println("making url");
 			URL IPWebsite = new URL("http://checkip.amazonaws.com");
-			//	URLConnection IPWebConnection = IPWebsite.openConnection();
-			//	IPWebConnection.connect();
+				URLConnection IPWebConnection = IPWebsite.openConnection();
+				IPWebConnection.connect();
 				System.out.println("making buffered reader");
 				BufferedReader in = new BufferedReader(new InputStreamReader(IPWebsite.openStream()));
 				System.out.println("getting external ip");
 				publicIP = in.readLine();
 				System.out.println("got external ip");
-			//	}catch(Exception e){
-			//	publicIP = "N/A";
-			//}
+				}catch(Exception e){
+				publicIP = "N/A";
+			}
 
 			System.out.println("local ip"+localIP);
 			System.out.println("public ip"+publicIP);

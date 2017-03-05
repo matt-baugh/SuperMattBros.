@@ -33,7 +33,7 @@ public class Engine extends StateBasedGame{
 			e.printStackTrace();
 		}
 	}
-	
+		
 	public void initStatesList(GameContainer gc) throws SlickException {
 		gc.setTargetFrameRate(60); //sets frame rate of game
 		gc.setAlwaysRender(true); //means that the game is always rendered, even if window is not focused on
@@ -44,7 +44,7 @@ public class Engine extends StateBasedGame{
 		new Resources();
 		
 		try { //load the map
-			World.load("res/maps/RealMap.json");} catch (Exception e) 
+			World.load("RealMap.json");} catch (Exception e) 
 			{
 			e.printStackTrace();
 			System.err.println("Map does not exist");
