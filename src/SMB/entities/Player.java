@@ -23,7 +23,7 @@ public class Player extends Entity{
 	//declare variables and initialise where appropriate
 	
 	private float speed = 0.35f; 
-	private int jumpsRemaining = 1;
+	private int jumpsRemaining = 2;
 	
 	//KEY FOR ANIMATIONS/COMBAT MOVES (most not all):
 	//first letter is the type of move, L for Light, H for Heavy, G for Grab and T for Throw
@@ -39,7 +39,7 @@ public class Player extends Entity{
 	public int startingX, startingY;
 	public boolean hasSword = false;
 	public int swordTimer = 0;
-	public float jumpHeight = -1.75f;
+	public float jumpHeight = -1.5f;
 	public Color playerColor; //this remains the same to keep track of which player is which
 	//even when the color of the image changes to grey when the player has a sword
 	
@@ -219,12 +219,12 @@ public class Player extends Entity{
 			if (vPY >= 0) {
 				vPY = 0;
 				vTY = 0;
-				jumpsRemaining = 1;
+				jumpsRemaining = 2;
 			}
 		}
 		
 		if (isOnSolid()) {
-			jumpsRemaining = 1;
+			jumpsRemaining = 2;
 			canJump = true;
 		}
 		if(!busy){ //all the inputs are handled in here
@@ -295,9 +295,10 @@ public class Player extends Entity{
 		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {   
 			if ((isOnSolid() || isOnPSolid())&&canJump) { //normal jump
 				vPY = jumpHeight;
-			} else if (jumpsRemaining == 1&&canJump) { //double jump funcitonality
+				jumpsRemaining = 1;
+			} else if (jumpsRemaining>0&&canJump) { //double jump funcitonality
 				vPY = jumpHeight;
-				jumpsRemaining = 0;
+				jumpsRemaining--;
 			}
 			canJump = false;
 		}else{
@@ -337,7 +338,7 @@ public class Player extends Entity{
 		
 
 		if (input.isLAKeyDown() ) { //light attack
-			busyTimer = LATime;		//forces player to commit to attack
+			busyTimer = LATime*2;		//forces player to commit to attack
 			if (input.isRightKeyDown() || input.isLeftKeyDown()) { //left or right
 				if(isOnSolid() || isOnPSolid()){//if on ground
 					currentAnimation = LGR;
@@ -389,6 +390,15 @@ public class Player extends Entity{
 					else{
 						vKX = -0.5f;
 						vPX = -0.1f;}
+				}else{ //uses heavy air neutral if in air, as no heavy air left/right attack 
+					currentAnimation = HAN;
+					currentAnimation.setLooping(false);
+					currentAnimation.restart();
+					if (facingRight){ //direction of lunge
+						vKX = 0.8f;}
+					else{
+						vKX = -0.8f;}
+					vPX = 0;
 				}
 			} else if (input.isDownKeyDown()) {//downwards attack
 				if(isOnSolid() || isOnPSolid()){//if on ground
@@ -475,9 +485,10 @@ public class Player extends Entity{
 		if (input.isUpKeyDown()&&!input.isHAKeyDown()) {
 			if ((isOnSolid() || isOnPSolid())&&canJump) {//normal jump
 				vPY = jumpHeight;
-			} else if (jumpsRemaining == 1&&canJump) {//double jump
+				jumpsRemaining = 1;
+			} else if (jumpsRemaining>0&&canJump) {//double jump
 				vPY = jumpHeight;
-				jumpsRemaining = 0;
+				jumpsRemaining--;
 			}
 			canJump = false;
 		}else{

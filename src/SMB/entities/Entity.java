@@ -99,7 +99,7 @@ public abstract class Entity extends Hitbox implements Serializable{
 			invulnerable = false;
 		}
 		//disables movement if the entity is grabbed
-		if(!grabbed){
+		if(!grabbed&&!grabbing){
 			vTX = vPX + vKX;
 			vTY = vPY + vKY;
 		}else{
@@ -132,14 +132,14 @@ public abstract class Entity extends Hitbox implements Serializable{
 				vKY = -vKY; //means if the entity was hit into the floor they will bound
 			}
 		}else{
-			vPY += 0.13f;//gravity
+			vPY += 0.1f;//gravity
 		}
 		
-		if(-0.01<vKX&&vKX<0.01)vKX=0; //stops the knockback velocity continuously being a really small value
-		if(-0.01<vKY&&vKY<0.01)vKY=0;
+		if(-0.001<vKX&&vKX<0.001)vKX=0; //stops the knockback velocity continuously being a really small value
+		if(-0.001<vKY&&vKY<0.001)vKY=0;
 		
-		vKX *= 0.7;//decreases the knockback velocity
-		vKY *= 0.7;
+		vKX *= 0.8;//decreases the knockback velocity
+		vKY *= 0.8;
 		
 
 		if (testLeft()) //stops entities passing through walls to the left, right or platforms above them

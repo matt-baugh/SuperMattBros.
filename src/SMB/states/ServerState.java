@@ -139,7 +139,12 @@ public class ServerState extends BasicGameState {
 			for (int i = 0; i <entities.size();i++){
 				//if the entity is a player, update it using its corresponding input
 				if(entities.get(i).label.contains("Player")){
-					entities.get(i).update(gc, delta, inputs.get(i));
+					//get the players number
+					int playerNum = Integer.parseInt(entities.get(i).label.replaceAll("[\\D]", ""));
+					//make it zero indexed
+					playerNum--;
+					//use this number to ge the correct input from inputs
+					entities.get(i).update(gc, delta, inputs.get(playerNum));
 				}else{
 					//otherwise update it normally
 					entities.get(i).update(gc, delta,null);
@@ -266,28 +271,28 @@ public class ServerState extends BasicGameState {
 
 
 			if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&((Player) player).getHGNHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
+				opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 30);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundDown2")&&((Player) player).getHGDHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+				opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 39);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundRight2")&&((Player) player).getHGRHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
+				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 33);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirDown")&&((Player) player).getHADHitBox().intersects(opponent)){
-				opponent.getHit(0, 3.5f, 8);
+				opponent.getHit(0, 3.5f, 24);
 				opponent.invulnerableTimer = ((Player) (player)).HATime + 100;
 				continue;
 			}
 
 			if(player.image == Resources.getImage("p1HeavyAirUp2")&&((Player) player).getHAUHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
+				opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 33);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
@@ -295,10 +300,10 @@ public class ServerState extends BasicGameState {
 				//this attack involves two hitboxes, so each must be checked 
 				//individually. Other than that is the same
 				if(((Player) player).getHAN1HitBox().intersects(opponent)){
-					opponent.getHit( 2f, 0, 11);
+					opponent.getHit( 2f, 0, 33);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
 				}else if(((Player) player).getHAN2HitBox().intersects(opponent)){
-					opponent.getHit( -2f, 0, 11);
+					opponent.getHit( -2f, 0, 33);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
 				}
 				continue;
@@ -368,17 +373,17 @@ public class ServerState extends BasicGameState {
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundSword2")&& ((Player) player).getHGSwordHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 7f : -7f, 0, 20);
+				opponent.getHit((player.facingRight) ? 7f : -7f, 0, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirSword2")&& ((Player) player).getHASwordHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 20);
+				opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirSwordDown")&& ((Player) player).getHADownSwordHitBox().intersects(opponent)){
-				opponent.getHit(0, 8f, 20);
+				opponent.getHit(0, 8f, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}

@@ -154,8 +154,7 @@ public class LocalGameState extends BasicGameState {
 			//if the players image is that which means he is performing a specific attack
 			//in this case a light neutral attack on the ground
 			//and the hitbox of the opponent intersects the hitbox of that attack
-			if(player.image == Resources.getImage("p1LightGroundNeutral")&& 
-					((Player) player).getLGNHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundNeutral")&& ((Player) player).getLGNHitBox().intersects(opponent)){
 				//cause the opponent to be hit, with the horizontal direction depending on
 				//what direction the player is facing, as if the player is facing left
 				//when they punch the opponent it will cause the opponent to be hit towards
@@ -170,14 +169,12 @@ public class LocalGameState extends BasicGameState {
 				//skip checking all other attacks, as only 1 can occur at a time
 				continue;
 			}
-			if(player.image == Resources.getImage("p1LightGroundDown")&&
-					((Player) player).getLGDHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundDown")&&((Player) player).getLGDHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 1f : -1f, -2f, 2);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;
 			}
-			if(player.image == Resources.getImage("p1LightGroundRight")&&
-					((Player) player).getLGRHitBox().intersects(opponent)){
+			if(player.image == Resources.getImage("p1LightGroundRight")&&((Player) player).getLGRHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 2.5f : -2.5f, 0, 3);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;
@@ -195,28 +192,28 @@ public class LocalGameState extends BasicGameState {
 
 
 			if(player.image == Resources.getImage("p1HeavyGroundNeutral2")&&((Player) player).getHGNHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 10);
+				opponent.getHit((player.facingRight) ? 1.6f : -1.6f, 0, 30);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundDown2")&&((Player) player).getHGDHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 13);
+				opponent.getHit((player.facingRight) ? 1.2f : -1.2f, -2.5f, 39);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundRight2")&&((Player) player).getHGRHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 11);
+				opponent.getHit((player.facingRight) ? 2f : -2f, 0, 33);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirDown")&&((Player) player).getHADHitBox().intersects(opponent)){
-				opponent.getHit(0, 3.5f, 8);
+				opponent.getHit(0, 3.5f, 24);
 				opponent.invulnerableTimer = ((Player) (player)).HATime + 100;
 				continue;
 			}
 
 			if(player.image == Resources.getImage("p1HeavyAirUp2")&&((Player) player).getHAUHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 11);
+				opponent.getHit((player.facingRight) ? 1f : -1f, -3.5f, 33);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
@@ -224,17 +221,17 @@ public class LocalGameState extends BasicGameState {
 				//this attack involves two hitboxes, so each must be checked 
 				//individually. Other than that is the same
 				if(((Player) player).getHAN1HitBox().intersects(opponent)){
-					opponent.getHit( 2f, 0, 11);
+					opponent.getHit( 2f, 0, 33);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
 				}else if(((Player) player).getHAN2HitBox().intersects(opponent)){
-					opponent.getHit( -2f, 0, 11);
+					opponent.getHit( -2f, 0, 33);
 					opponent.invulnerableTimer = ((Player) (player)).HATime;
 				}
 				continue;
 			}
 
 
-			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&
+			if((player.image == Resources.getImage("p1GrabGround")||player.image == Resources.getImage("p1GrabAir"))&&   
 					((Player) player).getGrabHitBox().intersects(opponent)&&
 					!player.grabbing){
 				if(opponent.label.equals("Sword")){
@@ -297,17 +294,17 @@ public class LocalGameState extends BasicGameState {
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyGroundSword2")&& ((Player) player).getHGSwordHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 7f : -7f, 0, 20);
+				opponent.getHit((player.facingRight) ? 7f : -7f, 0, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirSword2")&& ((Player) player).getHASwordHitBox().intersects(opponent)){
-				opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 20);
+				opponent.getHit((player.facingRight) ? 3f : -3f, -6f, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
 			if(player.image == Resources.getImage("p1HeavyAirSwordDown")&& ((Player) player).getHADownSwordHitBox().intersects(opponent)){
-				opponent.getHit(0, 8f, 20);
+				opponent.getHit(0, 8f, 60);
 				opponent.invulnerableTimer = ((Player) (player)).HATime;
 				continue;
 			}
