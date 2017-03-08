@@ -389,6 +389,17 @@ public class ServerState extends BasicGameState {
 			}
 
 		}
+		//this loop checks if another player is grabbed
+		//and stops the current player grabbing if no one else 
+		//is grabbed, to prevent players getting stuck grabbing no-one
+		if(player.grabbing){
+			boolean isSomeoneGrabbed = false;
+			for(Entity opponent : entities){
+				if(player == opponent) continue;
+				if(opponent.grabbed) isSomeoneGrabbed = true;
+			}
+			if(!isSomeoneGrabbed)player.grabbing=false;
+		}
 
 
 	}

@@ -428,7 +428,7 @@ public class Player extends Entity{
 					currentAnimation.restart();
 				}
 			}
-		} else if (input.isGrKeyDown() ) {//grab move
+		} else if (input.isGrKeyDown() &&!grabbed) {//grab move
 			if(isOnSolid() || isOnPSolid()){//if on ground
 				currentAnimation = GGAttempt;
 				currentAnimation.setLooping(false);
