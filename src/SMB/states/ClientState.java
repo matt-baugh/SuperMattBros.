@@ -125,9 +125,9 @@ public class ClientState extends BasicGameState {
 		newInput.setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_A));
 		newInput.setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_D));
 		newInput.setDownKeyDown(gc.getInput().isKeyDown(Input.KEY_S));
-		newInput.setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_X));
-		newInput.setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_C));
-		newInput.setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_V));
+		newInput.setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_J)||gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON));
+		newInput.setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_K)||gc.getInput().isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON));
+		newInput.setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_L)||gc.getInput().isKeyDown(Input.KEY_LSHIFT));
 
 		return newInput;
 	}

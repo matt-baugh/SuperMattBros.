@@ -33,7 +33,7 @@ public abstract class Entity extends Hitbox implements Serializable{
 	public transient boolean busy;
 	public transient int busyTimer;
 	public transient float xImageOffset = 0;
-	
+	public transient boolean grabberOnSolid =false;
 	
 	public float vTX, vPX, vKX; //T is total, P is player controlled, K is knockback
 	public float vTY, vPY, vKY;
@@ -102,6 +102,11 @@ public abstract class Entity extends Hitbox implements Serializable{
 		if(!grabbed&&!grabbing){
 			vTX = vPX + vKX;
 			vTY = vPY + vKY;
+			//makes it so entities that are grabbing or being grabbed by an entity
+			//not on a floor are still affected by gravity
+		}else if(grabbing||(grabbed&&!grabberOnSolid)){
+			vTX = 0;
+			vTY = vPY;
 		}else{
 			vTX = 0;
 			vTY = 0;

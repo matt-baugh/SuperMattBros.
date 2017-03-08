@@ -191,8 +191,8 @@ public class ServerState extends BasicGameState {
 			//this is what is checked for when someone has won the game
 			//the functions of the buttons match what the text displayed
 			//says they do
-			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
-			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			if(gc.getInput().isKeyDown(Input.KEY_ENTER))startGame();
+			if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)){
 				exitGame = true;
 			}
 			
@@ -335,6 +335,13 @@ public class ServerState extends BasicGameState {
 			}
 			//if the opponent is already grabbed
 			if(opponent.grabbed){
+				
+				if(player.isOnSolid()||player.isOnPSolid()){
+					opponent.grabberOnSolid = true;
+				}else{
+					opponent.grabberOnSolid = false;
+				}		
+				
 				//throws the opponent in the correct direction
 				//which can be found by which image the player is
 				//(if none match they are not attempting to throw)
@@ -400,6 +407,7 @@ public class ServerState extends BasicGameState {
 			}
 			if(!isSomeoneGrabbed)player.grabbing=false;
 		}
+		
 
 
 	}
@@ -479,13 +487,13 @@ public class ServerState extends BasicGameState {
 	
 	public void getPlayer1Input(GameContainer gc){
 		//gets the 1st players input from their respective keys
-		inputs.get(0).setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_UP));
-		inputs.get(0).setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_LEFT));
-		inputs.get(0).setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_RIGHT));
-		inputs.get(0).setDownKeyDown(gc.getInput().isKeyDown(Input.KEY_DOWN));
-		inputs.get(0).setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_M));
-		inputs.get(0).setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_COMMA));
-		inputs.get(0).setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_PERIOD));
+		inputs.get(0).setUpKeyDown(gc.getInput().isKeyDown(Input.KEY_W));
+		inputs.get(0).setLeftKeyDown(gc.getInput().isKeyDown(Input.KEY_A));
+		inputs.get(0).setRightKeyDown(gc.getInput().isKeyDown(Input.KEY_D));
+		inputs.get(0).setDownKeyDown(gc.getInput().isKeyDown(Input.KEY_S));
+		inputs.get(0).setLAKeyDown(gc.getInput().isKeyDown(Input.KEY_J)||gc.getInput().isMouseButtonDown(Input.MOUSE_LEFT_BUTTON));
+		inputs.get(0).setHAKeyDown(gc.getInput().isKeyDown(Input.KEY_K)||gc.getInput().isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON));
+		inputs.get(0).setGrKeyDown(gc.getInput().isKeyDown(Input.KEY_L)||gc.getInput().isKeyDown(Input.KEY_LSHIFT));
 	}
 	public void updateClients(){
 		//for each outputSteam, where each goes to a different client

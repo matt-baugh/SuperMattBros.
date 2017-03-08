@@ -131,9 +131,9 @@ public class LocalGameState extends BasicGameState {
 			checkForWinner();
 		}else{
 			// if the game is over, restart the game if the enter key is pressed
-			if(gc.getInput().isKeyPressed(Input.KEY_ENTER))startGame();
+			if(gc.getInput().isKeyDown(Input.KEY_ENTER))startGame();
 			//or return to the main menu if the escape key is pressed
-			if(gc.getInput().isKeyPressed(Input.KEY_ESCAPE)){
+			if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)){
 				s.enterState(States.MENU);
 			}
 		}
@@ -256,6 +256,13 @@ public class LocalGameState extends BasicGameState {
 			}
 			//if the opponent is already grabbed
 			if(opponent.grabbed){
+				
+				if(player.isOnSolid()||player.isOnPSolid()){
+					opponent.grabberOnSolid = true;
+				}else{
+					opponent.grabberOnSolid = false;
+				}				
+				
 				//throws the opponent in the correct direction
 				//which can be found by which image the player is
 				//(if none match they are not attempting to throw)
@@ -310,7 +317,17 @@ public class LocalGameState extends BasicGameState {
 			}
 
 		}
-
+		//this loop checks if another player is grabbed
+				//and stops the current player grabbing if no one else 
+				//is grabbed, to prevent players getting stuck grabbing no-one
+				if(player.grabbing){
+					boolean isSomeoneGrabbed = false;
+					for(Entity opponent : entities){
+						if(player == opponent) continue;
+						if(opponent.grabbed) isSomeoneGrabbed = true;
+					}
+					if(!isSomeoneGrabbed)player.grabbing=false;
+				}
 
 	}
 	public void checkForWinner(){

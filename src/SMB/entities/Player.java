@@ -235,6 +235,17 @@ public class Player extends Entity{
 			}else if(hasSword){
 				swordInput();
 			}
+		
+		}else if(currentAnimation == HAU){	//enables player to control horizontal movement when recovery jumping
+			if (input.isLeftKeyDown()) {           //jumps left
+				vPX = -speed;
+				facingRight = false;
+			} else if (input.isRightKeyDown()) { //jumps right
+				vPX = speed;
+				facingRight = true;
+			} else {
+				vPX = 0;
+			}
 		}
 
 	}
