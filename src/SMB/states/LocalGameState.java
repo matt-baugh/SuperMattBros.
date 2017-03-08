@@ -132,10 +132,10 @@ public class LocalGameState extends BasicGameState {
 		}else{
 			// if the game is over, restart the game if the enter key is pressed
 			if(gc.getInput().isKeyDown(Input.KEY_ENTER))startGame();
-			//or return to the main menu if the escape key is pressed
-			if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)){
-				s.enterState(States.MENU);
-			}
+		}
+		//return to the main menu if the escape key is pressed
+		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE)){
+			s.enterState(States.MENU);
 		}
 	}
 
