@@ -101,7 +101,7 @@ public class LocalGameState extends BasicGameState {
 				if(entities.get(i).label.equals("Training")) continue;
 				if(entities.get(i).label.equals("Sword")) continue;
 				//if the entity has gone outside the boundaries of the game
-				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
+				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 28*Tile.SIZE){
 					//run respawn method, which includes the decreasing of the players lives
 					entities.get(i).respawn();
 					//if the player has run out of lives, add them to the toRemove array
@@ -295,7 +295,9 @@ public class LocalGameState extends BasicGameState {
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
 				}
 			}
-			if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightGroundSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
+			
+			
+			if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightAirSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 4f : -4f, 0, 10);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;

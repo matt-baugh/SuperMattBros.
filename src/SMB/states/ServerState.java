@@ -156,7 +156,7 @@ public class ServerState extends BasicGameState {
 				
 				//if the player (can only be a player as all other types of entities cannot
 				//get to this point) has gone outside the boundaries of the map
-				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 30*Tile.SIZE){
+				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 28*Tile.SIZE){
 					//cause the player to respawn
 					entities.get(i).respawn();
 					//if the player has run out of lives
@@ -374,7 +374,7 @@ public class ServerState extends BasicGameState {
 					opponent.invulnerableTimer = ((Player) (player)).GTime;
 				}
 			}
-			if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightGroundSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
+			if((player.image == Resources.getImage("p1LightGroundSword")||player.image == Resources.getImage("p1LightAirSword"))&& ((Player) player).getLSwordHitBox().intersects(opponent)){
 				opponent.getHit((player.facingRight) ? 4f : -4f, 0, 10);
 				opponent.invulnerableTimer = ((Player) (player)).LATime;
 				continue;
