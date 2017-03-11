@@ -32,7 +32,7 @@ public class ServerTypeChooser extends BasicGameState{
 		largeButtonHeight = 120;
 		inputTextField = new TextField(gc, Resources.normalFont, 1200,400, largeButtonWidth, largeButtonHeight);
 		inputTextField.setText("Input name of your server");
-		inputTextField.setFocus(true);
+		inputTextField.setAcceptingInput(true);
 
 	}
 
@@ -62,6 +62,7 @@ public class ServerTypeChooser extends BasicGameState{
 	@Override
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
+		inputTextField.setFocus(true);
 		//if the mouse is clicked, check to see if it clicked on a button
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
 	}

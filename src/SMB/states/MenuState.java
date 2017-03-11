@@ -73,8 +73,14 @@ public class MenuState extends BasicGameState {
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY 
 				&& gc.getInput().getMouseX() < firstButtonX + smallButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight){
-			s.addState(new ManualInputState());
-			s.getState(States.IPINPUT).init(gc,s);
+			if(s.getState(States.IPINPUT)==null){
+				s.addState(new ManualInputState());
+				s.getState(States.IPINPUT).init(gc,s);
+			}else{
+				((ManualInputState) s.getState(States.IPINPUT)).inputTextField.setText("Input IP here");
+				((ManualInputState) s.getState(States.IPINPUT)).inputTextField.setAcceptingInput(true);
+
+			}
 			s.enterState(States.IPINPUT);
 		}
 		//check if it clicked on the game coordinator button
@@ -84,6 +90,7 @@ public class MenuState extends BasicGameState {
 			
 			s.addState(new GameCoordinator());
 			s.getState(States.GAMECOORDINATOR).init(gc,s);
+			
 			s.enterState(States.GAMECOORDINATOR);
 			
 		}
@@ -91,8 +98,14 @@ public class MenuState extends BasicGameState {
 		if(gc.getInput().getMouseX() > firstButtonX && gc.getInput().getMouseY() > firstButtonY +140
 				&& gc.getInput().getMouseX() < firstButtonX + largeButtonWidth
 				&& gc.getInput().getMouseY() < firstButtonY + buttonHeight + 140){
-			s.addState(new ServerTypeChooser());
-			s.getState(States.SERVERTYPECHOOSER).init(gc,s);
+			if(s.getState(States.SERVERTYPECHOOSER)==null){
+				s.addState(new ServerTypeChooser());
+				s.getState(States.SERVERTYPECHOOSER).init(gc,s);
+			}else{
+				((ServerTypeChooser) s.getState(States.SERVERTYPECHOOSER)).inputTextField.setText("Input name of your server");
+				((ServerTypeChooser) s.getState(States.SERVERTYPECHOOSER)).inputTextField.setAcceptingInput(true);
+
+			}
 			s.enterState(States.SERVERTYPECHOOSER);
 		}
 		

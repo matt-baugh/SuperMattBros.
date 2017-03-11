@@ -189,9 +189,7 @@ public class GameCoordinator extends BasicGameState{
 						try {
 						//receives confirmation message here
 						datagramSocket.receive(inboundPacket);
-						System.out.println("message received");
 						String message = new String(inboundPacket.getData()).trim();
-						System.out.println(message);
 						//checks that the message was for them
 						if(message.equals("ImHere")){
 							
@@ -201,7 +199,6 @@ public class GameCoordinator extends BasicGameState{
 
 							String serverDetails = new String(inboundPacket.getData(), inboundPacket.getOffset(),
 									inboundPacket.getLength()).trim();
-							System.out.println(serverDetails);
 							//splits details message into two parts
 							//the first being the name of the server
 							//the second being the amount of desired players of the server

@@ -31,7 +31,7 @@ public class ManualInputState extends BasicGameState{
 		largeButtonHeight = 120;
 		inputTextField = new TextField(gc, Resources.normalFont, 1200,400, largeButtonWidth, largeButtonHeight);
 		inputTextField.setText("Input IP here");
-		inputTextField.setFocus(true);
+		inputTextField.setAcceptingInput(true);
 
 	}
 
@@ -59,6 +59,7 @@ public class ManualInputState extends BasicGameState{
 	@Override
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
+		inputTextField.setFocus(true);
 		//if the mouse clicks, check to see if it's clicked on a button
 		if(gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON))handleButtons(gc, s);
 		

@@ -10,6 +10,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 
@@ -46,6 +48,7 @@ public class ServerState extends BasicGameState {
 	private int yRender = 1791;
 	private int desiredPlayers = 2;
 	public String nameOfServer;
+	public String pregameMessage;
 	private Thread serverInitialiser;
 
 	public boolean preGame = true, gameOver, exitGame = false;;
@@ -73,6 +76,7 @@ public class ServerState extends BasicGameState {
 		inputs.add(p1Input);
 		entities.add(new Player(2));
 		inputs.add(p2Input);
+		pregameMessage = "Waiting for players";
 		//only initialise and add players 3 and 4 
 		//if there are 4 desired players
 		if(desiredPlayers==4){
@@ -107,10 +111,10 @@ public class ServerState extends BasicGameState {
 
 		if(preGame){
 			//if it is before the game has started show the appropriate text
-			Resources.bigFont.drawString(2050, 2000, "Waiting for players", Color.black);
-			Resources.bigFont.drawString(1800, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ Resources.getLocalIP(), Color.black);
-			Resources.bigFont.drawString(1750, 2000+(Resources.bigFont.getLineHeight()*2), "Your public IP address is "+ Resources.getPublicIP(), Color.black);
-			Resources.bigFont.drawString(2300-(Resources.bigFont.getWidth("Server name is: "+ nameOfServer))/2, 2000+(Resources.bigFont.getLineHeight()*3), "Server name is: "+ nameOfServer, Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth(pregameMessage)/2, 2000, pregameMessage, Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth("Your local IP address is "+ Resources.getLocalIP() )/2, 2000+Resources.bigFont.getLineHeight(), "Your local IP address is "+ Resources.getLocalIP(), Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth("Your public IP address is "+ Resources.getPublicIP())/2, 2000+(Resources.bigFont.getLineHeight()*2), "Your public IP address is "+ Resources.getPublicIP(), Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth("Server name is: "+ nameOfServer)/2, 2000+(Resources.bigFont.getLineHeight()*3), "Server name is: "+ nameOfServer, Color.black);
 		}else{
 			for (int i = 0; i <entities.size();i++){
 				//renders each of the entities
@@ -129,7 +133,6 @@ public class ServerState extends BasicGameState {
 
 	public void update(GameContainer gc, StateBasedGame s, int delta)
 			throws SlickException {
-
 		if(preGame){
 			//nothing needs to be updated, as is pregame
 		} else if(!gameOver){
@@ -156,7 +159,8 @@ public class ServerState extends BasicGameState {
 				
 				//if the player (can only be a player as all other types of entities cannot
 				//get to this point) has gone outside the boundaries of the map
-				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 28*Tile.SIZE){
+				if(entities.get(i).x > 80*Tile.SIZE||entities.get(i).x < 18*Tile.SIZE|| 
+						entities.get(i).y > 80*Tile.SIZE||entities.get(i).y < 28*Tile.SIZE){
 					//cause the player to respawn
 					entities.get(i).respawn();
 					//if the player has run out of lives
@@ -603,11 +607,18 @@ public class ServerState extends BasicGameState {
 		ObjectInputStream inputStream;
 		Socket socket;
 		int playerNum;
+		DatagramSocket datagramSocket; 
 		public ServerInit(){
 		}
 		public void run(){
+			
 			//make a thread that runs the server announcer class
-			Thread serverAnnouncer = new Thread(new ServerAnnouncer());
+			try {
+				datagramSocket = new DatagramSocket(10306, InetAddress.getByName("0.0.0.0"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Thread serverAnnouncer = new Thread(new ServerAnnouncer(datagramSocket));
 			serverAnnouncer.start();
 			try{
 				//make a new server socket
@@ -623,9 +634,10 @@ public class ServerState extends BasicGameState {
 					//make an ObjectOutputStream going to that socket
 					ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 					outputStream.flush();
+					
 					//add it to outputStreams
 					outputStreams.add(outputStream);
-
+					
 					//make a thread which handles the input received by the client
 					//that has just connected
 					Thread clientHandler = new Thread(new ClientHandler(clientSocket, i));
@@ -633,12 +645,26 @@ public class ServerState extends BasicGameState {
 					threads.add(clientHandler);
 					//start the client handler
 					clientHandler.start();
+					
+					//tells the player what player number it is
+					outputStream.writeObject("playerNumber");
+					outputStream.writeObject(i);
 				}
 				//as all the clients that the server wants have connected
 				//close the server socket and stop the serverAnnouncer
 				serverSocket.close();
 				serverAnnouncer.stop();
+				datagramSocket.close();
+				
 			}catch(Exception ex){ex.printStackTrace();}
+			
+			pregameMessage = "All players connected, starting game soon";
+			
+			try {
+				Thread.sleep(6000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			startGame();
 			//pregame is false, as the game is now starting
@@ -654,11 +680,14 @@ public class ServerState extends BasicGameState {
 		DatagramSocket datagramSocket;
 		byte[] messageForClients, serverDetails, receiveBuffer;
 		DatagramPacket inboundPacket; 
-		@Override
+		
+		public ServerAnnouncer(DatagramSocket soc){
+			datagramSocket = soc;
+		}
 		public void run() {
 			try{
 				//initialise variables
-				datagramSocket = new DatagramSocket(10306, InetAddress.getByName("0.0.0.0"));
+				
 				datagramSocket.setBroadcast(true);
 				
 				messageForClients = "ImHere".getBytes();
@@ -694,6 +723,7 @@ public class ServerState extends BasicGameState {
 			}
 			
 		}
+		
 		
 	}
 

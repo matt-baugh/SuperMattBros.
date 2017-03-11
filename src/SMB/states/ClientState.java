@@ -30,6 +30,9 @@ public class ClientState extends BasicGameState {
 	public Input p1Input, p2Input;
 	private int xRender = 1366;
 	private int yRender = 1791;
+	
+	public int playerNumber;
+	public String playerColour;
 
 	public boolean gameOver, leaveGame = false, pregame = true;
 
@@ -47,6 +50,7 @@ public class ClientState extends BasicGameState {
 		entities = new ArrayList<Entity>();
 		initialiseConnection(IPAddress);
 		toRemove = new ArrayList<Entity>();
+		
 	}
 	@Override
 	public void init(GameContainer gc, StateBasedGame s)
@@ -68,6 +72,8 @@ public class ClientState extends BasicGameState {
 		if(pregame){
 			//displays this text if game hasnt started yet
 			Resources.bigFont.drawString(1900, 2000, "Waiting for players to connect", Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth("You are player number "+playerNumber)/2, 2000+Resources.bigFont.getLineHeight(), "You are player number "+playerNumber, Color.black);
+			Resources.bigFont.drawString(2326-Resources.bigFont.getWidth("And your player colour is "+playerColour)/2, 2000+Resources.bigFont.getLineHeight()*2, "And your player colour is "+playerColour, Color.black);
 		}
 		//renders all entities
 		for (int i = 0; i <entities.size();i++){
@@ -139,7 +145,7 @@ public class ClientState extends BasicGameState {
 			//are object streams so can send anything
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
-			writeToServer.flush(); 
+			
 			//starts thread to handle messages being sent from the server
 			serverHandler = new Thread(new ServerHandler());
 			serverHandler.start();	
@@ -154,6 +160,7 @@ public class ClientState extends BasicGameState {
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			writeToServer = new ObjectOutputStream(socket.getOutputStream());
 			writeToServer.flush();
+			playerNumber = inputStream.readInt()+1;
 			serverHandler = new Thread(new ServerHandler());
 			serverHandler.start();
 		} catch (IOException ex){
@@ -228,6 +235,21 @@ public class ClientState extends BasicGameState {
 						//causes player to leave the game
 						leaveGame();
 						break;	
+					case "playerNumber":
+						//gets what number this player is
+						playerNumber = (int)(inputStream.readObject())+1;
+						switch(playerNumber){
+							case(2): 
+								playerColour = "blue";
+							break;
+							case(3): 
+								playerColour = "green";
+							break;
+							case(4): 
+								playerColour = "yellow";
+							break;
+						
+						}
 					}
 
 				}catch(EOFException ex){

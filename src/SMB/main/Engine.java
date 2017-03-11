@@ -20,10 +20,6 @@ public class Engine extends StateBasedGame{
 	
 	public static void main(String[] args){
 		
-		//setNativesFolder
-		File f = new File("natives");
-		if (f.exists())System.setProperty("org.lwjgl.librarypath", f.getAbsolutePath());
-		
 		//sets up the window the game will be displayed in
 		try {
 			AppGameContainer game = new AppGameContainer(new Engine());
